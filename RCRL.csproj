@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\net6.0-windows\config.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CmlLib.Core" Version="4.0.4" />
     <PackageReference Include="CmlLib.Core.Installer.Forge" Version="1.0.1" />
   </ItemGroup>
@@ -39,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

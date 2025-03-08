@@ -49,6 +49,8 @@ public partial class LauncherForm : Form
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
         Config? config = JsonSerializer.Deserialize<Config>(json);
+        try { Directory.CreateDirectory(mcpath); }
+        catch { }
         using (var client = new WebClient())
         {
             client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
@@ -186,6 +188,8 @@ public partial class LauncherForm : Form
                 lbProgress.Text = "Do not forget to enable proxy!";
             }
 
+
+            //MODPACK CHANGER (plz hewp me)
             if (cbVersion.Text != Properties.Settings.Default.Version)
             {
                 try {Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }

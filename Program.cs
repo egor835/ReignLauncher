@@ -1,4 +1,4 @@
-namespace OfflineMinecraftLauncher
+namespace RCRL
 {
     internal static class Program
     {

@@ -1,24 +1,18 @@
-using CmlLib.Core;
+﻿using CmlLib.Core;
 using CmlLib.Core.Auth;
-using CmlLib.Core.Version;
-using CmlLib.Utils;
+using CmlLib.Core.Installer.Forge;
+using CmlLib.Core.Installers;
+using CmlLib.Core.ProcessBuilder;
 
-namespace OfflineMinecraftLauncher;
+namespace RCRL;
 
 public partial class LauncherForm : Form
 {
-    private readonly CMLauncher _launcher;
-
+    private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
-        // Make CMLauncher with default minecraft path
-        _launcher = new CMLauncher(new MinecraftPath());
+        _launcher = new MinecraftLauncher(new MinecraftPath("./.reign"));
 
-        // Attach events with functions
-        _launcher.FileChanged += _launcher_FileChanged;
-        _launcher.ProgressChanged += _launcher_ProgressChanged;
-
-        // Load UI
         InitializeComponent();
     }
 
@@ -27,13 +21,24 @@ public partial class LauncherForm : Form
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
         cbVersion.Text = Properties.Settings.Default.Version;
-
         // Set default username to Environment.UserName if empty
         if (string.IsNullOrEmpty(usernameInput.Text))
             usernameInput.Text = Environment.UserName;
+        if (string.IsNullOrEmpty(cbVersion.Text))
+            cbVersion.Text = "Default";
+        
+        ramBox.Minimum = 1024;
+        ramBox.Maximum = 16384;
 
-        // When loaded, list all versions
-        await listVersions();
+        if (string.IsNullOrEmpty(Properties.Settings.Default.RAM))
+        {
+            ramBox.Value = 4096;
+        }
+        else 
+        { 
+            ramBox.Value = Int32.Parse(Properties.Settings.Default.RAM); 
+        }
+            await listVersions();
     }
 
     private async Task listVersions(bool includeAll = false)
@@ -42,75 +47,93 @@ public partial class LauncherForm : Form
         cbVersion.Items.Clear();
 
         // List all versions
-        var versions = await _launcher.GetAllVersionsAsync();
-        foreach (var version in versions)
-        {
-            // Check if includeAll is enabled
-            if (version.MType == MVersionType.Release || version.MType == MVersionType.Custom || includeAll)
-                cbVersion.Items.Add(version.Name);
-        }
+        //var versions = await _launcher.GetAllVersionsAsync();
+        //foreach (var version in versions)
+        //{
+        //    // Check if includeAll is enabled
+        //     if (version.MType == MVersionType.Release || version.MType == MVersionType.Custom || includeAll)
+        cbVersion.Items.Add("hahahah");
+        // }
 
         // Default latest if not already set
         if (string.IsNullOrEmpty(cbVersion.Text))
-            cbVersion.Text = versions.LatestReleaseVersion?.Name;
+            cbVersion.Text = "hahahah";
     }
 
     private async void btnStart_Click(object sender, EventArgs e)
     {
         // Disable UI while launching
         this.Enabled = false;
-        btnStart.Text = "Launching";
-
+        btnStart.Text = "Идёт загрузка...";
+        var mcVersion = "1.20.1";
         // Try to launch Minecraft with an Offline session
         try
         {
-            var session = MSession.CreateOfflineSession(usernameInput.Text);
-            var process = await _launcher.CreateProcessAsync(cbVersion.Text, new MLaunchOption
+            var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
+            var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
+            var forge = new ForgeInstaller(_launcher);
+            var version_name = await forge.Install(mcVersion, new ForgeInstallOptions
             {
-                Session = session
+                ByteProgress = byteProgress,
+                FileProgress = fileProgress
             });
-            new ProcessUtil(process).StartWithEvents();
 
-            // Save values
+
+            var launchOption = new MLaunchOption
+            {
+                MaximumRamMb = Int32.Parse(ramBox.Text),
+                Session = MSession.CreateOfflineSession(usernameInput.Text),
+            };
+
+
             Properties.Settings.Default.Username = usernameInput.Text;
             Properties.Settings.Default.Version = cbVersion.Text;
+            Properties.Settings.Default.RAM = ramBox.Text;
             Properties.Settings.Default.Save();
 
-            // Exit if successful
-            Application.Exit();
+
+
+            var process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
+            var processUtil = new ProcessWrapper(process);
+            processUtil.StartWithEvents();
+            await processUtil.WaitForExitTaskAsync();
         }
         catch (Exception ex)
         {
             // Show error
             MessageBox.Show(ex.ToString());
         }
-
-        // Reset UI
-        pbProgress.Value = 0;
         pbFiles.Value = 0;
-        lbProgress.Text = "";
 
         this.Enabled = true;
         btnStart.Text = "Launch";
     }
 
-    private void _launcher_ProgressChanged(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
+
+
+
+
+    ByteProgress byteProgress;
+    private void _launcher_ProgressChanged(ByteProgress e)
     {
-        pbProgress.Maximum = 100;
-        pbProgress.Value = e.ProgressPercentage;
+        byteProgress = e;
     }
 
-    private void _launcher_FileChanged(CmlLib.Core.Downloader.DownloadFileChangedEventArgs e)
+    InstallerProgressChangedEventArgs? fileProgress;
+    private void Launcher_FileChanged(InstallerProgressChangedEventArgs e)
     {
-        pbFiles.Maximum = e.TotalFileCount;
-        pbFiles.Value = e.ProgressedFileCount;
-
-        lbProgress.Text = $"[{e.FileKind}] {e.FileName} - {e.ProgressedFileCount} / {e.TotalFileCount}";
+        if (e.EventType == InstallerEventType.Done)
+            fileProgress = e;
     }
-
-    private async void minecraftVersion_SelectedIndexChanged(object sender, EventArgs e)
+    private void eventTimer_Tick(object sender, EventArgs e)
     {
-        // Load all versions if "All Versions" is selected
-        await listVersions(minecraftVersion.Text == "All Versions");
+        var bytePercentage = (int)(byteProgress.ProgressedBytes / (double)byteProgress.TotalBytes * 100);
+        if (bytePercentage >= 0 && bytePercentage <= 100)
+        {
+            pbFiles.Value = bytePercentage;
+            pbFiles.Maximum = 100;
+        }
+        if (fileProgress != null)
+            lbProgress.Text = $"[{fileProgress.ProgressedTasks}/{fileProgress.TotalTasks}] {fileProgress.Name}";
     }
 }

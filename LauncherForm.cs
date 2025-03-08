@@ -11,7 +11,8 @@ public partial class LauncherForm : Form
     private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
-        _launcher = new MinecraftLauncher(new MinecraftPath("./.reign"));
+        var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reign");
+        _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
 
         InitializeComponent();
     }
@@ -27,6 +28,17 @@ public partial class LauncherForm : Form
         if (string.IsNullOrEmpty(cbVersion.Text))
             cbVersion.Text = "Default";
         
+        if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy) || Properties.Settings.Default.Proxy == "0")
+        {
+            useProxy.Checked = false;
+        } 
+        else 
+        {
+            useProxy.Checked = true;
+        }
+            
+
+
         ramBox.Minimum = 1024;
         ramBox.Maximum = 16384;
 
@@ -89,6 +101,14 @@ public partial class LauncherForm : Form
             Properties.Settings.Default.Username = usernameInput.Text;
             Properties.Settings.Default.Version = cbVersion.Text;
             Properties.Settings.Default.RAM = ramBox.Text;
+            if (useProxy.Checked == false)
+            {
+                Properties.Settings.Default.Proxy = "0";
+            }
+            else
+            {
+                Properties.Settings.Default.Proxy = "1";
+            }
             Properties.Settings.Default.Save();
 
 
@@ -106,7 +126,7 @@ public partial class LauncherForm : Form
         pbFiles.Value = 0;
 
         this.Enabled = true;
-        btnStart.Text = "Launch";
+        btnStart.Text = "ЗАПУСК";
     }
 
 

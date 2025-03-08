@@ -3,11 +3,25 @@ using CmlLib.Core.Auth;
 using CmlLib.Core.Installer.Forge;
 using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
+using System;
+using System.IO;
+using System.Text.Json;
 
 namespace RCRL;
 
 public partial class LauncherForm : Form
 {
+
+    public class Config
+    {
+        public string ip { get; set; }
+        public string proxy { get; set; }
+        public string port { get; set; }
+        public List<string> versions { get; set; }
+    }
+
+    
+
     private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
@@ -15,6 +29,7 @@ public partial class LauncherForm : Form
         _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
 
         InitializeComponent();
+
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)
@@ -36,8 +51,6 @@ public partial class LauncherForm : Form
         {
             useProxy.Checked = true;
         }
-            
-
 
         ramBox.Minimum = 1024;
         ramBox.Maximum = 16384;
@@ -51,6 +64,7 @@ public partial class LauncherForm : Form
             ramBox.Value = Int32.Parse(Properties.Settings.Default.RAM); 
         }
             await listVersions();
+
     }
 
     private async Task listVersions(bool includeAll = false)
@@ -58,18 +72,20 @@ public partial class LauncherForm : Form
         // Clear list
         cbVersion.Items.Clear();
 
+        string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
+        string json = File.ReadAllText(jsonPath);
+        Config? config = JsonSerializer.Deserialize<Config>(json);
+
         // List all versions
-        //var versions = await _launcher.GetAllVersionsAsync();
-        //foreach (var version in versions)
-        //{
-        //    // Check if includeAll is enabled
-        //     if (version.MType == MVersionType.Release || version.MType == MVersionType.Custom || includeAll)
-        cbVersion.Items.Add("hahahah");
-        // }
+        var versions = await _launcher.GetAllVersionsAsync();
+        foreach (var version in config.versions)
+        { 
+             cbVersion.Items.Add(version);
+        }
 
         // Default latest if not already set
         if (string.IsNullOrEmpty(cbVersion.Text))
-            cbVersion.Text = "hahahah";
+            cbVersion.Text = "Full";
     }
 
     private async void btnStart_Click(object sender, EventArgs e)
@@ -79,6 +95,16 @@ public partial class LauncherForm : Form
         btnStart.Text = "Идёт загрузка...";
         var mcVersion = "1.20.1";
         // Try to launch Minecraft with an Offline session
+        string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
+        string json = File.ReadAllText(jsonPath);
+        Config? config = JsonSerializer.Deserialize<Config>(json);
+        var port = config.port;
+        var addr = config.ip;
+        if (useProxy.Checked == true)
+        {
+            addr = config.proxy;
+        }
+
         try
         {
             var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
@@ -91,10 +117,13 @@ public partial class LauncherForm : Form
             });
 
 
+           
             var launchOption = new MLaunchOption
             {
                 MaximumRamMb = Int32.Parse(ramBox.Text),
                 Session = MSession.CreateOfflineSession(usernameInput.Text),
+                ServerIp = addr,
+                ServerPort = Int32.Parse(port),
             };
 
 

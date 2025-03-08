@@ -51,13 +51,18 @@ public partial class LauncherForm : Form
         Config? config = JsonSerializer.Deserialize<Config>(json);
         try { Directory.CreateDirectory(mcpath); }
         catch { }
-        using (var client = new WebClient())
+        try
         {
-            client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
+            }
+            _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
+            InitializeComponent();
         }
-        _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
-        InitializeComponent();
-
+        catch { MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
+            Environment.Exit(0);
+        }
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)

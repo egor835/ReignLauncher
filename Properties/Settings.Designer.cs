@@ -79,5 +79,19 @@ namespace RCRL.Properties {
                 this["Proxy"] = value;
             }
         }
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ModsVer
+        {
+            get
+            {
+                return ((string)(this["ModsVer"]));
+            }
+            set
+            {
+                this["ModsVer"] = value;
+            }
+        }
     }
 }

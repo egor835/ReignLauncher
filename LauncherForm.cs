@@ -3,31 +3,57 @@ using CmlLib.Core.Auth;
 using CmlLib.Core.Installer.Forge;
 using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
-using System;
-using System.IO;
+using Microsoft.VisualBasic.ApplicationServices;
+using System.Net;
+using System.Security.Policy;
 using System.Text.Json;
 
 namespace RCRL;
 
 public partial class LauncherForm : Form
 {
-
+    public class ver
+    {
+        public string name { get; set; }
+        public List<string> mods { get; set; }
+    }
+    public class rev
+    {
+        public List<ver> ver { get; set; }
+    }
     public class Config
     {
         public string ip { get; set; }
         public string proxy { get; set; }
         public string port { get; set; }
-        public List<string> versions { get; set; }
+        public string updateServer { get; set; }
     }
 
-    
+    public static class Globals
+    {
+        //path
+        public static string mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
+        //config
+        public static string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
+        public static string json = File.ReadAllText(jsonPath);
+        //versions
+        public static string versionsPath = Path.Combine(mcpath, "versions.json");
+        public static string versions = File.ReadAllText(versionsPath);
+        public static string ModsVer;
+    }
 
     private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
-        var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reign");
-        _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
-
+        var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
+        var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
+        var json = File.ReadAllText(jsonPath);
+        Config? config = JsonSerializer.Deserialize<Config>(json);
+        using (var client = new WebClient())
+        {
+            client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
+        }
+        _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
         InitializeComponent();
 
     }
@@ -37,12 +63,13 @@ public partial class LauncherForm : Form
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
         cbVersion.Text = Properties.Settings.Default.Version;
-        // Set default username to Environment.UserName if empty
+        Globals.ModsVer = Properties.Settings.Default.ModsVer;
         if (string.IsNullOrEmpty(usernameInput.Text))
             usernameInput.Text = Environment.UserName;
         if (string.IsNullOrEmpty(cbVersion.Text))
-            cbVersion.Text = "Default";
-        
+            cbVersion.Text = "Full";
+        if (string.IsNullOrEmpty(Globals.ModsVer))
+            Globals.ModsVer = "0";
         if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy) || Properties.Settings.Default.Proxy == "0")
         {
             useProxy.Checked = false;
@@ -51,7 +78,7 @@ public partial class LauncherForm : Form
         {
             useProxy.Checked = true;
         }
-
+        
         ramBox.Minimum = 1024;
         ramBox.Maximum = 16384;
 
@@ -72,15 +99,14 @@ public partial class LauncherForm : Form
         // Clear list
         cbVersion.Items.Clear();
 
-        string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
-        string json = File.ReadAllText(jsonPath);
-        Config? config = JsonSerializer.Deserialize<Config>(json);
+        //init config
+        rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
+
 
         // List all versions
-        var versions = await _launcher.GetAllVersionsAsync();
-        foreach (var version in config.versions)
+        foreach (var version in revision.ver)
         { 
-             cbVersion.Items.Add(version);
+             cbVersion.Items.Add(version.name);
         }
 
         // Default latest if not already set
@@ -94,10 +120,9 @@ public partial class LauncherForm : Form
         this.Enabled = false;
         btnStart.Text = "Идёт загрузка...";
         var mcVersion = "1.20.1";
-        // Try to launch Minecraft with an Offline session
-        string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
-        string json = File.ReadAllText(jsonPath);
-        Config? config = JsonSerializer.Deserialize<Config>(json);
+        
+        //define fucking variables
+        Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
         var port = config.port;
         var addr = config.ip;
         if (useProxy.Checked == true)
@@ -107,6 +132,7 @@ public partial class LauncherForm : Form
 
         try
         {
+           //install forge
             var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
             var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
             var forge = new ForgeInstaller(_launcher);
@@ -115,9 +141,44 @@ public partial class LauncherForm : Form
                 ByteProgress = byteProgress,
                 FileProgress = fileProgress
             });
+            
+            
+            //silly mod updater
+            string readver;
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    readver = client.DownloadString(Path.Combine(config.updateServer, "version"));
+                }
+                if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
+                {
+                    var downloadFileUrl = Path.Combine(config.updateServer, "mods.zip");
+                    var destinationFilePath = Path.Combine(Globals.mcpath, "mods.zip");
+                    using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                    {
+                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                        {
+                            pbFiles.Value = Convert.ToInt32(progressPercentage);
+                            lbProgress.Text = $"[Updating mods: {totalBytesDownloaded}/{totalFileSize}]";
+                        };
+
+                        await client.StartDownload();
+                    }
+                    Globals.ModsVer = readver;
+                    System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), Path.Combine(Globals.mcpath, "servermods"));
+                }
+            }
+            //if you somehow downloaded json, but fucked up on version
+            catch (Exception ex)
+            {
+                lbProgress.Text = "Do not forget to enable proxy!";
+            }
+
+            //somewhere here should been version chooser
 
 
-           
+            //LAUNCH MINCERAFT and write vars to conf
             var launchOption = new MLaunchOption
             {
                 MaximumRamMb = Int32.Parse(ramBox.Text),
@@ -125,11 +186,10 @@ public partial class LauncherForm : Form
                 ServerIp = addr,
                 ServerPort = Int32.Parse(port),
             };
-
-
             Properties.Settings.Default.Username = usernameInput.Text;
             Properties.Settings.Default.Version = cbVersion.Text;
             Properties.Settings.Default.RAM = ramBox.Text;
+            Properties.Settings.Default.ModsVer = Globals.ModsVer;
             if (useProxy.Checked == false)
             {
                 Properties.Settings.Default.Proxy = "0";
@@ -139,9 +199,6 @@ public partial class LauncherForm : Form
                 Properties.Settings.Default.Proxy = "1";
             }
             Properties.Settings.Default.Save();
-
-
-
             var process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
             var processUtil = new ProcessWrapper(process);
             processUtil.StartWithEvents();
@@ -149,11 +206,11 @@ public partial class LauncherForm : Form
         }
         catch (Exception ex)
         {
-            // Show error
+            // Show error 
             MessageBox.Show(ex.ToString());
         }
-        pbFiles.Value = 0;
 
+        pbFiles.Value = 0;
         this.Enabled = true;
         btnStart.Text = "ЗАПУСК";
     }
@@ -161,7 +218,7 @@ public partial class LauncherForm : Form
 
 
 
-
+    //some random shit, idk, i stole this code
     ByteProgress byteProgress;
     private void _launcher_ProgressChanged(ByteProgress e)
     {
@@ -184,5 +241,88 @@ public partial class LauncherForm : Form
         }
         if (fileProgress != null)
             lbProgress.Text = $"[{fileProgress.ProgressedTasks}/{fileProgress.TotalTasks}] {fileProgress.Name}";
+    }
+    public class HttpClientDownloadWithProgress : IDisposable
+    {
+        private readonly string _downloadUrl;
+        private readonly string _destinationFilePath;
+
+        private HttpClient _httpClient;
+
+        public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage);
+
+        public event ProgressChangedHandler ProgressChanged;
+
+        public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
+        {
+            _downloadUrl = downloadUrl;
+            _destinationFilePath = destinationFilePath;
+        }
+
+        public async Task StartDownload()
+        {
+            _httpClient = new HttpClient { Timeout = TimeSpan.FromDays(1) };
+
+            using (var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead))
+                await DownloadFileFromHttpResponseMessage(response);
+        }
+
+        private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
+        {
+            response.EnsureSuccessStatusCode();
+
+            var totalBytes = response.Content.Headers.ContentLength;
+
+            using (var contentStream = await response.Content.ReadAsStreamAsync())
+                await ProcessContentStream(totalBytes, contentStream);
+        }
+
+        private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream)
+        {
+            var totalBytesRead = 0L;
+            var readCount = 0L;
+            var buffer = new byte[8192];
+            var isMoreToRead = true;
+
+            using (var fileStream = new FileStream(_destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
+            {
+                do
+                {
+                    var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length);
+                    if (bytesRead == 0)
+                    {
+                        isMoreToRead = false;
+                        TriggerProgressChanged(totalDownloadSize, totalBytesRead);
+                        continue;
+                    }
+
+                    await fileStream.WriteAsync(buffer, 0, bytesRead);
+
+                    totalBytesRead += bytesRead;
+                    readCount += 1;
+
+                    if (readCount % 100 == 0)
+                        TriggerProgressChanged(totalDownloadSize, totalBytesRead);
+                }
+                while (isMoreToRead);
+            }
+        }
+
+        private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
+        {
+            if (ProgressChanged == null)
+                return;
+
+            double? progressPercentage = null;
+            if (totalDownloadSize.HasValue)
+                progressPercentage = Math.Round((double)totalBytesRead / totalDownloadSize.Value * 100, 2);
+
+            ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
+        }
     }
 }

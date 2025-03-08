@@ -125,6 +125,7 @@ public partial class LauncherForm : Form
         rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
         var servmodfolder = Path.Combine(Globals.mcpath, "servermods");
         var globmodfolder = Path.Combine(Globals.mcpath, "mods");
+        var usermodfolder = Path.Combine(Globals.mcpath, "usermods");
         var port = config.port;
         var addr = config.ip;
         if (useProxy.Checked == true)
@@ -198,11 +199,17 @@ public partial class LauncherForm : Form
                 ver? fullVersion = revision.ver.FirstOrDefault(v => v.name == cbVersion.Text);
                 foreach (var mod in fullVersion.mods)
                 {
-                    File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod));
+                    File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod), true);
                 }
-
-
-
+                try 
+                { 
+                    foreach (var usermod in Directory.GetFiles(usermodfolder))
+                    {
+                        string modname = Path.GetFileName(usermod);
+                        File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
+                    } 
+                }
+                catch { Directory.CreateDirectory(usermodfolder); }
             }
 
             //LAUNCH MINCERAFT and write vars to conf

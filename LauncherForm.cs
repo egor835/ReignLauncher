@@ -109,9 +109,6 @@ public partial class LauncherForm : Form
              cbVersion.Items.Add(version.name);
         }
 
-        // Default latest if not already set
-        if (string.IsNullOrEmpty(cbVersion.Text))
-            cbVersion.Text = "Full";
     }
 
     private async void btnStart_Click(object sender, EventArgs e)
@@ -123,6 +120,9 @@ public partial class LauncherForm : Form
         
         //define fucking variables
         Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
+        rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
+        var servmodfolder = Path.Combine(Globals.mcpath, "servermods");
+        var globmodfolder = Path.Combine(Globals.mcpath, "mods");
         var port = config.port;
         var addr = config.ip;
         if (useProxy.Checked == true)
@@ -153,6 +153,7 @@ public partial class LauncherForm : Form
                 }
                 if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
                 {
+                    //mods
                     var downloadFileUrl = Path.Combine(config.updateServer, "mods.zip");
                     var destinationFilePath = Path.Combine(Globals.mcpath, "mods.zip");
                     using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
@@ -165,8 +166,18 @@ public partial class LauncherForm : Form
 
                         await client.StartDownload();
                     }
+                    //README
+                    using (var client = new WebClient())
+                    {
+                        client.DownloadFile(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
+                    }
                     Globals.ModsVer = readver;
-                    System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), Path.Combine(Globals.mcpath, "servermods"));
+                    try
+                    {
+                        Array.ForEach(Directory.GetFiles(servmodfolder), File.Delete);
+                    }
+                    catch { }
+                    System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
                 }
             }
             //if you somehow downloaded json, but fucked up on version
@@ -175,8 +186,20 @@ public partial class LauncherForm : Form
                 lbProgress.Text = "Do not forget to enable proxy!";
             }
 
-            //somewhere here should been version chooser
+            if (cbVersion.Text != Properties.Settings.Default.Version)
+            {
+                try {Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
+                catch {Directory.CreateDirectory(globmodfolder); }
+                
+                ver? fullVersion = revision.ver.FirstOrDefault(v => v.name == cbVersion.Text);
+                foreach (var mod in fullVersion.mods)
+                {
+                    File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod));
+                }
 
+
+
+            }
 
             //LAUNCH MINCERAFT and write vars to conf
             var launchOption = new MLaunchOption

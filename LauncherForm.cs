@@ -42,9 +42,23 @@ public partial class LauncherForm : Form
         public static string ModsVer;
     }
 
+    //make window draggable
+    private const int WM_NCHITTEST = 0x84;
+    private const int HTCLIENT = 0x1;
+    private const int HTCAPTION = 0x2;
+    protected override void WndProc(ref Message message)
+    {
+        base.WndProc(ref message);
+
+        if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
+            message.Result = (IntPtr)HTCAPTION;
+    }
+
+
     private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
+        //fucking mess, which downloads versions.json from remote server
         var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
@@ -57,6 +71,7 @@ public partial class LauncherForm : Form
             {
                 client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
             }
+            //and init this shit
             _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
             InitializeComponent();
         }

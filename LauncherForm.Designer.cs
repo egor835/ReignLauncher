@@ -50,7 +50,7 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(210, 374);
+            label1.Location = new Point(210, 419);
             label1.Name = "label1";
             label1.Size = new Size(76, 17);
             label1.TabIndex = 0;
@@ -59,16 +59,16 @@
             // cbVersion
             // 
             cbVersion.FormattingEnabled = true;
-            cbVersion.Location = new Point(292, 368);
+            cbVersion.Location = new Point(292, 419);
             cbVersion.Name = "cbVersion";
             cbVersion.Size = new Size(213, 23);
             cbVersion.TabIndex = 1;
             // 
             // pbFiles
             // 
-            pbFiles.Location = new Point(12, 405);
+            pbFiles.Location = new Point(12, 448);
             pbFiles.Name = "pbFiles";
-            pbFiles.Size = new Size(660, 23);
+            pbFiles.Size = new Size(674, 23);
             pbFiles.TabIndex = 10;
             // 
             // lbProgress
@@ -77,7 +77,7 @@
             lbProgress.AutoSize = true;
             lbProgress.BackColor = Color.Transparent;
             lbProgress.ForeColor = Color.White;
-            lbProgress.Location = new Point(12, 437);
+            lbProgress.Location = new Point(12, 474);
             lbProgress.Name = "lbProgress";
             lbProgress.Size = new Size(44, 15);
             lbProgress.TabIndex = 5;
@@ -90,7 +90,7 @@
             btnStart.BackColor = Color.DarkOliveGreen;
             btnStart.Font = new Font("Minecraft Seven v2", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             btnStart.Image = (Image)resources.GetObject("btnStart.Image");
-            btnStart.Location = new Point(12, 323);
+            btnStart.Location = new Point(12, 368);
             btnStart.Margin = new Padding(0);
             btnStart.Name = "btnStart";
             btnStart.Size = new Size(189, 76);
@@ -102,7 +102,7 @@
             // usernameInput
             // 
             usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            usernameInput.Location = new Point(292, 333);
+            usernameInput.Location = new Point(292, 390);
             usernameInput.Name = "usernameInput";
             usernameInput.Size = new Size(213, 23);
             usernameInput.TabIndex = 9;
@@ -113,7 +113,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(243, 339);
+            label2.Location = new Point(243, 390);
             label2.Name = "label2";
             label2.Size = new Size(43, 17);
             label2.TabIndex = 8;
@@ -128,9 +128,9 @@
             // ramBox
             // 
             ramBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ramBox.Location = new Point(609, 368);
+            ramBox.Location = new Point(609, 419);
             ramBox.Name = "ramBox";
-            ramBox.Size = new Size(63, 23);
+            ramBox.Size = new Size(77, 23);
             ramBox.TabIndex = 11;
             // 
             // label3
@@ -139,7 +139,7 @@
             label3.BackColor = Color.Transparent;
             label3.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(525, 374);
+            label3.Location = new Point(525, 419);
             label3.Name = "label3";
             label3.Size = new Size(78, 17);
             label3.TabIndex = 12;
@@ -151,7 +151,7 @@
             useProxy.CheckAlign = ContentAlignment.MiddleRight;
             useProxy.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             useProxy.ForeColor = Color.White;
-            useProxy.Location = new Point(497, 321);
+            useProxy.Location = new Point(511, 378);
             useProxy.Name = "useProxy";
             useProxy.Size = new Size(175, 42);
             useProxy.TabIndex = 13;
@@ -165,7 +165,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(684, 461);
+            ClientSize = new Size(698, 498);
+            ControlBox = false;
             Controls.Add(label3);
             Controls.Add(ramBox);
             Controls.Add(usernameInput);
@@ -176,12 +177,13 @@
             Controls.Add(cbVersion);
             Controls.Add(label1);
             Controls.Add(useProxy);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(700, 500);
             MinimumSize = new Size(700, 500);
             Name = "LauncherForm";
+            RightToLeft = RightToLeft.No;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ReignCraft Retarded Launcher";
             Load += LauncherForm_Load;
             ((System.ComponentModel.ISupportInitialize)ramBox).EndInit();
             ResumeLayout(false);

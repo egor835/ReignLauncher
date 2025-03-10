@@ -75,7 +75,9 @@ public partial class LauncherForm : Form
             _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
             InitializeComponent();
         }
-        catch { MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
+        catch
+        {
+            MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
             Environment.Exit(0);
         }
     }
@@ -95,12 +97,12 @@ public partial class LauncherForm : Form
         if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy) || Properties.Settings.Default.Proxy == "0")
         {
             useProxy.Checked = false;
-        } 
-        else 
+        }
+        else
         {
             useProxy.Checked = true;
         }
-        
+
         ramBox.Minimum = 1024;
         ramBox.Maximum = 16384;
 
@@ -108,11 +110,11 @@ public partial class LauncherForm : Form
         {
             ramBox.Value = 4096;
         }
-        else 
-        { 
-            ramBox.Value = Int32.Parse(Properties.Settings.Default.RAM); 
+        else
+        {
+            ramBox.Value = Int32.Parse(Properties.Settings.Default.RAM);
         }
-            await listVersions();
+        await listVersions();
 
     }
 
@@ -127,8 +129,8 @@ public partial class LauncherForm : Form
 
         // List all versions
         foreach (var version in revision.ver)
-        { 
-             cbVersion.Items.Add(version.name);
+        {
+            cbVersion.Items.Add(version.name);
         }
 
     }
@@ -139,7 +141,7 @@ public partial class LauncherForm : Form
         this.Enabled = false;
         btnStart.Text = "Идёт загрузка...";
         var mcVersion = "1.20.1";
-        
+
         //define fucking variables
         Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
         rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
@@ -155,7 +157,7 @@ public partial class LauncherForm : Form
 
         try
         {
-           //install forge
+            //install forge
             var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
             var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
             var forge = new ForgeInstaller(_launcher);
@@ -164,8 +166,8 @@ public partial class LauncherForm : Form
                 ByteProgress = byteProgress,
                 FileProgress = fileProgress
             });
-            
-            
+
+
             //silly mod updater
             string readver;
             try
@@ -197,37 +199,41 @@ public partial class LauncherForm : Form
                     Globals.ModsVer = readver;
                     try
                     {
-                        Array.ForEach(Directory.GetFiles(servmodfolder), File.Delete);
+                        Directory.Delete(servmodfolder, true);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
                     System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
                 }
             }
             //if you somehow downloaded json, but fucked up on version
             catch (Exception ex)
             {
-                lbProgress.Text = "Do not forget to enable proxy!";
+                MessageBox.Show(ex.ToString());
+                //lbProgress.Text = "Do not forget to enable proxy!";
             }
 
 
             //MODPACK CHANGER (plz hewp me)
             if (cbVersion.Text != Properties.Settings.Default.Version)
             {
-                try {Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
-                catch {Directory.CreateDirectory(globmodfolder); }
-                
+                try { Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
+                catch { Directory.CreateDirectory(globmodfolder); }
+
                 ver? fullVersion = revision.ver.FirstOrDefault(v => v.name == cbVersion.Text);
                 foreach (var mod in fullVersion.mods)
                 {
                     File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod), true);
                 }
-                try 
-                { 
+                try
+                {
                     foreach (var usermod in Directory.GetFiles(usermodfolder))
                     {
                         string modname = Path.GetFileName(usermod);
                         File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
-                    } 
+                    }
                 }
                 catch { Directory.CreateDirectory(usermodfolder); }
             }

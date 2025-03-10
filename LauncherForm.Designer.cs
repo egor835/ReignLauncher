@@ -96,7 +96,7 @@
             btnStart.Location = new Point(12, 368);
             btnStart.Margin = new Padding(0);
             btnStart.Name = "btnStart";
-            btnStart.Size = new Size(189, 76);
+            btnStart.Size = new Size(191, 76);
             btnStart.TabIndex = 7;
             btnStart.Text = "ЗАПУСК";
             btnStart.UseVisualStyleBackColor = false;
@@ -107,7 +107,7 @@
             usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             usernameInput.Location = new Point(292, 361);
             usernameInput.Name = "usernameInput";
-            usernameInput.Size = new Size(213, 23);
+            usernameInput.Size = new Size(215, 23);
             usernameInput.TabIndex = 9;
             // 
             // label2
@@ -133,7 +133,7 @@
             ramBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ramBox.Location = new Point(609, 419);
             ramBox.Name = "ramBox";
-            ramBox.Size = new Size(77, 23);
+            ramBox.Size = new Size(79, 23);
             ramBox.TabIndex = 11;
             // 
             // label3
@@ -193,7 +193,7 @@
             passwdBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             passwdBox.Location = new Point(292, 390);
             passwdBox.Name = "passwdBox";
-            passwdBox.Size = new Size(213, 23);
+            passwdBox.Size = new Size(215, 23);
             passwdBox.TabIndex = 16;
             passwdBox.UseSystemPasswordChar = true;
             // 
@@ -201,9 +201,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.Lime;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(698, 498);
+            ClientSize = new Size(700, 500);
             ControlBox = false;
             Controls.Add(passwdBox);
             Controls.Add(label4);
@@ -218,13 +219,15 @@
             Controls.Add(cbVersion);
             Controls.Add(label1);
             Controls.Add(useProxy);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(700, 500);
             MinimumSize = new Size(700, 500);
             Name = "LauncherForm";
             RightToLeft = RightToLeft.No;
             StartPosition = FormStartPosition.CenterScreen;
+            TransparencyKey = Color.Lime;
             Load += LauncherForm_Load;
             ((System.ComponentModel.ISupportInitialize)ramBox).EndInit();
             ResumeLayout(false);

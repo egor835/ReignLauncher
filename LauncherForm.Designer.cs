@@ -93,7 +93,7 @@
             btnStart.Location = new Point(12, 368);
             btnStart.Margin = new Padding(0);
             btnStart.Name = "btnStart";
-            btnStart.Size = new Size(189, 76);
+            btnStart.Size = new Size(109, 76);
             btnStart.TabIndex = 7;
             btnStart.Text = "ЗАПУСК";
             btnStart.UseVisualStyleBackColor = false;
@@ -104,7 +104,7 @@
             usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             usernameInput.Location = new Point(292, 390);
             usernameInput.Name = "usernameInput";
-            usernameInput.Size = new Size(213, 23);
+            usernameInput.Size = new Size(133, 23);
             usernameInput.TabIndex = 9;
             // 
             // label2
@@ -130,7 +130,7 @@
             ramBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ramBox.Location = new Point(609, 419);
             ramBox.Name = "ramBox";
-            ramBox.Size = new Size(77, 23);
+            ramBox.Size = new Size(0, 23);
             ramBox.TabIndex = 11;
             // 
             // label3
@@ -165,7 +165,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(698, 498);
+            ClientSize = new Size(618, 498);
             ControlBox = false;
             Controls.Add(label3);
             Controls.Add(ramBox);
@@ -180,7 +180,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(700, 500);
-            MinimumSize = new Size(700, 500);
+            MinimumSize = new Size(598, 500);
             Name = "LauncherForm";
             RightToLeft = RightToLeft.No;
             StartPosition = FormStartPosition.CenterScreen;

@@ -75,7 +75,8 @@ public partial class LauncherForm : Form
             _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
             InitializeComponent();
         }
-        catch { MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
+        catch { 
+            MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
             Environment.Exit(0);
         }
     }
@@ -197,16 +198,20 @@ public partial class LauncherForm : Form
                     Globals.ModsVer = readver;
                     try
                     {
-                        Array.ForEach(Directory.GetFiles(servmodfolder), File.Delete);
+                        Directory.Delete(servmodfolder, true);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
                     System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
                 }
             }
             //if you somehow downloaded json, but fucked up on version
             catch (Exception ex)
             {
-                lbProgress.Text = "Do not forget to enable proxy!";
+                MessageBox.Show(ex.ToString());
+                //lbProgress.Text = "Do not forget to enable proxy!";
             }
 
 

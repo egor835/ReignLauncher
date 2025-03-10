@@ -41,6 +41,9 @@
             ramBox = new NumericUpDown();
             label3 = new Label();
             useProxy = new CheckBox();
+            closeBtn = new Label();
+            label4 = new Label();
+            passwdBox = new TextBox();
             ((System.ComponentModel.ISupportInitialize)ramBox).BeginInit();
             SuspendLayout();
             // 
@@ -50,7 +53,7 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(210, 419);
+            label1.Location = new Point(210, 418);
             label1.Name = "label1";
             label1.Size = new Size(76, 17);
             label1.TabIndex = 0;
@@ -102,7 +105,7 @@
             // usernameInput
             // 
             usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            usernameInput.Location = new Point(292, 390);
+            usernameInput.Location = new Point(292, 361);
             usernameInput.Name = "usernameInput";
             usernameInput.Size = new Size(213, 23);
             usernameInput.TabIndex = 9;
@@ -113,7 +116,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(243, 390);
+            label2.Location = new Point(243, 361);
             label2.Name = "label2";
             label2.Size = new Size(43, 17);
             label2.TabIndex = 8;
@@ -151,13 +154,48 @@
             useProxy.CheckAlign = ContentAlignment.MiddleRight;
             useProxy.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             useProxy.ForeColor = Color.White;
-            useProxy.Location = new Point(511, 378);
+            useProxy.Location = new Point(511, 365);
             useProxy.Name = "useProxy";
             useProxy.Size = new Size(175, 42);
             useProxy.TabIndex = 13;
             useProxy.Text = "Использовать прокси:";
             useProxy.TextAlign = ContentAlignment.MiddleRight;
             useProxy.UseVisualStyleBackColor = false;
+            // 
+            // closeBtn
+            // 
+            closeBtn.AutoSize = true;
+            closeBtn.BackColor = Color.Transparent;
+            closeBtn.Font = new Font("Minecraft", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            closeBtn.ForeColor = Color.White;
+            closeBtn.Location = new Point(665, 9);
+            closeBtn.Name = "closeBtn";
+            closeBtn.Size = new Size(21, 23);
+            closeBtn.TabIndex = 14;
+            closeBtn.Text = "X";
+            closeBtn.Click += closeBtn_Click;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
+            label4.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
+            label4.ForeColor = Color.White;
+            label4.Location = new Point(208, 390);
+            label4.Name = "label4";
+            label4.Size = new Size(78, 17);
+            label4.TabIndex = 15;
+            label4.Text = "Пароль:";
+            label4.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // passwdBox
+            // 
+            passwdBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            passwdBox.Location = new Point(292, 390);
+            passwdBox.Name = "passwdBox";
+            passwdBox.Size = new Size(213, 23);
+            passwdBox.TabIndex = 16;
+            passwdBox.UseSystemPasswordChar = true;
             // 
             // LauncherForm
             // 
@@ -167,6 +205,9 @@
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(698, 498);
             ControlBox = false;
+            Controls.Add(passwdBox);
+            Controls.Add(label4);
+            Controls.Add(closeBtn);
             Controls.Add(label3);
             Controls.Add(ramBox);
             Controls.Add(usernameInput);
@@ -203,5 +244,8 @@
         private NumericUpDown ramBox;
         private Label label3;
         private System.Windows.Forms.CheckBox useProxy;
+        private Label closeBtn;
+        private Label label4;
+        private TextBox passwdBox;
     }
 }

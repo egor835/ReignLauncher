@@ -39,6 +39,8 @@ public partial class LauncherForm : Form
         //versions
         public static string versionsPath = Path.Combine(mcpath, "versions.json");
         public static string versions = File.ReadAllText(versionsPath);
+        public static string passwdPath = Path.Combine(mcpath, ".sl_password");
+        public static string passwd = File.ReadAllText(passwdPath);
         public static string ModsVer;
     }
 
@@ -58,10 +60,17 @@ public partial class LauncherForm : Form
     private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
-        //fucking mess, which downloads versions.json from remote server
+        //define vars
         var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
+
+        //create sl_password
+        if (!File.Exists(Path.Combine(mcpath, ".sl_password"))) {
+            File.Create(Path.Combine(mcpath, ".sl_password")).Close();
+        }
+
+        //fucking mess, which downloads versions.json from remote server
         Config? config = JsonSerializer.Deserialize<Config>(json);
         try { Directory.CreateDirectory(mcpath); }
         catch { }
@@ -72,11 +81,13 @@ public partial class LauncherForm : Form
                 client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
             }
             //and init this shit
+
             _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
             InitializeComponent();
         }
-        catch
+        catch (Exception ex)
         {
+            //MessageBox.Show(ex.ToString());
             MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
             Environment.Exit(0);
         }
@@ -102,7 +113,10 @@ public partial class LauncherForm : Form
         {
             useProxy.Checked = true;
         }
-
+        if (!string.IsNullOrEmpty(Globals.passwd))
+        {
+            passwdBox.Text = Globals.passwd;
+        }
         ramBox.Minimum = 1024;
         ramBox.Maximum = 16384;
 
@@ -208,7 +222,7 @@ public partial class LauncherForm : Form
                     System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
                 }
             }
-            //if you somehow downloaded json, but fucked up on version
+            //if you downloaded json, but somehow fucked up on version
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
@@ -236,6 +250,12 @@ public partial class LauncherForm : Form
                     }
                 }
                 catch { Directory.CreateDirectory(usermodfolder); }
+            }
+
+            //You should check passwd NOW
+            if (passwdBox.Text != Globals.passwd)
+            {
+                File.WriteAllText(Globals.passwdPath, passwdBox.Text);
             }
 
             //LAUNCH MINCERAFT and write vars to conf
@@ -384,5 +404,10 @@ public partial class LauncherForm : Form
         {
             _httpClient?.Dispose();
         }
+    }
+
+    private void closeBtn_Click(object sender, EventArgs e)
+    {
+        Environment.Exit(0);
     }
 }

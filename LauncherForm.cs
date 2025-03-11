@@ -3,9 +3,7 @@ using CmlLib.Core.Auth;
 using CmlLib.Core.Installer.Forge;
 using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
-using Microsoft.VisualBasic.ApplicationServices;
 using System.Net;
-using System.Security.Policy;
 using System.Text.Json;
 
 namespace RCRL;
@@ -39,8 +37,8 @@ public partial class LauncherForm : Form
         //versions
         public static string versionsPath = Path.Combine(mcpath, "versions.json");
         public static string versions = File.ReadAllText(versionsPath);
-        public static string passwdPath = Path.Combine(mcpath, ".sl_password");
-        public static string passwd = File.ReadAllText(passwdPath);
+        //public static string passwdPath = Path.Combine(mcpath, ".sl_password");
+        //public static string passwd = File.ReadAllText(passwdPath);
         public static string ModsVer;
     }
 
@@ -66,9 +64,9 @@ public partial class LauncherForm : Form
         var json = File.ReadAllText(jsonPath);
 
         //create sl_password
-        if (!File.Exists(Path.Combine(mcpath, ".sl_password"))) {
-            File.Create(Path.Combine(mcpath, ".sl_password")).Close();
-        }
+        //if (!File.Exists(Path.Combine(mcpath, ".sl_password"))) {
+        //    File.Create(Path.Combine(mcpath, ".sl_password")).Close();
+        //}
 
         //fucking mess, which downloads versions.json from remote server
         Config? config = JsonSerializer.Deserialize<Config>(json);
@@ -95,6 +93,9 @@ public partial class LauncherForm : Form
 
     private async void LauncherForm_Load(object sender, EventArgs e)
     {
+        //define buttons and some дезигн shit
+        this.BackgroundImage = Image.FromFile("bg.png");
+        settingsBtn.BackgroundImage = Image.FromFile("settings.png");
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
         cbVersion.Text = Properties.Settings.Default.Version;
@@ -102,32 +103,25 @@ public partial class LauncherForm : Form
         if (string.IsNullOrEmpty(usernameInput.Text))
             usernameInput.Text = Environment.UserName;
         if (string.IsNullOrEmpty(cbVersion.Text))
-            cbVersion.Text = "Full";
+            cbVersion.Text = "Выберите сборку";
         if (string.IsNullOrEmpty(Globals.ModsVer))
             Globals.ModsVer = "0";
-        if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy) || Properties.Settings.Default.Proxy == "0")
-        {
-            useProxy.Checked = false;
-        }
-        else
-        {
-            useProxy.Checked = true;
-        }
-        if (!string.IsNullOrEmpty(Globals.passwd))
-        {
-            passwdBox.Text = Globals.passwd;
-        }
-        ramBox.Minimum = 1024;
-        ramBox.Maximum = 16384;
 
+        //if (!string.IsNullOrEmpty(Globals.passwd))
+        //{
+        //    passwdBox.Text = Globals.passwd;
+        //}
+
+        //first run checks
+        if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy))
+        {
+            Properties.Settings.Default.Proxy = "0";
+        }
         if (string.IsNullOrEmpty(Properties.Settings.Default.RAM))
         {
-            ramBox.Value = 4096;
+            Properties.Settings.Default.RAM = "4096";
         }
-        else
-        {
-            ramBox.Value = Int32.Parse(Properties.Settings.Default.RAM);
-        }
+
         await listVersions();
 
     }
@@ -151,7 +145,9 @@ public partial class LauncherForm : Form
 
     private async void btnStart_Click(object sender, EventArgs e)
     {
-        // Disable UI while launching
+        // Disable UI while launchin
+        
+
         this.Enabled = false;
         btnStart.Text = "Идёт загрузка...";
         var mcVersion = "1.20.1";
@@ -164,7 +160,7 @@ public partial class LauncherForm : Form
         var usermodfolder = Path.Combine(Globals.mcpath, "usermods");
         var port = config.port;
         var addr = config.ip;
-        if (useProxy.Checked == true)
+        if (!(Properties.Settings.Default.Proxy == "0"))
         {
             addr = config.proxy;
         }
@@ -252,32 +248,24 @@ public partial class LauncherForm : Form
                 catch { Directory.CreateDirectory(usermodfolder); }
             }
 
+            //I spent about 1.5 hrs on this shit, but Ilya said NO
             //You should check passwd NOW
-            if (passwdBox.Text != Globals.passwd)
-            {
-                File.WriteAllText(Globals.passwdPath, passwdBox.Text);
-            }
+            //if (passwdBox.Text != Globals.passwd)
+            //{
+            //    File.WriteAllText(Globals.passwdPath, passwdBox.Text);
+            //}
 
             //LAUNCH MINCERAFT and write vars to conf
             var launchOption = new MLaunchOption
             {
-                MaximumRamMb = Int32.Parse(ramBox.Text),
+                MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),
                 Session = MSession.CreateOfflineSession(usernameInput.Text),
                 ServerIp = addr,
                 ServerPort = Int32.Parse(port),
             };
             Properties.Settings.Default.Username = usernameInput.Text;
             Properties.Settings.Default.Version = cbVersion.Text;
-            Properties.Settings.Default.RAM = ramBox.Text;
             Properties.Settings.Default.ModsVer = Globals.ModsVer;
-            if (useProxy.Checked == false)
-            {
-                Properties.Settings.Default.Proxy = "0";
-            }
-            else
-            {
-                Properties.Settings.Default.Proxy = "1";
-            }
             Properties.Settings.Default.Save();
             var process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
             var processUtil = new ProcessWrapper(process);
@@ -409,5 +397,24 @@ public partial class LauncherForm : Form
     private void closeBtn_Click(object sender, EventArgs e)
     {
         Environment.Exit(0);
+    }
+
+    private void settingsBtn_release(object sender, EventArgs e)
+    {
+        settingsBtn.BackgroundImage = Image.FromFile("settings.png");
+        SettingsForm form = new SettingsForm();
+        form.Show();
+    }
+    private void settingsBtn_Hover(object sender, EventArgs e)
+    {
+        settingsBtn.BackgroundImage = Image.FromFile("settings_hover.png");
+    }
+    private void settingsBtn_noHover(object sender, EventArgs e)
+    {
+        settingsBtn.BackgroundImage = Image.FromFile("settings.png");
+    }
+    private void settingsBtn_press(object sender, EventArgs e)
+    {
+        settingsBtn.BackgroundImage = Image.FromFile("settings_click.png");
     }
 }

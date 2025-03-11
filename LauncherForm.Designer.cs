@@ -38,13 +38,8 @@
             usernameInput = new TextBox();
             label2 = new Label();
             eventTimer = new System.Windows.Forms.Timer(components);
-            ramBox = new NumericUpDown();
-            label3 = new Label();
-            useProxy = new CheckBox();
             closeBtn = new Label();
-            label4 = new Label();
-            passwdBox = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)ramBox).BeginInit();
+            settingsBtn = new Button();
             SuspendLayout();
             // 
             // label1
@@ -105,7 +100,7 @@
             // usernameInput
             // 
             usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            usernameInput.Location = new Point(292, 361);
+            usernameInput.Location = new Point(292, 390);
             usernameInput.Name = "usernameInput";
             usernameInput.Size = new Size(215, 23);
             usernameInput.TabIndex = 9;
@@ -116,7 +111,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(243, 361);
+            label2.Location = new Point(243, 390);
             label2.Name = "label2";
             label2.Size = new Size(43, 17);
             label2.TabIndex = 8;
@@ -127,40 +122,6 @@
             // 
             eventTimer.Enabled = true;
             eventTimer.Tick += eventTimer_Tick;
-            // 
-            // ramBox
-            // 
-            ramBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ramBox.Location = new Point(609, 419);
-            ramBox.Name = "ramBox";
-            ramBox.Size = new Size(79, 23);
-            ramBox.TabIndex = 11;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.BackColor = Color.Transparent;
-            label3.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.ForeColor = Color.White;
-            label3.Location = new Point(525, 419);
-            label3.Name = "label3";
-            label3.Size = new Size(78, 17);
-            label3.TabIndex = 12;
-            label3.Text = "Память:";
-            // 
-            // useProxy
-            // 
-            useProxy.BackColor = Color.Transparent;
-            useProxy.CheckAlign = ContentAlignment.MiddleRight;
-            useProxy.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
-            useProxy.ForeColor = Color.White;
-            useProxy.Location = new Point(511, 365);
-            useProxy.Name = "useProxy";
-            useProxy.Size = new Size(175, 42);
-            useProxy.TabIndex = 13;
-            useProxy.Text = "Использовать прокси:";
-            useProxy.TextAlign = ContentAlignment.MiddleRight;
-            useProxy.UseVisualStyleBackColor = false;
             // 
             // closeBtn
             // 
@@ -175,42 +136,29 @@
             closeBtn.Text = "X";
             closeBtn.Click += closeBtn_Click;
             // 
-            // label4
+            // settingsBtn
             // 
-            label4.AutoSize = true;
-            label4.BackColor = Color.Transparent;
-            label4.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
-            label4.ForeColor = Color.White;
-            label4.Location = new Point(208, 390);
-            label4.Name = "label4";
-            label4.Size = new Size(78, 17);
-            label4.TabIndex = 15;
-            label4.Text = "Пароль:";
-            label4.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // passwdBox
-            // 
-            passwdBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            passwdBox.Location = new Point(292, 390);
-            passwdBox.Name = "passwdBox";
-            passwdBox.Size = new Size(215, 23);
-            passwdBox.TabIndex = 16;
-            passwdBox.UseSystemPasswordChar = true;
+            settingsBtn.Location = new Point(589, 377);
+            settingsBtn.Name = "settingsBtn";
+            settingsBtn.Size = new Size(64, 64);
+            settingsBtn.TabIndex = 15;
+            settingsBtn.Text = "l";
+            settingsBtn.UseVisualStyleBackColor = true;
+            settingsBtn.MouseEnter += settingsBtn_Hover;
+            settingsBtn.MouseLeave += settingsBtn_noHover;
+            settingsBtn.MouseDown += settingsBtn_press;
+            settingsBtn.MouseUp += settingsBtn_release;
             // 
             // LauncherForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Lime;
-            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(700, 500);
             ControlBox = false;
-            Controls.Add(passwdBox);
-            Controls.Add(label4);
+            Controls.Add(settingsBtn);
             Controls.Add(closeBtn);
-            Controls.Add(label3);
-            Controls.Add(ramBox);
             Controls.Add(usernameInput);
             Controls.Add(label2);
             Controls.Add(btnStart);
@@ -218,7 +166,6 @@
             Controls.Add(pbFiles);
             Controls.Add(cbVersion);
             Controls.Add(label1);
-            Controls.Add(useProxy);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -229,7 +176,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             TransparencyKey = Color.Lime;
             Load += LauncherForm_Load;
-            ((System.ComponentModel.ISupportInitialize)ramBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -244,11 +190,8 @@
         private TextBox usernameInput;
         private Label label2;
         private System.Windows.Forms.Timer eventTimer;
-        private NumericUpDown ramBox;
-        private Label label3;
-        private System.Windows.Forms.CheckBox useProxy;
+        
         private Label closeBtn;
-        private Label label4;
-        private TextBox passwdBox;
+        private Button settingsBtn;
     }
 }

@@ -34,63 +34,64 @@ namespace RCRL.Properties {
                 this["Username"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Version
-        {
-            get
-            {
+        public string Version {
+            get {
                 return ((string)(this["Version"]));
             }
-            set
-            {
+            set {
                 this["Version"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RAM
-        {
-            get
-            {
+        public string RAM {
+            get {
                 return ((string)(this["RAM"]));
             }
-            set
-            {
+            set {
                 this["RAM"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Proxy
-        {
-            get
-            {
+        public string Proxy {
+            get {
                 return ((string)(this["Proxy"]));
             }
-            set
-            {
+            set {
                 this["Proxy"] = value;
             }
         }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ModsVer
-        {
-            get
-            {
+        public string ModsVer {
+            get {
                 return ((string)(this["ModsVer"]));
             }
-            set
-            {
+            set {
                 this["ModsVer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FastStart {
+            get {
+                return ((string)(this["FastStart"]));
+            }
+            set {
+                this["FastStart"] = value;
             }
         }
     }

@@ -1,20 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace RCRL
+﻿namespace RCRL
 {
     public partial class SettingsForm : Form
     {
-
-
-
         public SettingsForm()
         {
             InitializeComponent();
@@ -29,6 +16,14 @@ namespace RCRL
             else
             {
                 useProxy.Checked = true;
+            }
+            if (Properties.Settings.Default.FastStart == "0")
+            {
+                faststartBox.Checked = false;
+            }
+            else
+            {
+                faststartBox.Checked = true;
             }
             ramBox.Minimum = 1024;
             ramBox.Maximum = 16384;
@@ -46,6 +41,14 @@ namespace RCRL
             else
             {
                 Properties.Settings.Default.Proxy = "1";
+            }
+            if (faststartBox.Checked == false)
+            {
+                Properties.Settings.Default.FastStart = "0";
+            }
+            else
+            {
+                Properties.Settings.Default.FastStart = "1";
             }
             Properties.Settings.Default.Save();
             ActiveForm.Close();

@@ -3,6 +3,7 @@ using CmlLib.Core.Auth;
 using CmlLib.Core.Installer.Forge;
 using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
+using System.Diagnostics;
 using System.Net;
 using System.Text.Json;
 
@@ -37,9 +38,9 @@ public partial class LauncherForm : Form
         //versions
         public static string versionsPath = Path.Combine(mcpath, "versions.json");
         public static string versions = File.ReadAllText(versionsPath);
-        //public static string passwdPath = Path.Combine(mcpath, ".sl_password");
-        //public static string passwd = File.ReadAllText(passwdPath);
         public static string ModsVer;
+        //parameters
+        public static bool isInternetHere = true;
     }
 
     //make window draggable
@@ -63,12 +64,7 @@ public partial class LauncherForm : Form
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
 
-        //create sl_password
-        //if (!File.Exists(Path.Combine(mcpath, ".sl_password"))) {
-        //    File.Create(Path.Combine(mcpath, ".sl_password")).Close();
-        //}
-
-        //fucking mess, which downloads versions.json from remote server
+        //fucking mess, which downloads versions.json from remote server and checks internet kenekshun
         Config? config = JsonSerializer.Deserialize<Config>(json);
         try { Directory.CreateDirectory(mcpath); }
         catch { }
@@ -76,19 +72,27 @@ public partial class LauncherForm : Form
         {
             using (var client = new WebClient())
             {
-                client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "versions.json"));
+                client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "newversions.json"));
             }
-            //and init this shit
-
-            _launcher = new MinecraftLauncher(new MinecraftPath(Globals.mcpath));
-            InitializeComponent();
+            File.Move(Path.Combine(mcpath, "newversions.json"), Path.Combine(mcpath, "versions.json"), true);
         }
         catch (Exception ex)
         {
-            //MessageBox.Show(ex.ToString());
-            MessageBox.Show("Проверьте своё интернет-соединение и повторите попытку.");
-            Environment.Exit(0);
+            if (File.Exists(Path.Combine(mcpath, "versions.json")))
+            {
+                MessageBox.Show("Проверьте своё интернет-соединение.");
+                Globals.isInternetHere = false;
+            }
+            else
+            {
+                MessageBox.Show("Проверьте своё интернет-соединение перед первым запуском.");
+                Environment.Exit(0);
+            }
         }
+
+        //and init this shit
+        _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
+        InitializeComponent();
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)
@@ -96,6 +100,7 @@ public partial class LauncherForm : Form
         //define buttons and some дезигн shit
         this.BackgroundImage = Image.FromFile("bg.png");
         settingsBtn.BackgroundImage = Image.FromFile("settings.png");
+
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
         cbVersion.Text = Properties.Settings.Default.Version;
@@ -107,11 +112,6 @@ public partial class LauncherForm : Form
         if (string.IsNullOrEmpty(Globals.ModsVer))
             Globals.ModsVer = "0";
 
-        //if (!string.IsNullOrEmpty(Globals.passwd))
-        //{
-        //    passwdBox.Text = Globals.passwd;
-        //}
-
         //first run checks
         if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy))
         {
@@ -121,7 +121,10 @@ public partial class LauncherForm : Form
         {
             Properties.Settings.Default.RAM = "4096";
         }
-
+        if (string.IsNullOrEmpty(Properties.Settings.Default.FastStart))
+        {
+            Properties.Settings.Default.FastStart = "0";
+        }
         await listVersions();
 
     }
@@ -146,7 +149,6 @@ public partial class LauncherForm : Form
     private async void btnStart_Click(object sender, EventArgs e)
     {
         // Disable UI while launchin
-        
 
         this.Enabled = false;
         btnStart.Text = "Идёт загрузка...";
@@ -179,52 +181,54 @@ public partial class LauncherForm : Form
 
 
             //silly mod updater
-            string readver;
-            try
+            if (Globals.isInternetHere)
             {
-                using (WebClient client = new WebClient())
+                string readver;
+                try
                 {
-                    readver = client.DownloadString(Path.Combine(config.updateServer, "version"));
-                }
-                if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
-                {
-                    //mods
-                    var downloadFileUrl = Path.Combine(config.updateServer, "mods.zip");
-                    var destinationFilePath = Path.Combine(Globals.mcpath, "mods.zip");
-                    using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                    using (WebClient client = new WebClient())
                     {
-                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                        readver = client.DownloadString(Path.Combine(config.updateServer, "version"));
+                    }
+                    if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
+                    {
+                        //mods
+                        var downloadFileUrl = Path.Combine(config.updateServer, "mods.zip");
+                        var destinationFilePath = Path.Combine(Globals.mcpath, "mods.zip");
+                        using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                         {
-                            pbFiles.Value = Convert.ToInt32(progressPercentage);
-                            lbProgress.Text = $"[Updating mods: {totalBytesDownloaded}/{totalFileSize}]";
-                        };
+                            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                            {
+                                pbFiles.Value = Convert.ToInt32(progressPercentage);
+                                lbProgress.Text = $"[Updating mods: {totalBytesDownloaded}/{totalFileSize}]";
+                            };
 
-                        await client.StartDownload();
+                            await client.StartDownload();
+                        }
+                        //README
+                        using (var client = new WebClient())
+                        {
+                            client.DownloadFile(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
+                        }
+                        Globals.ModsVer = readver;
+                        try
+                        {
+                            Directory.Delete(servmodfolder, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
+                        System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
                     }
-                    //README
-                    using (var client = new WebClient())
-                    {
-                        client.DownloadFile(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
-                    }
-                    Globals.ModsVer = readver;
-                    try
-                    {
-                        Directory.Delete(servmodfolder, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                    System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
+                }
+                //if you downloaded json, but somehow fucked up on version
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    //lbProgress.Text = "Do not forget to enable proxy!";
                 }
             }
-            //if you downloaded json, but somehow fucked up on version
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-                //lbProgress.Text = "Do not forget to enable proxy!";
-            }
-
 
             //MODPACK CHANGER (plz hewp me)
             if (cbVersion.Text != Properties.Settings.Default.Version)
@@ -248,21 +252,22 @@ public partial class LauncherForm : Form
                 catch { Directory.CreateDirectory(usermodfolder); }
             }
 
-            //I spent about 1.5 hrs on this shit, but Ilya said NO
-            //You should check passwd NOW
-            //if (passwdBox.Text != Globals.passwd)
-            //{
-            //    File.WriteAllText(Globals.passwdPath, passwdBox.Text);
-            //}
-
             //LAUNCH MINCERAFT and write vars to conf
             var launchOption = new MLaunchOption
             {
                 MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),
                 Session = MSession.CreateOfflineSession(usernameInput.Text),
-                ServerIp = addr,
-                ServerPort = Int32.Parse(port),
             };
+            if (Properties.Settings.Default.FastStart == "1")
+            {
+                launchOption = new MLaunchOption
+                {
+                    MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),
+                    Session = MSession.CreateOfflineSession(usernameInput.Text),
+                    ServerIp = addr,
+                    ServerPort = Int32.Parse(port),
+                };
+            }
             Properties.Settings.Default.Username = usernameInput.Text;
             Properties.Settings.Default.Version = cbVersion.Text;
             Properties.Settings.Default.ModsVer = Globals.ModsVer;
@@ -282,7 +287,6 @@ public partial class LauncherForm : Form
         this.Enabled = true;
         btnStart.Text = "ЗАПУСК";
     }
-
 
 
 
@@ -394,6 +398,9 @@ public partial class LauncherForm : Form
         }
     }
 
+
+
+    //some random design code
     private void closeBtn_Click(object sender, EventArgs e)
     {
         Environment.Exit(0);
@@ -417,4 +424,10 @@ public partial class LauncherForm : Form
     {
         settingsBtn.BackgroundImage = Image.FromFile("settings_click.png");
     }
+
+    private void folderBtn_Click(object sender, EventArgs e)
+    {
+        Process.Start("explorer.exe", Globals.mcpath);
+    }
+
 }

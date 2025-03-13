@@ -33,6 +33,7 @@
             label3 = new Label();
             useProxy = new CheckBox();
             okBtn = new Button();
+            faststartBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)ramBox).BeginInit();
             SuspendLayout();
             // 
@@ -70,7 +71,7 @@
             useProxy.CheckAlign = ContentAlignment.MiddleRight;
             useProxy.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
             useProxy.ForeColor = Color.Black;
-            useProxy.Location = new Point(32, 68);
+            useProxy.Location = new Point(12, 62);
             useProxy.Name = "useProxy";
             useProxy.Size = new Size(175, 42);
             useProxy.TabIndex = 13;
@@ -86,13 +87,28 @@
             okBtn.TabIndex = 14;
             okBtn.Text = "применить";
             okBtn.UseVisualStyleBackColor = true;
-            okBtn.Click += this.okBtn_Click;
+            okBtn.Click += okBtn_Click;
+            // 
+            // faststartBox
+            // 
+            faststartBox.BackColor = Color.Transparent;
+            faststartBox.CheckAlign = ContentAlignment.MiddleRight;
+            faststartBox.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
+            faststartBox.ForeColor = Color.Black;
+            faststartBox.Location = new Point(193, 62);
+            faststartBox.Name = "faststartBox";
+            faststartBox.Size = new Size(175, 42);
+            faststartBox.TabIndex = 15;
+            faststartBox.Text = "Автозаход на сервер";
+            faststartBox.TextAlign = ContentAlignment.MiddleRight;
+            faststartBox.UseVisualStyleBackColor = false;
             // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(403, 222);
+            Controls.Add(faststartBox);
             Controls.Add(okBtn);
             Controls.Add(label1);
             Controls.Add(label3);
@@ -114,5 +130,6 @@
         private Label label3;
         private System.Windows.Forms.CheckBox useProxy;
         private Button okBtn;
+        private CheckBox faststartBox;
     }
 }

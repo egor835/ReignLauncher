@@ -40,6 +40,8 @@
             eventTimer = new System.Windows.Forms.Timer(components);
             closeBtn = new Label();
             settingsBtn = new Button();
+            folderBtn = new Button();
+            NewsLabel = new Label();
             SuspendLayout();
             // 
             // label1
@@ -138,16 +140,36 @@
             // 
             // settingsBtn
             // 
-            settingsBtn.Location = new Point(589, 377);
+            settingsBtn.Location = new Point(620, 377);
             settingsBtn.Name = "settingsBtn";
             settingsBtn.Size = new Size(64, 64);
             settingsBtn.TabIndex = 15;
             settingsBtn.Text = "l";
             settingsBtn.UseVisualStyleBackColor = true;
+            settingsBtn.MouseDown += settingsBtn_press;
             settingsBtn.MouseEnter += settingsBtn_Hover;
             settingsBtn.MouseLeave += settingsBtn_noHover;
-            settingsBtn.MouseDown += settingsBtn_press;
             settingsBtn.MouseUp += settingsBtn_release;
+            // 
+            // folderBtn
+            // 
+            folderBtn.Location = new Point(550, 377);
+            folderBtn.Name = "folderBtn";
+            folderBtn.Size = new Size(64, 64);
+            folderBtn.TabIndex = 16;
+            folderBtn.Text = "fldr";
+            folderBtn.UseVisualStyleBackColor = true;
+            folderBtn.Click += folderBtn_Click;
+            // 
+            // NewsLabel
+            // 
+            NewsLabel.AutoSize = true;
+            NewsLabel.ForeColor = Color.White;
+            NewsLabel.Location = new Point(91, 59);
+            NewsLabel.Name = "NewsLabel";
+            NewsLabel.Size = new Size(57, 15);
+            NewsLabel.TabIndex = 17;
+            NewsLabel.Text = "Новости:";
             // 
             // LauncherForm
             // 
@@ -157,6 +179,8 @@
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(700, 500);
             ControlBox = false;
+            Controls.Add(NewsLabel);
+            Controls.Add(folderBtn);
             Controls.Add(settingsBtn);
             Controls.Add(closeBtn);
             Controls.Add(usernameInput);
@@ -193,5 +217,7 @@
         
         private Label closeBtn;
         private Button settingsBtn;
+        private Button folderBtn;
+        private Label NewsLabel;
     }
 }

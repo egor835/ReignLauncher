@@ -41,6 +41,7 @@ public partial class LauncherForm : Form
         public static string ModsVer;
         //parameters
         public static bool isInternetHere = true;
+        public static bool isLoading = false;
     }
 
     //make window draggable
@@ -98,8 +99,10 @@ public partial class LauncherForm : Form
     private async void LauncherForm_Load(object sender, EventArgs e)
     {
         //define buttons and some дезигн shit
-        this.BackgroundImage = Image.FromFile("bg.png");
-        settingsBtn.BackgroundImage = Image.FromFile("settings.png");
+        if (Globals.isInternetHere)
+        {
+            this.BackgroundImage = Image.FromFile(Path.Combine(Globals.mcpath, "bg.png"));
+        }
 
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
@@ -146,12 +149,12 @@ public partial class LauncherForm : Form
 
     }
 
-    private async void btnStart_Click(object sender, EventArgs e)
+    private async void btnStart_release(object sender, EventArgs e)
     {
         // Disable UI while launchin
-
+        Globals.isLoading = true;
+        btnStart.Image = Properties.Resources.Play_install;
         this.Enabled = false;
-        btnStart.Text = "Идёт загрузка...";
         var mcVersion = "1.20.1";
 
         //define fucking variables
@@ -285,7 +288,8 @@ public partial class LauncherForm : Form
 
         pbFiles.Value = 0;
         this.Enabled = true;
-        btnStart.Text = "ЗАПУСК";
+        Globals.isLoading = false;
+        btnStart.Image = Properties.Resources.Play;
     }
 
 
@@ -406,28 +410,58 @@ public partial class LauncherForm : Form
         Environment.Exit(0);
     }
 
-    private void settingsBtn_release(object sender, EventArgs e)
+
+
+
+    private void btnStart_Hover(object sender, EventArgs e)
     {
-        settingsBtn.BackgroundImage = Image.FromFile("settings.png");
-        SettingsForm form = new SettingsForm();
-        form.Show();
+        if (!Globals.isLoading)
+        {
+            btnStart.Image = Properties.Resources.Play_hover;
+        }
     }
+    private void btnStart_noHover(object sender, EventArgs e)
+    {
+        if (!Globals.isLoading)
+        {
+            btnStart.Image = Properties.Resources.Play;
+        }
+    }
+    private void btnStart_press(object sender, EventArgs e)
+    {
+        btnStart.Image = Properties.Resources.Play_clicked;
+    }
+
+
+
+
+
     private void settingsBtn_Hover(object sender, EventArgs e)
     {
-        settingsBtn.BackgroundImage = Image.FromFile("settings_hover.png");
+        settingsBtn.Image = Properties.Resources.Settings_hover;
     }
     private void settingsBtn_noHover(object sender, EventArgs e)
     {
-        settingsBtn.BackgroundImage = Image.FromFile("settings.png");
-    }
-    private void settingsBtn_press(object sender, EventArgs e)
-    {
-        settingsBtn.BackgroundImage = Image.FromFile("settings_click.png");
+        settingsBtn.Image = Properties.Resources.Settings;
     }
 
+    private void settingsBtn_Click(object sender, EventArgs e)
+    {
+        SettingsForm form = new SettingsForm();
+        form.Show();
+    }
+
+
+    private void folderBtn_Hover(object sender, EventArgs e)
+    {
+        folderBtn.Image = Properties.Resources.Mods_hover;
+    }
+    private void folderBtn_noHover(object sender, EventArgs e)
+    {
+        folderBtn.Image = Properties.Resources.Mods;
+    }
     private void folderBtn_Click(object sender, EventArgs e)
     {
         Process.Start("explorer.exe", Globals.mcpath);
     }
-
 }

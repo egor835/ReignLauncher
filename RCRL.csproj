@@ -49,9 +49,6 @@
     <None Update="settings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="settings_click.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="settings_hover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

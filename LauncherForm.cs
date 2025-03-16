@@ -51,9 +51,6 @@ public partial class LauncherForm : Form
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
-        //newz
-        public static string newsPath = Path.Combine(mcpath, "news.json");
-        public static string news = File.ReadAllText(newsPath);
     }
 
     //make window draggable
@@ -169,11 +166,13 @@ public partial class LauncherForm : Form
         {
             cbVersion.Text = cbVersion.Items[0].ToString();
         }
-        //not only versions, but NEWZZZZ
+
+        string newsPath = Path.Combine(Globals.mcpath, "news.json");
+        string newsCont = File.ReadAllText(newsPath);
         if (Globals.isInternetHere)
         {
             NewsRTB.Text = "";
-            newz? news = JsonSerializer.Deserialize<newz>(Globals.news);
+            newz? news = JsonSerializer.Deserialize<newz>(newsCont);
             foreach (var neww in news.news)
             {
                 NewsRTB.Text += ("• " + neww + (Environment.NewLine + Environment.NewLine));

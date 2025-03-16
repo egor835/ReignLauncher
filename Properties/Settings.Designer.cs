@@ -94,5 +94,17 @@ namespace RCRL.Properties {
                 this["FastStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MCVersion {
+            get {
+                return ((string)(this["MCVersion"]));
+            }
+            set {
+                this["MCVersion"] = value;
+            }
+        }
     }
 }

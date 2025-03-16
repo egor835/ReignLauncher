@@ -3,7 +3,9 @@ using CmlLib.Core.Auth;
 using CmlLib.Core.Installer.Forge;
 using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
+using CmlLib.Core.VersionLoader;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.Net;
 using System.Text.Json;
 using static RCRL.LauncherForm;
@@ -25,6 +27,7 @@ public partial class LauncherForm : Form
     //newz
     public class newz
     {
+        public string title { get; set; }
         public List<string> news { get; set; }
     }
     //fetch config
@@ -51,6 +54,8 @@ public partial class LauncherForm : Form
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
+        //font
+        //public static PrivateFontCollection pfc = new PrivateFontCollection();
     }
 
     //make window draggable
@@ -73,6 +78,8 @@ public partial class LauncherForm : Form
         var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
+        //add font to pfc
+        //Globals.pfc.AddFontFile(Path.Combine(Application.StartupPath, ".\\Resources\\vcrosd.ttf"));
 
         //fucking mess, which downloads versions.json from remote server and checks internet kenekshun
         Config? config = JsonSerializer.Deserialize<Config>(json);
@@ -88,20 +95,27 @@ public partial class LauncherForm : Form
         }
         catch (Exception ex)
         {
-            if (File.Exists(Path.Combine(mcpath, "versions.json")))
-            {
-                MessageBox.Show("Проверьте своё интернет-соединение.");
-                Globals.isInternetHere = false;
-            }
-            else
+            if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
             {
                 MessageBox.Show("Проверьте своё интернет-соединение перед первым запуском.");
                 Environment.Exit(0);
             }
+            else
+            {
+                MessageBox.Show("Проверьте своё интернет-соединение.");
+                Globals.isInternetHere = false;
+            }
         }
 
         //and init this shit
-        _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
+        if (Globals.isInternetHere) {
+            _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
+        } else {
+            var path = new MinecraftPath(mcpath);
+            var parameters = MinecraftLauncherParameters.CreateDefault(path);
+            parameters.VersionLoader = new LocalJsonVersionLoader(path);
+            _launcher = new MinecraftLauncher(parameters);
+        }
         InitializeComponent();
     }
 
@@ -167,12 +181,15 @@ public partial class LauncherForm : Form
             cbVersion.Text = cbVersion.Items[0].ToString();
         }
 
-        string newsPath = Path.Combine(Globals.mcpath, "news.json");
-        string newsCont = File.ReadAllText(newsPath);
+        //news
+        //NewsRTB.Font = new Font(Globals.pfc.Families[0], 18, FontStyle.Regular);
         if (Globals.isInternetHere)
         {
-            NewsRTB.Text = "";
+            string newsPath = Path.Combine(Globals.mcpath, "news.json");
+            string newsCont = File.ReadAllText(newsPath);
             newz? news = JsonSerializer.Deserialize<newz>(newsCont);
+            NewsLabel.Text = news.title;
+            NewsRTB.Text = "";
             foreach (var neww in news.news)
             {
                 NewsRTB.Text += ("• " + neww + (Environment.NewLine + Environment.NewLine));
@@ -211,15 +228,22 @@ public partial class LauncherForm : Form
             try
             {
                 pbFiles.Visible = true;
-                //install forge
-                var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
-                var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
-                var forge = new ForgeInstaller(_launcher);
-                var version_name = await forge.Install(mcVersion, config.versionName, new ForgeInstallOptions
+                var version_name = "";
+                if (Globals.isInternetHere)
                 {
-                    ByteProgress = byteProgress,
-                    FileProgress = fileProgress
-                });
+                    //install forge
+                    var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
+                    var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
+                    var forge = new ForgeInstaller(_launcher);
+                    version_name = await forge.Install(mcVersion, config.versionName, new ForgeInstallOptions
+                    {
+                        ByteProgress = byteProgress,
+                        FileProgress = fileProgress
+                    });
+                } else
+                {
+                    version_name = Properties.Settings.Default.MCVersion;
+                }
 
                 //silly mod updater
                 if (Globals.isInternetHere)
@@ -315,8 +339,14 @@ public partial class LauncherForm : Form
                 Properties.Settings.Default.Username = usernameInput.Text;
                 Properties.Settings.Default.Version = cbVersion.Text;
                 Properties.Settings.Default.ModsVer = Globals.ModsVer;
+                Properties.Settings.Default.MCVersion = version_name;
                 Properties.Settings.Default.Save();
-                var process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
+                var process = new Process();
+                if (Globals.isInternetHere) {
+                    process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
+                } else { 
+                    process = await _launcher.BuildProcessAsync(version_name, launchOption); 
+                }
                 var processUtil = new ProcessWrapper(process);
                 processUtil.StartWithEvents();
                 await processUtil.WaitForExitTaskAsync();

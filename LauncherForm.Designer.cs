@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing.Text;
+using System.Windows.Forms;
 
 namespace RCRL
 {
@@ -167,9 +168,9 @@ namespace RCRL
             NewsLabel.ForeColor = Color.FromArgb(101, 166, 106);
             NewsLabel.Location = new Point(20, 151);
             NewsLabel.Name = "NewsLabel";
-            NewsLabel.Size = new Size(610, 59);
+            NewsLabel.Size = new Size(606, 59);
             NewsLabel.TabIndex = 17;
-            NewsLabel.Text = "Что нового в Мезенхольме?";
+            NewsLabel.Text = "Нет соедниения с сервером";
             // 
             // logo
             // 
@@ -257,7 +258,7 @@ namespace RCRL
             NewsRTB.Name = "NewsRTB";
             NewsRTB.Size = new Size(666, 306);
             NewsRTB.TabIndex = 26;
-            NewsRTB.Text = "Интернет подключение недоступно";
+            NewsRTB.Text = "Но если сборка уже установлена, то вы можете начать играть :3";
             // 
             // sunflower
             // 

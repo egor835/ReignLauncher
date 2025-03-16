@@ -10,6 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="vcrosdmonorus_vhsicons.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\vcrosd.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CmlLib.Core" Version="4.0.4" />
     <PackageReference Include="CmlLib.Core.Installer.Forge" Version="1.0.1" />
   </ItemGroup>
@@ -37,6 +48,7 @@
   <ItemGroup>
     <None Update="bg.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </None>
     <None Update="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -45,12 +57,6 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="settings.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="settings_hover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

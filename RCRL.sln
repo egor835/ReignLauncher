@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRL", "RCRL.csproj", "{26E63F0E-93EA-B46A-6F8C-4F87118838A7}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RCRL Setup", "..\RCRL Setup\RCRL Setup.vdproj", "{067309BF-9B92-6A9A-8FEB-2094FD957359}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{26E63F0E-93EA-B46A-6F8C-4F87118838A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26E63F0E-93EA-B46A-6F8C-4F87118838A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26E63F0E-93EA-B46A-6F8C-4F87118838A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{067309BF-9B92-6A9A-8FEB-2094FD957359}.Debug|Any CPU.ActiveCfg = Debug
+		{067309BF-9B92-6A9A-8FEB-2094FD957359}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

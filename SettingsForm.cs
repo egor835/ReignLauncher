@@ -2,6 +2,17 @@
 {
     public partial class SettingsForm : Form
     {
+
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTCLIENT = 0x1;
+        private const int HTCAPTION = 0x2;
+        protected override void WndProc(ref Message message)
+        {
+            base.WndProc(ref message);
+
+            if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
+                message.Result = (IntPtr)HTCAPTION;
+        }
         public SettingsForm()
         {
             InitializeComponent();
@@ -51,6 +62,18 @@
                 Properties.Settings.Default.FastStart = "1";
             }
             Properties.Settings.Default.Save();
+            ActiveForm.Close();
+        }
+        private void closeBtn_Hover(object sender, EventArgs e)
+        {
+            closeBtn.Image = Properties.Resources.Exit_hover;
+        }
+        private void closeBtn_noHover(object sender, EventArgs e)
+        {
+            closeBtn.Image = Properties.Resources.Exit;
+        }
+        private void closeBtn_Click(object sender, EventArgs e)
+        {
             ActiveForm.Close();
         }
     }

@@ -69,7 +69,7 @@ namespace RCRL
             // cbVersion
             // 
             cbVersion.FlatStyle = FlatStyle.Flat;
-            cbVersion.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            cbVersion.Font = new Font("Calibri", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             cbVersion.FormattingEnabled = true;
             cbVersion.Location = new Point(77, 746);
             cbVersion.Name = "cbVersion";
@@ -89,7 +89,7 @@ namespace RCRL
             lbProgress.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbProgress.AutoSize = true;
             lbProgress.BackColor = Color.Transparent;
-            lbProgress.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            lbProgress.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
             lbProgress.ForeColor = Color.White;
             lbProgress.Location = new Point(12, 550);
             lbProgress.Name = "lbProgress";
@@ -118,7 +118,7 @@ namespace RCRL
             // 
             usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             usernameInput.BorderStyle = BorderStyle.None;
-            usernameInput.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            usernameInput.Font = new Font("Calibri", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             usernameInput.Location = new Point(77, 689);
             usernameInput.Name = "usernameInput";
             usernameInput.PlaceholderText = "Введите никнейм";
@@ -164,13 +164,13 @@ namespace RCRL
             // 
             NewsLabel.AutoSize = true;
             NewsLabel.BackColor = Color.Transparent;
-            NewsLabel.Font = new Font("Calibri", 36F, FontStyle.Bold, GraphicsUnit.Point);
+            NewsLabel.Font = new Font("Calibri", 48F, FontStyle.Bold, GraphicsUnit.Pixel);
             NewsLabel.ForeColor = Color.FromArgb(101, 166, 106);
             NewsLabel.Location = new Point(20, 151);
             NewsLabel.Name = "NewsLabel";
             NewsLabel.Size = new Size(606, 59);
             NewsLabel.TabIndex = 17;
-            NewsLabel.Text = "Нет соедниения с сервером";
+            NewsLabel.Text = "Нет соединения с сервером";
             // 
             // logo
             // 
@@ -252,7 +252,7 @@ namespace RCRL
             // 
             NewsRTB.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             NewsRTB.BackColor = Color.Transparent;
-            NewsRTB.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            NewsRTB.Font = new Font("Calibri", 27F, FontStyle.Regular, GraphicsUnit.Pixel);
             NewsRTB.ForeColor = Color.White;
             NewsRTB.Location = new Point(65, 231);
             NewsRTB.Name = "NewsRTB";
@@ -319,7 +319,9 @@ namespace RCRL
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             MaximumSize = new Size(1200, 800);
+            MinimizeBox = false;
             MinimumSize = new Size(1200, 800);
             Name = "LauncherForm";
             RightToLeft = RightToLeft.No;

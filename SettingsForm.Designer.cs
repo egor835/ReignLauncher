@@ -28,52 +28,60 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
+            SettingsLabel = new Label();
             ramBox = new NumericUpDown();
-            label3 = new Label();
+            RAMLabel = new Label();
             useProxy = new CheckBox();
             okBtn = new Button();
             faststartBox = new CheckBox();
+            closeBtn = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)ramBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closeBtn).BeginInit();
             SuspendLayout();
             // 
-            // label1
+            // SettingsLabel
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(149, 18);
-            label1.Name = "label1";
-            label1.Size = new Size(60, 15);
-            label1.TabIndex = 0;
-            label1.Text = "насройки";
+            SettingsLabel.AutoSize = true;
+            SettingsLabel.BackColor = Color.Transparent;
+            SettingsLabel.Font = new Font("Calibri", 29F, FontStyle.Regular, GraphicsUnit.Pixel);
+            SettingsLabel.ForeColor = Color.Black;
+            SettingsLabel.Location = new Point(174, 28);
+            SettingsLabel.Name = "SettingsLabel";
+            SettingsLabel.Size = new Size(145, 36);
+            SettingsLabel.TabIndex = 0;
+            SettingsLabel.Text = "Настройки";
             // 
             // ramBox
             // 
-            ramBox.Location = new Point(149, 123);
+            ramBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
+            ramBox.Location = new Point(12, 265);
             ramBox.Name = "ramBox";
-            ramBox.Size = new Size(142, 23);
+            ramBox.Size = new Size(176, 23);
             ramBox.TabIndex = 11;
             // 
-            // label3
+            // RAMLabel
             // 
-            label3.AutoSize = true;
-            label3.BackColor = Color.Transparent;
-            label3.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.ForeColor = Color.Black;
-            label3.Location = new Point(55, 122);
-            label3.Name = "label3";
-            label3.Size = new Size(78, 17);
-            label3.TabIndex = 12;
-            label3.Text = "Память:";
+            RAMLabel.AutoSize = true;
+            RAMLabel.BackColor = Color.Transparent;
+            RAMLabel.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
+            RAMLabel.ForeColor = Color.Black;
+            RAMLabel.Location = new Point(12, 239);
+            RAMLabel.Name = "RAMLabel";
+            RAMLabel.Size = new Size(176, 23);
+            RAMLabel.TabIndex = 12;
+            RAMLabel.Text = "Выделенная память:";
+            RAMLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // useProxy
             // 
             useProxy.BackColor = Color.Transparent;
             useProxy.CheckAlign = ContentAlignment.MiddleRight;
-            useProxy.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
+            useProxy.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
             useProxy.ForeColor = Color.Black;
-            useProxy.Location = new Point(12, 62);
+            useProxy.Location = new Point(281, 119);
             useProxy.Name = "useProxy";
-            useProxy.Size = new Size(175, 42);
+            useProxy.Size = new Size(169, 57);
             useProxy.TabIndex = 13;
             useProxy.Text = "Использовать прокси:";
             useProxy.TextAlign = ContentAlignment.MiddleRight;
@@ -81,11 +89,13 @@
             // 
             // okBtn
             // 
-            okBtn.Location = new Point(149, 187);
+            okBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
+            okBtn.Location = new Point(394, 265);
             okBtn.Name = "okBtn";
+            okBtn.RightToLeft = RightToLeft.No;
             okBtn.Size = new Size(94, 23);
             okBtn.TabIndex = 14;
-            okBtn.Text = "применить";
+            okBtn.Text = "Применить";
             okBtn.UseVisualStyleBackColor = true;
             okBtn.Click += okBtn_Click;
             // 
@@ -93,43 +103,68 @@
             // 
             faststartBox.BackColor = Color.Transparent;
             faststartBox.CheckAlign = ContentAlignment.MiddleRight;
-            faststartBox.Font = new Font("Minecraft Seven v2", 14.2499981F, FontStyle.Regular, GraphicsUnit.Point);
+            faststartBox.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
             faststartBox.ForeColor = Color.Black;
-            faststartBox.Location = new Point(193, 62);
+            faststartBox.Location = new Point(27, 119);
             faststartBox.Name = "faststartBox";
-            faststartBox.Size = new Size(175, 42);
+            faststartBox.Size = new Size(211, 57);
             faststartBox.TabIndex = 15;
-            faststartBox.Text = "Автозаход на сервер";
+            faststartBox.Text = "Автоматически заходить на сервер";
             faststartBox.TextAlign = ContentAlignment.MiddleRight;
             faststartBox.UseVisualStyleBackColor = false;
             // 
+            // closeBtn
+            // 
+            closeBtn.BackColor = Color.Transparent;
+            closeBtn.ForeColor = Color.Transparent;
+            closeBtn.Image = Properties.Resources.Exit_black;
+            closeBtn.Location = new Point(471, 9);
+            closeBtn.Margin = new Padding(0);
+            closeBtn.Name = "closeBtn";
+            closeBtn.Size = new Size(20, 20);
+            closeBtn.TabIndex = 21;
+            closeBtn.TabStop = false;
+            closeBtn.Click += closeBtn_Click;
+            closeBtn.MouseEnter += closeBtn_Hover;
+            closeBtn.MouseLeave += closeBtn_noHover;
+            // 
             // SettingsForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(403, 222);
+            AutoScaleMode = AutoScaleMode.None;
+            BackColor = Color.Gainsboro;
+            ClientSize = new Size(500, 300);
+            ControlBox = false;
+            Controls.Add(closeBtn);
             Controls.Add(faststartBox);
             Controls.Add(okBtn);
-            Controls.Add(label1);
-            Controls.Add(label3);
+            Controls.Add(SettingsLabel);
+            Controls.Add(RAMLabel);
             Controls.Add(ramBox);
             Controls.Add(useProxy);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MaximumSize = new Size(500, 300);
+            MinimizeBox = false;
+            MinimumSize = new Size(500, 300);
             Name = "SettingsForm";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Настройки лаунчера";
             Load += SettingsForm_Load;
             ((System.ComponentModel.ISupportInitialize)ramBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closeBtn).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Label label1;
+        private Label SettingsLabel;
         private NumericUpDown ramBox;
-        private Label label3;
+        private Label RAMLabel;
         private System.Windows.Forms.CheckBox useProxy;
         private Button okBtn;
         private CheckBox faststartBox;
+        private PictureBox closeBtn;
     }
 }

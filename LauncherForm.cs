@@ -5,10 +5,8 @@ using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
 using CmlLib.Core.VersionLoader;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.Net;
 using System.Text.Json;
-using static RCRL.LauncherForm;
 
 namespace RCRL;
 
@@ -297,8 +295,8 @@ public partial class LauncherForm : Form
                 }
 
                 //MODPACK CHANGER (plz hewp me)
-                if (cbVersion.Text != Properties.Settings.Default.Version)
-                {
+                //if (cbVersion.Text != Properties.Settings.Default.Version)
+                //{
                     try { Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
                     catch { Directory.CreateDirectory(globmodfolder); }
 
@@ -316,7 +314,7 @@ public partial class LauncherForm : Form
                         }
                     }
                     catch { Directory.CreateDirectory(usermodfolder); }
-                }
+                //}
 
                 pbFiles.Visible = false;
                 lbProgress.Text = "";

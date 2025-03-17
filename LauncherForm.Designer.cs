@@ -68,9 +68,9 @@ namespace RCRL
             // 
             // cbVersion
             // 
+            cbVersion.DropDownStyle = ComboBoxStyle.DropDownList;
             cbVersion.FlatStyle = FlatStyle.Flat;
             cbVersion.Font = new Font("Calibri", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            cbVersion.FormattingEnabled = true;
             cbVersion.Location = new Point(77, 746);
             cbVersion.Name = "cbVersion";
             cbVersion.Size = new Size(261, 27);
@@ -78,9 +78,9 @@ namespace RCRL
             // 
             // pbFiles
             // 
-            pbFiles.Location = new Point(12, 583);
+            pbFiles.Location = new Point(757, 654);
             pbFiles.Name = "pbFiles";
-            pbFiles.Size = new Size(1176, 39);
+            pbFiles.Size = new Size(423, 16);
             pbFiles.TabIndex = 10;
             pbFiles.Visible = false;
             // 
@@ -91,10 +91,12 @@ namespace RCRL
             lbProgress.BackColor = Color.Transparent;
             lbProgress.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
             lbProgress.ForeColor = Color.White;
-            lbProgress.Location = new Point(12, 550);
+            lbProgress.Location = new Point(752, 628);
+            lbProgress.Margin = new Padding(0);
             lbProgress.Name = "lbProgress";
-            lbProgress.Size = new Size(0, 23);
+            lbProgress.Size = new Size(14, 23);
             lbProgress.TabIndex = 5;
+            lbProgress.Text = " ";
             lbProgress.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnStart
@@ -256,7 +258,7 @@ namespace RCRL
             NewsRTB.ForeColor = Color.White;
             NewsRTB.Location = new Point(65, 231);
             NewsRTB.Name = "NewsRTB";
-            NewsRTB.Size = new Size(666, 306);
+            NewsRTB.Size = new Size(666, 385);
             NewsRTB.TabIndex = 26;
             NewsRTB.Text = "Но если сборка уже установлена, то вы можете начать играть :3";
             // 

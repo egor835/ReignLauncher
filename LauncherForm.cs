@@ -230,6 +230,7 @@ public partial class LauncherForm : Form
                 if (Globals.isInternetHere)
                 {
                     //install forge
+                    eventTimer.Enabled = true;
                     var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
                     var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
                     var forge = new ForgeInstaller(_launcher);
@@ -238,6 +239,7 @@ public partial class LauncherForm : Form
                         ByteProgress = byteProgress,
                         FileProgress = fileProgress
                     });
+                    eventTimer.Enabled = false;
                 } else
                 {
                     version_name = Properties.Settings.Default.MCVersion;

@@ -129,7 +129,7 @@ namespace RCRL
             // 
             // eventTimer
             // 
-            eventTimer.Enabled = true;
+            eventTimer.Enabled = false;
             eventTimer.Tick += eventTimer_Tick;
             // 
             // settingsBtn

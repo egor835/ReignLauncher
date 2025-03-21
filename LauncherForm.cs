@@ -44,11 +44,12 @@ public partial class LauncherForm : Form
     {
         //path
         public static string mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
+        public static string datapath = Path.Combine(mcpath, "launcher_data");
         //config
         public static string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         public static string json = File.ReadAllText(jsonPath);
         //versions
-        public static string versionsPath = Path.Combine(mcpath, "versions.json");
+        public static string versionsPath = Path.Combine(datapath, "versions.json");
         public static string versions = File.ReadAllText(versionsPath);
         public static string ModsVer;
         //parameters
@@ -76,6 +77,7 @@ public partial class LauncherForm : Form
     {
         //define vars
         var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
+        var datapath = Path.Combine(mcpath, "launcher_data");
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
         //add font to pfc
@@ -85,13 +87,15 @@ public partial class LauncherForm : Form
         Config? config = JsonSerializer.Deserialize<Config>(json);
         try { Directory.CreateDirectory(mcpath); }
         catch { }
+        try { Directory.CreateDirectory(datapath); }
+        catch { }
         try
         {
             using (var client = new WebClient())
             {
-                client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(mcpath, "newversions.json"));
+                client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(datapath, "newversions.json"));
             }
-            File.Move(Path.Combine(mcpath, "newversions.json"), Path.Combine(mcpath, "versions.json"), true);
+            File.Move(Path.Combine(datapath, "newversions.json"), Path.Combine(datapath, "versions.json"), true);
         }
         catch (Exception ex)
         {
@@ -121,21 +125,19 @@ public partial class LauncherForm : Form
 
     private async void LauncherForm_Load(object sender, EventArgs e)
     {
-
-
-
         //define buttons and some дезигн shit
         Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
         if (Globals.isInternetHere)
         {
             using (var client = new WebClient())
             {
-                client.DownloadFile(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.mcpath, "bg.png"));
-                client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.mcpath, "news.json"));
-                client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
+                client.DownloadFile(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
+                client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
+                client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.datapath, "servers.dat"));
             }
-            this.BackgroundImage = Image.FromFile(Path.Combine(Globals.mcpath, "bg.png"));
+            this.BackgroundImage = Image.FromFile(Path.Combine(Globals.datapath, "bg.png"));
         }
+        hide("launcher_data");
 
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
@@ -199,7 +201,7 @@ public partial class LauncherForm : Form
         //NewsRTB.Font = new Font(Globals.pfc.Families[0], 18, FontStyle.Regular);
         if (Globals.isInternetHere)
         {
-            string newsPath = Path.Combine(Globals.mcpath, "news.json");
+            string newsPath = Path.Combine(Globals.datapath, "news.json");
             string newsCont = File.ReadAllText(newsPath);
             newz? news = JsonSerializer.Deserialize<newz>(newsCont);
             NewsLabel.Text = news.title;

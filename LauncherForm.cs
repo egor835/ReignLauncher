@@ -339,17 +339,7 @@ public partial class LauncherForm : Form
                     }
                 }
 
-                //user pak add
-                try
-                {
-                    foreach (var usermod in Directory.GetFiles(usermodfolder))
-                    {
-                        string modname = Path.GetFileName(usermod);
-                        File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
-                    }
-                }
-                catch { Directory.CreateDirectory(usermodfolder); }
-
+                //add user's texturepak and shaders
 
                 try
                 {
@@ -382,7 +372,17 @@ public partial class LauncherForm : Form
                 {
                     File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod), true);
                 }
+                try
+                {
+                    foreach (var usermod in Directory.GetFiles(usermodfolder))
+                    {
+                        string modname = Path.GetFileName(usermod);
+                        File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
+                    }
+                }
+                catch { Directory.CreateDirectory(usermodfolder); }
 
+                //enable texturepacks
                 var opline = "";
                 if (File.Exists(optionfile))
                 {
@@ -407,7 +407,7 @@ public partial class LauncherForm : Form
                                 opline += ",\"file/" + rpname + "\"";
                             }
                             opline += "]";
-                            MessageBox.Show(opline);
+                            //MessageBox.Show(opline);
                             arrLine[ind] = opline;
                         }
                     }
@@ -433,6 +433,16 @@ public partial class LauncherForm : Form
                 }
 
 
+                //Hide the folders from stoopid users
+                hide("assets");
+                hide("libraries");
+                hide("mods");
+                hide("resourcepacks");
+                hide("runtime");
+                hide("shaderpacks");
+                hide("versions");
+                hide("servermods");
+                hide("defaultconfigs");
 
                 //LAUNCH MINCERAFT and write vars to conf
                 pbFiles.Visible = false;
@@ -624,6 +634,16 @@ public partial class LauncherForm : Form
             usernameInput.ReadOnly = false;
             //listVersions();
         }
+    }
+
+    private void hide(string foldername)
+    {
+        var folderpath = Path.Combine(Globals.mcpath, foldername);
+        if (!Directory.Exists(folderpath))
+        { Directory.CreateDirectory(folderpath); }
+        DirectoryInfo di = new DirectoryInfo(folderpath);
+        if (!di.Attributes.HasFlag(FileAttributes.Hidden))
+        { di.Attributes |= FileAttributes.Hidden; }
     }
 
     //some random design code

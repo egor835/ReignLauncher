@@ -297,7 +297,7 @@ namespace RCRL
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.Lime;
-            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImage = Properties.Resources.bg;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
             ControlBox = false;

@@ -29,142 +29,135 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            SettingsLabel = new Label();
-            ramBox = new NumericUpDown();
             RAMLabel = new Label();
             useProxy = new CheckBox();
-            okBtn = new Button();
             faststartBox = new CheckBox();
             closeBtn = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)ramBox).BeginInit();
+            okBtn = new PictureBox();
+            ramBar = new TrackBar();
+            resetBtn = new PictureBox();
+            hcBtn = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)closeBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)okBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ramBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)resetBtn).BeginInit();
             SuspendLayout();
-            // 
-            // SettingsLabel
-            // 
-            SettingsLabel.AutoSize = true;
-            SettingsLabel.BackColor = Color.Transparent;
-            SettingsLabel.Font = new Font("Calibri", 29F, FontStyle.Regular, GraphicsUnit.Pixel);
-            SettingsLabel.ForeColor = Color.Black;
-            SettingsLabel.Location = new Point(174, 28);
-            SettingsLabel.Name = "SettingsLabel";
-            SettingsLabel.Size = new Size(145, 36);
-            SettingsLabel.TabIndex = 0;
-            SettingsLabel.Text = "Настройки";
-            // 
-            // ramBox
-            // 
-            ramBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
-            ramBox.Location = new Point(12, 265);
-            ramBox.Name = "ramBox";
-            ramBox.Size = new Size(176, 23);
-            ramBox.TabIndex = 11;
             // 
             // RAMLabel
             // 
-            RAMLabel.AutoSize = true;
+            resources.ApplyResources(RAMLabel, "RAMLabel");
             RAMLabel.BackColor = Color.Transparent;
-            RAMLabel.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
-            RAMLabel.ForeColor = Color.Black;
-            RAMLabel.Location = new Point(12, 239);
+            RAMLabel.ForeColor = Color.White;
             RAMLabel.Name = "RAMLabel";
-            RAMLabel.Size = new Size(176, 23);
-            RAMLabel.TabIndex = 12;
-            RAMLabel.Text = "Выделенная память:";
-            RAMLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // useProxy
             // 
             useProxy.BackColor = Color.Transparent;
-            useProxy.CheckAlign = ContentAlignment.MiddleRight;
-            useProxy.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
-            useProxy.ForeColor = Color.Black;
-            useProxy.Location = new Point(281, 119);
+            resources.ApplyResources(useProxy, "useProxy");
+            useProxy.ForeColor = Color.White;
             useProxy.Name = "useProxy";
-            useProxy.Size = new Size(169, 57);
-            useProxy.TabIndex = 13;
-            useProxy.Text = "Использовать прокси:";
-            useProxy.TextAlign = ContentAlignment.MiddleRight;
             useProxy.UseVisualStyleBackColor = false;
-            // 
-            // okBtn
-            // 
-            okBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
-            okBtn.Location = new Point(394, 265);
-            okBtn.Name = "okBtn";
-            okBtn.RightToLeft = RightToLeft.No;
-            okBtn.Size = new Size(94, 23);
-            okBtn.TabIndex = 14;
-            okBtn.Text = "Применить";
-            okBtn.UseVisualStyleBackColor = true;
-            okBtn.Click += okBtn_Click;
             // 
             // faststartBox
             // 
             faststartBox.BackColor = Color.Transparent;
-            faststartBox.CheckAlign = ContentAlignment.MiddleRight;
-            faststartBox.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
-            faststartBox.ForeColor = Color.Black;
-            faststartBox.Location = new Point(27, 119);
+            resources.ApplyResources(faststartBox, "faststartBox");
+            faststartBox.ForeColor = Color.White;
             faststartBox.Name = "faststartBox";
-            faststartBox.Size = new Size(211, 57);
-            faststartBox.TabIndex = 15;
-            faststartBox.Text = "Автоматически заходить на сервер";
-            faststartBox.TextAlign = ContentAlignment.MiddleRight;
             faststartBox.UseVisualStyleBackColor = false;
             // 
             // closeBtn
             // 
             closeBtn.BackColor = Color.Transparent;
+            resources.ApplyResources(closeBtn, "closeBtn");
             closeBtn.ForeColor = Color.Transparent;
-            closeBtn.Image = Properties.Resources.Exit_black;
-            closeBtn.Location = new Point(471, 9);
-            closeBtn.Margin = new Padding(0);
+            closeBtn.Image = Properties.Resources.Exit;
             closeBtn.Name = "closeBtn";
-            closeBtn.Size = new Size(20, 20);
-            closeBtn.TabIndex = 21;
             closeBtn.TabStop = false;
             closeBtn.Click += closeBtn_Click;
             closeBtn.MouseEnter += closeBtn_Hover;
             closeBtn.MouseLeave += closeBtn_noHover;
             // 
+            // okBtn
+            // 
+            okBtn.BackColor = Color.Transparent;
+            okBtn.Image = Properties.Resources.Accept;
+            resources.ApplyResources(okBtn, "okBtn");
+            okBtn.Name = "okBtn";
+            okBtn.TabStop = false;
+            okBtn.MouseDown += okBtn_press;
+            okBtn.MouseEnter += okBtn_Hover;
+            okBtn.MouseLeave += okBtn_noHover;
+            okBtn.MouseUp += okBtn_release;
+            // 
+            // ramBar
+            // 
+            ramBar.BackColor = Color.Black;
+            resources.ApplyResources(ramBar, "ramBar");
+            ramBar.Maximum = 16384;
+            ramBar.Minimum = 1024;
+            ramBar.Name = "ramBar";
+            ramBar.Value = 4096;
+            ramBar.ValueChanged += ramBar_change;
+            // 
+            // resetBtn
+            // 
+            resetBtn.BackColor = Color.Transparent;
+            resetBtn.Image = Properties.Resources.Reset;
+            resources.ApplyResources(resetBtn, "resetBtn");
+            resetBtn.Name = "resetBtn";
+            resetBtn.TabStop = false;
+            resetBtn.MouseDown += resetBtn_press;
+            resetBtn.MouseEnter += resetBtn_Hover;
+            resetBtn.MouseLeave += resetBtn_noHover;
+            resetBtn.MouseUp += resetBtn_release;
+            // 
+            // hcBtn
+            // 
+            hcBtn.BackColor = Color.Transparent;
+            resources.ApplyResources(hcBtn, "hcBtn");
+            hcBtn.ForeColor = Color.White;
+            hcBtn.Name = "hcBtn";
+            hcBtn.UseVisualStyleBackColor = false;
+            // 
             // SettingsForm
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackColor = Color.Gainsboro;
-            ClientSize = new Size(500, 300);
+            BackColor = Color.Lime;
+            BackgroundImage = Properties.Resources.Settings_background;
+            resources.ApplyResources(this, "$this");
             ControlBox = false;
+            Controls.Add(hcBtn);
+            Controls.Add(resetBtn);
+            Controls.Add(ramBar);
+            Controls.Add(okBtn);
             Controls.Add(closeBtn);
             Controls.Add(faststartBox);
-            Controls.Add(okBtn);
-            Controls.Add(SettingsLabel);
             Controls.Add(RAMLabel);
-            Controls.Add(ramBox);
             Controls.Add(useProxy);
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
-            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            MaximumSize = new Size(500, 300);
             MinimizeBox = false;
-            MinimumSize = new Size(500, 300);
             Name = "SettingsForm";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Настройки лаунчера";
+            TransparencyKey = Color.Lime;
             Load += SettingsForm_Load;
-            ((System.ComponentModel.ISupportInitialize)ramBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)closeBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)okBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ramBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)resetBtn).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Label SettingsLabel;
-        private NumericUpDown ramBox;
         private Label RAMLabel;
         private System.Windows.Forms.CheckBox useProxy;
-        private Button okBtn;
         private CheckBox faststartBox;
         private PictureBox closeBtn;
+        private PictureBox okBtn;
+        private TrackBar ramBar;
+        private PictureBox resetBtn;
+        private CheckBox hcBtn;
     }
 }

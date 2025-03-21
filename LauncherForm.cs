@@ -17,6 +17,8 @@ public partial class LauncherForm : Form
     {
         public string name { get; set; }
         public List<string> mods { get; set; }
+        public List<string> shaders { get; set; }
+        public List<string> resourcepacks { get; set; }
     }
     public class rev
     {
@@ -137,7 +139,6 @@ public partial class LauncherForm : Form
 
         // Load previous used values in the inputs
         usernameInput.Text = Properties.Settings.Default.Username;
-        cbVersion.Text = Properties.Settings.Default.Version;
         Globals.ModsVer = Properties.Settings.Default.ModsVer;
         if (string.IsNullOrEmpty(Globals.ModsVer))
             Globals.ModsVer = "0";
@@ -155,11 +156,24 @@ public partial class LauncherForm : Form
         {
             Properties.Settings.Default.FastStart = "0";
         }
+        if (string.IsNullOrEmpty(Properties.Settings.Default.HighContrast))
+        {
+            Properties.Settings.Default.HighContrast = "0";
+        }
+        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_resourcepacks"))) {
+            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks"));
+        }
+        if(!Directory.Exists(Path.Combine(Globals.mcpath, "user_shaderpacks"))) {
+            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks"));
+        }
+        if(!Directory.Exists(Path.Combine(Globals.mcpath, "user_mods"))) {
+            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_mods"));
+        }
         await listVersions();
 
     }
 
-    private async Task listVersions(bool includeAll = false)
+    private async Task listVersions()
     {
         // Clear list
         cbVersion.Items.Clear();
@@ -174,9 +188,11 @@ public partial class LauncherForm : Form
             cbVersion.Items.Add(version.name);
         }
 
-        if (!(cbVersion.Items.Contains(cbVersion.Text)))
+        if (!(cbVersion.Items.Contains(Properties.Settings.Default.Version)))
         {
             cbVersion.Text = cbVersion.Items[0].ToString();
+        } else {
+            cbVersion.Text = Properties.Settings.Default.Version;
         }
 
         //news
@@ -193,6 +209,9 @@ public partial class LauncherForm : Form
                 NewsRTB.Text += ("• " + neww + (Environment.NewLine + Environment.NewLine));
             }
         }
+        //NewsRTB.Enabled = false;
+        //NewsLabel.Enabled = false;
+        //stfu();
     }
 
     private async void btnStart_release(object sender, EventArgs e)
@@ -204,10 +223,11 @@ public partial class LauncherForm : Form
         }
         else
         {
+
             // Disable UI while launchin
+            stfu();
             Globals.isLoading = true;
             btnStart.Image = Properties.Resources.Play_install;
-            this.Enabled = false;
             var mcVersion = "1.20.1";
 
             //define fucking variables
@@ -215,7 +235,10 @@ public partial class LauncherForm : Form
             rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
             var servmodfolder = Path.Combine(Globals.mcpath, "servermods");
             var globmodfolder = Path.Combine(Globals.mcpath, "mods");
-            var usermodfolder = Path.Combine(Globals.mcpath, "usermods");
+            var usermodfolder = Path.Combine(Globals.mcpath, "user_mods");
+            var resourcepacks = Path.Combine(Globals.mcpath, "resourcepacks");
+            var shaderpacks = Path.Combine(Globals.mcpath, "shaderpacks");
+            var optionfile = Path.Combine(Globals.mcpath, "options.txt");
             var port = config.port;
             var addr = config.ip;
             if (!(Properties.Settings.Default.Proxy == "0"))
@@ -258,14 +281,32 @@ public partial class LauncherForm : Form
                         if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
                         {
                             //mods
-                            var downloadFileUrl = Path.Combine(config.updateServer, "mods.zip");
-                            var destinationFilePath = Path.Combine(Globals.mcpath, "mods.zip");
-                            using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                            using (var client = new HttpClientDownloadWithProgress(Path.Combine(config.updateServer, "mods.zip"), Path.Combine(Globals.mcpath, "mods.zip")))
                             {
                                 client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                                 {
                                     pbFiles.Value = Convert.ToInt32(progressPercentage);
                                     lbProgress.Text = $"[Updating mods: {totalBytesDownloaded}/{totalFileSize}]";
+                                };
+
+                                await client.StartDownload();
+                            }
+                            using (var client = new HttpClientDownloadWithProgress(Path.Combine(config.updateServer, "resourcepacks.zip"), Path.Combine(Globals.mcpath, "resourcepacks.zip")))
+                            {
+                                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                                {
+                                    pbFiles.Value = Convert.ToInt32(progressPercentage);
+                                    lbProgress.Text = $"[Updating resourcepacks: {totalBytesDownloaded}/{totalFileSize}]";
+                                };
+
+                                await client.StartDownload();
+                            }
+                            using (var client = new HttpClientDownloadWithProgress(Path.Combine(config.updateServer, "shaders.zip"), Path.Combine(Globals.mcpath, "shaders.zip")))
+                            {
+                                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                                {
+                                    pbFiles.Value = Convert.ToInt32(progressPercentage);
+                                    lbProgress.Text = $"[Updating shaders: {totalBytesDownloaded}/{totalFileSize}]";
                                 };
 
                                 await client.StartDownload();
@@ -277,50 +318,125 @@ public partial class LauncherForm : Form
                             }
                             Globals.ModsVer = readver;
                             lbProgress.Text = "Unpacking...";
-                            try
-                            {
-                                Directory.Delete(servmodfolder, true);
-                            }
-                            catch (Exception ex)
-                            {
-                                //MessageBox.Show(ex.ToString());
-                            }
+                            try { Directory.Delete(servmodfolder, true); }
+                            catch (Exception ex) { }
+                            try { Directory.Delete(resourcepacks, true); }
+                            catch (Exception ex) { }
+                            try { Directory.Delete(shaderpacks, true); }
+                            catch (Exception ex) { }
                             System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
+                            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "resourcepacks.zip"), resourcepacks);
+                            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "shaders.zip"), shaderpacks);
+                            File.Delete(Path.Combine(Globals.mcpath, "mods.zip"));
+                            File.Delete(Path.Combine(Globals.mcpath, "resourcepacks.zip"));
+                            File.Delete(Path.Combine(Globals.mcpath, "shaders.zip"));
                         }
                     }
                     //if you downloaded json, but somehow fucked up on version
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.ToString());
-                        //lbProgress.Text = "Do not forget to enable proxy!";
                     }
                 }
 
-                //MODPACK CHANGER (plz hewp me)
-                //if (cbVersion.Text != Properties.Settings.Default.Version)
-                //{
-                    try { Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
-                    catch { Directory.CreateDirectory(globmodfolder); }
-
-                    ver? fullVersion = revision.ver.FirstOrDefault(v => v.name == cbVersion.Text);
-                    foreach (var mod in fullVersion.mods)
+                //user pak add
+                try
+                {
+                    foreach (var usermod in Directory.GetFiles(usermodfolder))
                     {
-                        File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod), true);
+                        string modname = Path.GetFileName(usermod);
+                        File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
                     }
-                    try
+                }
+                catch { Directory.CreateDirectory(usermodfolder); }
+
+
+                try
+                {
+                    foreach (var usertp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
                     {
-                        foreach (var usermod in Directory.GetFiles(usermodfolder))
+                        string tpname = Path.GetFileName(usertp);
+                        File.Copy(usertp, Path.Combine(resourcepacks, tpname), true);
+                    }
+                }
+                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks")); }
+
+                try
+                {
+                    foreach (var usersp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_shaderpacks")))
+                    {
+                        string spname = Path.GetFileName(usersp);
+                        File.Copy(usersp, Path.Combine(shaderpacks, spname), true);
+                    }
+                }
+                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks")); }
+
+
+
+                //MODPACK CHANGER (plz hewp me)
+                try { Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
+                catch { Directory.CreateDirectory(globmodfolder); }
+                ver? fullVersion = revision.ver.FirstOrDefault(v => v.name == cbVersion.Text);
+                lbProgress.Text = "Installing mods";
+                foreach (var mod in fullVersion.mods)
+                {
+                    File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod), true);
+                }
+
+                var opline = "";
+                if (File.Exists(optionfile))
+                {
+                    string[] arrLine = File.ReadAllLines(optionfile);
+                    foreach (var item in arrLine.Select((value, index) => new { value, index }))
+                    {
+                        var lin = item.value;
+                        var ind = item.index;
+                        if (lin.Contains("resourcePacks"))
                         {
-                            string modname = Path.GetFileName(usermod);
-                            File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
+                            opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
+                            if (Properties.Settings.Default.HighContrast == "1") {
+                                opline += ",\"high_contrast\"";
+                            }
+                            foreach (var rp in fullVersion.resourcepacks)
+                            {
+                                opline += ",\"file/" + rp + "\"";
+                            }
+                            foreach (var rp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
+                            {
+                                string rpname = Path.GetFileName(rp);
+                                opline += ",\"file/" + rpname + "\"";
+                            }
+                            opline += "]";
+                            MessageBox.Show(opline);
+                            arrLine[ind] = opline;
                         }
                     }
-                    catch { Directory.CreateDirectory(usermodfolder); }
-                //}
+                    File.WriteAllLines(optionfile, arrLine);
+                } 
+                else {
+                    opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
+                    if (Properties.Settings.Default.HighContrast == "1")
+                    {
+                        opline += ",\"high_contrast\"";
+                    }
+                    foreach (var rp in fullVersion.resourcepacks)
+                    {
+                        opline += ",\"file/" + rp + "\"";
+                    }
+                    foreach (var rp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
+                    {
+                        string rpname = Path.GetFileName(rp);
+                        opline += ",\"file/" + rpname + "\"";
+                    }
+                    opline += "]";
+                    File.WriteAllText(optionfile, opline);
+                }
 
+
+
+                //LAUNCH MINCERAFT and write vars to conf
                 pbFiles.Visible = false;
                 lbProgress.Text = "";
-                //LAUNCH MINCERAFT and write vars to conf
                 var launchOption = new MLaunchOption
                 {
                     MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),
@@ -349,16 +465,20 @@ public partial class LauncherForm : Form
                 }
                 var processUtil = new ProcessWrapper(process);
                 processUtil.StartWithEvents();
-                await processUtil.WaitForExitTaskAsync();
+                //await processUtil.WaitForExitTaskAsync();
+                Environment.Exit(0);
+                //stfu(false);
             }
             catch (Exception ex)
             {
                 // Show error 
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show("Произошла ошибка.\nОтправьте репорт разрабочику.\n\n"+ex.ToString());
+                Environment.Exit(0);
+                //stfu(false);
             }
 
             pbFiles.Value = 0;
-            this.Enabled = true;
+            //this.Enabled = true;
             Globals.isLoading = false;
             btnStart.Image = Properties.Resources.Play;
         }
@@ -475,16 +595,46 @@ public partial class LauncherForm : Form
     }
 
 
+    //disable form but not really
+    private void stfu(bool Lock=true)
+    {
+        if (Lock == true)
+        {
+            closeBtn.Click -= closeBtn_Click;
+            closeBtn.MouseHover -= closeBtn_Hover;
+            btnStart.MouseUp -= btnStart_release;
+            btnStart.MouseDown -= btnStart_press;
+            btnStart.MouseEnter -= btnStart_Hover;
+            settingsBtn.Click -= settingsBtn_Click;
+            folderBtn.Click -= folderBtn_Click;
+            settingsBtn.MouseEnter -= settingsBtn_Hover;
+            folderBtn.MouseEnter -= folderBtn_Hover;
+            usernameInput.ReadOnly = true;
+            var tempor = cbVersion.Text;
+            cbVersion.Items.Clear();
+            cbVersion.Items.Add(tempor);
+            cbVersion.Text = tempor;
+            try { Application.OpenForms["SettingsForm"].Close(); }
+            catch { }
+        } else {
+            closeBtn.Click += closeBtn_Click;
+            btnStart.MouseUp += btnStart_release;
+            settingsBtn.Click += settingsBtn_Click;
+            folderBtn.Click += folderBtn_Click;
+            usernameInput.ReadOnly = false;
+            //listVersions();
+        }
+    }
 
     //some random design code
     //closeBtn
     private void closeBtn_Hover(object sender, EventArgs e)
     {
-        closeBtn.Image = Properties.Resources.Exit_hover;
+        closeBtn.BackgroundImage = Properties.Resources.Exit_hover;
     }
     private void closeBtn_noHover(object sender, EventArgs e)
     {
-        closeBtn.Image = Properties.Resources.Exit;
+        closeBtn.BackgroundImage = Properties.Resources.Exit;
     }
     private void closeBtn_Click(object sender, EventArgs e)
     {
@@ -548,7 +698,7 @@ public partial class LauncherForm : Form
     }
     private void sunflower_Click(object sender, EventArgs e)
     {
-        MessageBox.Show("Sunflower team:" + Environment.NewLine + "ilaa70" + Environment.NewLine + "cnuuyy" + Environment.NewLine + "T4lziar" + Environment.NewLine + "blood is fuel, hell is full :3");
+        Process.Start("explorer", "https://modrinth.com/organization/reign-devs");
     }
     //book
     private void book_Hover(object sender, EventArgs e)
@@ -561,7 +711,7 @@ public partial class LauncherForm : Form
     }
     private void book_Click(object sender, EventArgs e)
     {
-        Process.Start("explorer", "https://t.me/reignserver");
+        Process.Start("explorer", "https://t.me/reignmod");
     }
 
 }

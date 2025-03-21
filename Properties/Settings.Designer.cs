@@ -106,5 +106,17 @@ namespace RCRL.Properties {
                 this["MCVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HighContrast {
+            get {
+                return ((string)(this["HighContrast"]));
+            }
+            set {
+                this["HighContrast"] = value;
+            }
+        }
     }
 }

@@ -129,7 +129,6 @@ namespace RCRL
             // 
             // eventTimer
             // 
-            eventTimer.Enabled = false;
             eventTimer.Tick += eventTimer_Tick;
             // 
             // settingsBtn
@@ -166,11 +165,11 @@ namespace RCRL
             // 
             NewsLabel.AutoSize = true;
             NewsLabel.BackColor = Color.Transparent;
-            NewsLabel.Font = new Font("Calibri", 48F, FontStyle.Bold, GraphicsUnit.Pixel);
+            NewsLabel.Font = new Font("Calibri", 48F, FontStyle.Regular, GraphicsUnit.Pixel);
             NewsLabel.ForeColor = Color.FromArgb(101, 166, 106);
-            NewsLabel.Location = new Point(20, 151);
+            NewsLabel.Location = new Point(36, 150);
             NewsLabel.Name = "NewsLabel";
-            NewsLabel.Size = new Size(606, 59);
+            NewsLabel.Size = new Size(595, 59);
             NewsLabel.TabIndex = 17;
             NewsLabel.Text = "Нет соединения с сервером";
             // 
@@ -178,6 +177,7 @@ namespace RCRL
             // 
             logo.BackColor = Color.Transparent;
             logo.BackgroundImage = Properties.Resources.Logo;
+            logo.Enabled = false;
             logo.Location = new Point(411, 20);
             logo.Name = "logo";
             logo.Size = new Size(378, 72);
@@ -198,12 +198,13 @@ namespace RCRL
             // closeBtn
             // 
             closeBtn.BackColor = Color.Transparent;
+            closeBtn.BackgroundImage = Properties.Resources.Exit;
+            closeBtn.BackgroundImageLayout = ImageLayout.Center;
             closeBtn.ForeColor = Color.Transparent;
-            closeBtn.Image = Properties.Resources.Exit;
-            closeBtn.Location = new Point(1160, 20);
+            closeBtn.Location = new Point(1140, 0);
             closeBtn.Margin = new Padding(0);
             closeBtn.Name = "closeBtn";
-            closeBtn.Size = new Size(20, 20);
+            closeBtn.Size = new Size(60, 60);
             closeBtn.TabIndex = 20;
             closeBtn.TabStop = false;
             closeBtn.Click += closeBtn_Click;
@@ -256,7 +257,7 @@ namespace RCRL
             NewsRTB.BackColor = Color.Transparent;
             NewsRTB.Font = new Font("Calibri", 27F, FontStyle.Regular, GraphicsUnit.Pixel);
             NewsRTB.ForeColor = Color.White;
-            NewsRTB.Location = new Point(65, 231);
+            NewsRTB.Location = new Point(77, 243);
             NewsRTB.Name = "NewsRTB";
             NewsRTB.Size = new Size(666, 385);
             NewsRTB.TabIndex = 26;

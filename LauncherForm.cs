@@ -620,6 +620,7 @@ public partial class LauncherForm : Form
             settingsBtn.MouseEnter -= settingsBtn_Hover;
             folderBtn.MouseEnter -= folderBtn_Hover;
             usernameInput.ReadOnly = true;
+            box1.BackgroundImage = Properties.Resources.box_disabled;
             var tempor = cbVersion.Text;
             cbVersion.Items.Clear();
             cbVersion.Items.Add(tempor);

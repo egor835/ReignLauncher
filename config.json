@@ -2,6 +2,6 @@
   "ip": "185.9.145.213",
   "proxy": "45.154.35.134",
   "port": "15056",
-  "updateServer": "http://45.154.35.134/",
+  "updateServer": "http://45.154.35.134/data/",
   "versionName": "47.3.12"
 }

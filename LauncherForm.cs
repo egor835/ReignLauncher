@@ -6,12 +6,26 @@ using CmlLib.Core.ProcessBuilder;
 using CmlLib.Core.VersionLoader;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text.Json;
+using static RCRL.LauncherForm;
 
 namespace RCRL;
 
 public partial class LauncherForm : Form
 {
+    //make window rounded
+    [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+    private static extern IntPtr CreateRoundRectRgn
+        (
+            int nLeftRect,     // x-coordinate of upper-left corner
+            int nTopRect,      // y-coordinate of upper-left corner
+            int nRightRect,    // x-coordinate of lower-right corner
+            int nBottomRect,   // y-coordinate of lower-right corner
+            int nWidthEllipse, // width of ellipse
+            int nHeightEllipse // height of ellipse
+        );
+
     //version getter
     public class ver
     {
@@ -29,6 +43,7 @@ public partial class LauncherForm : Form
     {
         public string title { get; set; }
         public List<string> news { get; set; }
+        public string king { get; set; }
     }
     //fetch config
     public class Config
@@ -121,6 +136,8 @@ public partial class LauncherForm : Form
             _launcher = new MinecraftLauncher(parameters);
         }
         InitializeComponent();
+        this.FormBorderStyle = FormBorderStyle.None;
+        Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)
@@ -222,6 +239,29 @@ public partial class LauncherForm : Form
         if (string.IsNullOrEmpty(usernameInput.Text))
         {
             MessageBox.Show("Введите никнейм");
+        }
+        else if (usernameInput.Text == "BannedForever")
+        {
+            stfu();
+            if (!Directory.Exists(Path.Combine(Globals.datapath, "Doukutsu")))
+            {
+                pbFiles.Visible = true;
+                using (var client = new HttpClientDownloadWithProgress("https://cavestorymultiplayer.com/content/CaveStoryMultiplayer-v0.1.1.16b.zip", Path.Combine(Globals.datapath, "doukutsu.zip")))
+                {
+                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                    {
+                        pbFiles.Value = Convert.ToInt32(progressPercentage);
+                        lbProgress.Text = $"[Downloading Cave Story: {totalBytesDownloaded}/{totalFileSize}]";
+                    };
+                    await client.StartDownload();
+                }
+                System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.datapath, "doukutsu.zip"), Path.Combine(Globals.datapath, "Doukutsu"));
+                File.Delete(Path.Combine(Globals.datapath, "doukutsu.zip"));
+                pbFiles.Visible = false;
+                lbProgress.Text = "";
+            }
+            Process.Start(Path.Combine(Globals.datapath, "Doukutsu\\Doukutsu.exe"));
+            Environment.Exit(0);
         }
         else
         {
@@ -414,7 +454,7 @@ public partial class LauncherForm : Form
                         }
                     }
                     File.WriteAllLines(optionfile, arrLine);
-                } 
+                }
                 else {
                     opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
                     if (Properties.Settings.Default.HighContrast == "1")
@@ -472,8 +512,8 @@ public partial class LauncherForm : Form
                 var process = new Process();
                 if (Globals.isInternetHere) {
                     process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
-                } else { 
-                    process = await _launcher.BuildProcessAsync(version_name, launchOption); 
+                } else {
+                    process = await _launcher.BuildProcessAsync(version_name, launchOption);
                 }
                 var processUtil = new ProcessWrapper(process);
                 processUtil.StartWithEvents();
@@ -484,7 +524,7 @@ public partial class LauncherForm : Form
             catch (Exception ex)
             {
                 // Show error 
-                MessageBox.Show("Произошла ошибка.\nОтправьте репорт разрабочику.\n\n"+ex.ToString());
+                MessageBox.Show("Произошла ошибка.\nОтправьте репорт разрабочику.\n\n" + ex.ToString());
                 Environment.Exit(0);
                 //stfu(false);
             }

@@ -296,7 +296,7 @@ namespace RCRL
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackColor = Color.Lime;
+            BackColor = Color.Black;
             BackgroundImage = Properties.Resources.bg;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
@@ -330,7 +330,6 @@ namespace RCRL
             RightToLeft = RightToLeft.No;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ReignCraft Launcher";
-            TransparencyKey = Color.Lime;
             Load += LauncherForm_Load;
             ((System.ComponentModel.ISupportInitialize)btnStart).EndInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).EndInit();

@@ -5,10 +5,10 @@ using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
 using CmlLib.Core.VersionLoader;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using static RCRL.LauncherForm;
 
 namespace RCRL;
 
@@ -70,8 +70,10 @@ public partial class LauncherForm : Form
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
-        //font
-        //public static PrivateFontCollection pfc = new PrivateFontCollection();
+        //font init
+        public static PrivateFontCollection pfc = new PrivateFontCollection();
+        public static Font vcrosd_reg = null;
+        public static Font vcrosd_bold = null;
     }
 
     //make window draggable
@@ -95,8 +97,6 @@ public partial class LauncherForm : Form
         var datapath = Path.Combine(mcpath, "launcher_data");
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
-        //add font to pfc
-        //Globals.pfc.AddFontFile(Path.Combine(Application.StartupPath, ".\\Resources\\vcrosd.ttf"));
 
         //fucking mess, which downloads versions.json from remote server and checks internet kenekshun
         Config? config = JsonSerializer.Deserialize<Config>(json);
@@ -135,6 +135,13 @@ public partial class LauncherForm : Form
             parameters.VersionLoader = new LocalJsonVersionLoader(path);
             _launcher = new MinecraftLauncher(parameters);
         }
+        
+        //load vcrosd
+        Globals.pfc.AddFontFile(Path.Combine(Application.StartupPath, ".\\vcrosd.ttf"));
+        Globals.vcrosd_reg = new Font(Globals.pfc.Families[0], 18, FontStyle.Regular);
+        Globals.vcrosd_bold = new Font(Globals.pfc.Families[0], 18, FontStyle.Bold);
+
+
         InitializeComponent();
         this.FormBorderStyle = FormBorderStyle.None;
         Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
@@ -150,7 +157,7 @@ public partial class LauncherForm : Form
             {
                 client.DownloadFile(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
                 client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
-                client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.datapath, "servers.dat"));
+                client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
             }
             this.BackgroundImage = Image.FromFile(Path.Combine(Globals.datapath, "bg.png"));
         }
@@ -215,7 +222,6 @@ public partial class LauncherForm : Form
         }
 
         //news
-        //NewsRTB.Font = new Font(Globals.pfc.Families[0], 18, FontStyle.Regular);
         if (Globals.isInternetHere)
         {
             string newsPath = Path.Combine(Globals.datapath, "news.json");
@@ -228,9 +234,6 @@ public partial class LauncherForm : Form
                 NewsRTB.Text += ("• " + neww + (Environment.NewLine + Environment.NewLine));
             }
         }
-        //NewsRTB.Enabled = false;
-        //NewsLabel.Enabled = false;
-        //stfu();
     }
 
     private async void btnStart_release(object sender, EventArgs e)
@@ -262,6 +265,24 @@ public partial class LauncherForm : Form
             }
             Process.Start(Path.Combine(Globals.datapath, "Doukutsu\\Doukutsu.exe"));
             Environment.Exit(0);
+        }
+        else if (usernameInput.Text == "MankindIsDeadBloodIsFuelHellIsFull")
+        {
+            ultrakillyourself();
+            Process.Start("\"C:\\Program Files (x86)\\Steam\\steam.exe\"", "steam://rungameid/1229490");
+        }
+        else if (usernameInput.Text == "shrek 2")
+        {
+            Process.Start(Path.Combine(Application.StartupPath, "ffplay.exe"),"-i http://parky.ddns.net/shrek.mp4 -fs -noborder -alwaysontop -autoexit");
+            Environment.Exit(0);
+        }
+        else if (usernameInput.Text.Any(ch => !char.IsLetterOrDigit(ch)))
+        {
+            MessageBox.Show("Ваш никнейм не должен содержать пробелов или спецсимволов");
+        }
+        else if (usernameInput.Text.Length > 16)
+        {
+            MessageBox.Show("Ваш никнейм слишком длинный!");
         }
         else
         {
@@ -775,6 +796,13 @@ public partial class LauncherForm : Form
     private void book_Click(object sender, EventArgs e)
     {
         Process.Start("explorer", "https://t.me/reignmod");
+    }
+    private void ultrakillyourself(bool Lock = true)
+    {
+        this.BackgroundImage = null;
+        this.BackColor = Color.Red;
+        NewsLabel.Text = "PREPARE THYSELF";
+        NewsRTB.Text = "DIE!!!!";
     }
 
 }

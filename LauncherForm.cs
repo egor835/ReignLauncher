@@ -128,15 +128,18 @@ public partial class LauncherForm : Form
         }
 
         //and init this shit
-        if (Globals.isInternetHere) {
+        if (Globals.isInternetHere)
+        {
             _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
-        } else {
+        }
+        else
+        {
             var path = new MinecraftPath(mcpath);
             var parameters = MinecraftLauncherParameters.CreateDefault(path);
             parameters.VersionLoader = new LocalJsonVersionLoader(path);
             _launcher = new MinecraftLauncher(parameters);
         }
-        
+
         //load vcrosd
         Globals.pfc.AddFontFile(Path.Combine(Application.StartupPath, ".\\vcrosd.ttf"));
         Globals.vcrosd_reg = new Font(Globals.pfc.Families[0], 18, FontStyle.Regular);
@@ -187,13 +190,16 @@ public partial class LauncherForm : Form
         {
             Properties.Settings.Default.HighContrast = "0";
         }
-        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_resourcepacks"))) {
+        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_resourcepacks")))
+        {
             Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks"));
         }
-        if(!Directory.Exists(Path.Combine(Globals.mcpath, "user_shaderpacks"))) {
+        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_shaderpacks")))
+        {
             Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks"));
         }
-        if(!Directory.Exists(Path.Combine(Globals.mcpath, "user_mods"))) {
+        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_mods")))
+        {
             Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_mods"));
         }
         await listVersions();
@@ -218,7 +224,9 @@ public partial class LauncherForm : Form
         if (!(cbVersion.Items.Contains(Properties.Settings.Default.Version)))
         {
             cbVersion.Text = cbVersion.Items[0].ToString();
-        } else {
+        }
+        else
+        {
             cbVersion.Text = Properties.Settings.Default.Version;
         }
 
@@ -274,7 +282,7 @@ public partial class LauncherForm : Form
         }
         else if (usernameInput.Text == "shrek 2")
         {
-            Process.Start("explorer","http://parky.ddns.net/shrek.mp4");
+            Process.Start("explorer", "http://parky.ddns.net/shrek.mp4");
             Environment.Exit(0);
         }
         else if (usernameInput.Text.Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text, @"\p{IsCyrillic}"))
@@ -327,7 +335,8 @@ public partial class LauncherForm : Form
                         FileProgress = fileProgress
                     });
                     eventTimer.Enabled = false;
-                } else
+                }
+                else
                 {
                     version_name = Properties.Settings.Default.MCVersion;
                 }
@@ -458,7 +467,8 @@ public partial class LauncherForm : Form
                         if (lin.Contains("resourcePacks"))
                         {
                             opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
-                            if (Properties.Settings.Default.HighContrast == "1") {
+                            if (Properties.Settings.Default.HighContrast == "1")
+                            {
                                 opline += ",\"high_contrast\"";
                             }
                             foreach (var rp in fullVersion.resourcepacks)
@@ -477,7 +487,8 @@ public partial class LauncherForm : Form
                     }
                     File.WriteAllLines(optionfile, arrLine);
                 }
-                else {
+                else
+                {
                     opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
                     if (Properties.Settings.Default.HighContrast == "1")
                     {
@@ -532,9 +543,12 @@ public partial class LauncherForm : Form
                 Properties.Settings.Default.MCVersion = version_name;
                 Properties.Settings.Default.Save();
                 var process = new Process();
-                if (Globals.isInternetHere) {
+                if (Globals.isInternetHere)
+                {
                     process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
-                } else {
+                }
+                else
+                {
                     process = await _launcher.BuildProcessAsync(version_name, launchOption);
                 }
                 var processUtil = new ProcessWrapper(process);
@@ -670,7 +684,7 @@ public partial class LauncherForm : Form
 
 
     //disable form but not really
-    private void stfu(bool Lock=true)
+    private void stfu(bool Lock = true)
     {
         if (Lock == true)
         {
@@ -691,7 +705,9 @@ public partial class LauncherForm : Form
             cbVersion.Text = tempor;
             try { Application.OpenForms["SettingsForm"].Close(); }
             catch { }
-        } else {
+        }
+        else
+        {
             closeBtn.Click += closeBtn_Click;
             btnStart.MouseUp += btnStart_release;
             settingsBtn.Click += settingsBtn_Click;
@@ -806,4 +822,20 @@ public partial class LauncherForm : Form
         NewsRTB.Text = "DIE!!!!";
     }
 
+    private void usernameInput_TextChanged(object sender, EventArgs e)
+    {
+        if (usernameInput.Text == "ilaa70")
+        {
+            easterLabel.Text = "Добро пожаловать, господин админ.";
+        } else if (usernameInput.Text == "PetrCHess") {
+            easterLabel.Text = "$> Майнер активирован.";
+        }
+        else if (usernameInput.Text == "cnuuyy")
+        {
+            easterLabel.Text = "почему винда а не арч, егор?";
+        } else {
+            easterLabel.Text = "";
+        }
+
+    }
 }

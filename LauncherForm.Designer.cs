@@ -52,6 +52,7 @@ namespace RCRL
             NewsRTB = new Label();
             sunflower = new PictureBox();
             book = new PictureBox();
+            easterLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -126,6 +127,7 @@ namespace RCRL
             usernameInput.PlaceholderText = "Введите никнейм";
             usernameInput.Size = new Size(261, 20);
             usernameInput.TabIndex = 9;
+            usernameInput.TextChanged += usernameInput_TextChanged;
             // 
             // eventTimer
             // 
@@ -293,6 +295,18 @@ namespace RCRL
             book.MouseEnter += book_Hover;
             book.MouseLeave += book_noHover;
             // 
+            // easterLabel
+            // 
+            easterLabel.AutoSize = true;
+            easterLabel.BackColor = Color.Transparent;
+            easterLabel.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
+            easterLabel.ForeColor = Color.Green;
+            easterLabel.Location = new Point(65, 663);
+            easterLabel.Name = "easterLabel";
+            easterLabel.Size = new Size(10, 14);
+            easterLabel.TabIndex = 29;
+            easterLabel.Text = " ";
+            // 
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -301,6 +315,7 @@ namespace RCRL
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
             ControlBox = false;
+            Controls.Add(easterLabel);
             Controls.Add(book);
             Controls.Add(sunflower);
             Controls.Add(NewsRTB);
@@ -367,5 +382,6 @@ namespace RCRL
         private Label NewsRTB;
         private PictureBox sunflower;
         private PictureBox book;
+        private Label easterLabel;
     }
 }

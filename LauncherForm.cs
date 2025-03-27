@@ -9,6 +9,7 @@ using System.Drawing.Text;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace RCRL;
 
@@ -273,10 +274,10 @@ public partial class LauncherForm : Form
         }
         else if (usernameInput.Text == "shrek 2")
         {
-            Process.Start(Path.Combine(Application.StartupPath, "ffplay.exe"),"-i http://parky.ddns.net/shrek.mp4 -fs -noborder -alwaysontop -autoexit");
+            Process.Start("explorer","http://parky.ddns.net/shrek.mp4");
             Environment.Exit(0);
         }
-        else if (usernameInput.Text.Any(ch => !char.IsLetterOrDigit(ch)))
+        else if (usernameInput.Text.Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text, @"\p{IsCyrillic}"))
         {
             MessageBox.Show("Ваш никнейм не должен содержать пробелов или спецсимволов");
         }

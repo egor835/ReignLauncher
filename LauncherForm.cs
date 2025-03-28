@@ -88,6 +88,13 @@ public partial class LauncherForm : Form
     private readonly MinecraftLauncher _launcher;
     public LauncherForm()
     {
+        Process[] pname = Process.GetProcessesByName("RCRL");
+        if (pname.Length > 1)
+        {
+            MessageBox.Show("Лаунчер уже запущен. Закройте все предыдущие процессы и повторите попытку.");
+            Environment.Exit(0);
+        }
+
         //define vars
         var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
         var datapath = Path.Combine(mcpath, "launcher_data");
@@ -125,6 +132,19 @@ public partial class LauncherForm : Form
         //and init this shit
         if (Globals.isInternetHere)
         {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
+                    client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
+                    client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
+                }
+            } catch
+            {
+                MessageBox.Show("Судя по всему, лаунчер уже запущен. Закройте все предыдущие процессы и повторите попытку.");
+                Environment.Exit(0);
+            }
             _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
         }
         else
@@ -146,12 +166,6 @@ public partial class LauncherForm : Form
         Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
         if (Globals.isInternetHere)
         {
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
-                client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
-                client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
-            }
             this.BackgroundImage = Image.FromFile(Path.Combine(Globals.datapath, "bg.png"));
         }
         hide("launcher_data");
@@ -509,7 +523,7 @@ public partial class LauncherForm : Form
 
                 //LAUNCH MINCERAFT and write vars to conf
                 pbFiles.Visible = false;
-                lbProgress.Text = "";
+                lbProgress.Text = "Please wait...";
                 var launchOption = new MLaunchOption
                 {
                     MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),

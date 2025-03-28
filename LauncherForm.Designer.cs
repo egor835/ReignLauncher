@@ -53,6 +53,7 @@ namespace RCRL
             sunflower = new PictureBox();
             book = new PictureBox();
             easterLabel = new Label();
+            hideBtn = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -65,6 +66,7 @@ namespace RCRL
             ((System.ComponentModel.ISupportInitialize)box2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)sunflower).BeginInit();
             ((System.ComponentModel.ISupportInitialize)book).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)hideBtn).BeginInit();
             SuspendLayout();
             // 
             // cbVersion
@@ -307,6 +309,22 @@ namespace RCRL
             easterLabel.TabIndex = 29;
             easterLabel.Text = " ";
             // 
+            // hideBtn
+            // 
+            hideBtn.BackColor = Color.Transparent;
+            hideBtn.BackgroundImage = Properties.Resources.hide;
+            hideBtn.BackgroundImageLayout = ImageLayout.Center;
+            hideBtn.ForeColor = Color.Transparent;
+            hideBtn.Location = new Point(1080, 0);
+            hideBtn.Margin = new Padding(0);
+            hideBtn.Name = "hideBtn";
+            hideBtn.Size = new Size(60, 60);
+            hideBtn.TabIndex = 30;
+            hideBtn.TabStop = false;
+            hideBtn.Click += hideBtn_Click;
+            hideBtn.MouseEnter += hideBtn_Hover;
+            hideBtn.MouseLeave += hideBtn_noHover;
+            // 
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -315,6 +333,7 @@ namespace RCRL
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
             ControlBox = false;
+            Controls.Add(hideBtn);
             Controls.Add(easterLabel);
             Controls.Add(book);
             Controls.Add(sunflower);
@@ -358,6 +377,7 @@ namespace RCRL
             ((System.ComponentModel.ISupportInitialize)box2).EndInit();
             ((System.ComponentModel.ISupportInitialize)sunflower).EndInit();
             ((System.ComponentModel.ISupportInitialize)book).EndInit();
+            ((System.ComponentModel.ISupportInitialize)hideBtn).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -383,5 +403,6 @@ namespace RCRL
         private PictureBox sunflower;
         private PictureBox book;
         private Label easterLabel;
+        private PictureBox hideBtn;
     }
 }

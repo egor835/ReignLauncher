@@ -5,7 +5,6 @@ using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
 using CmlLib.Core.VersionLoader;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -71,10 +70,6 @@ public partial class LauncherForm : Form
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
-        //font init
-        public static PrivateFontCollection pfc = new PrivateFontCollection();
-        public static Font vcrosd_reg = null;
-        public static Font vcrosd_bold = null;
     }
 
     //make window draggable
@@ -139,12 +134,6 @@ public partial class LauncherForm : Form
             parameters.VersionLoader = new LocalJsonVersionLoader(path);
             _launcher = new MinecraftLauncher(parameters);
         }
-
-        //load vcrosd
-        Globals.pfc.AddFontFile(Path.Combine(Application.StartupPath, ".\\vcrosd.ttf"));
-        Globals.vcrosd_reg = new Font(Globals.pfc.Families[0], 18, FontStyle.Regular);
-        Globals.vcrosd_bold = new Font(Globals.pfc.Families[0], 18, FontStyle.Bold);
-
 
         InitializeComponent();
         this.FormBorderStyle = FormBorderStyle.None;
@@ -287,7 +276,7 @@ public partial class LauncherForm : Form
         }
         else if (usernameInput.Text.Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text, @"\p{IsCyrillic}"))
         {
-            MessageBox.Show("Ваш никнейм не должен содержать пробелов или спецсимволов");
+            MessageBox.Show("Ваш никнейм не должен содержать:\n\n- пробелов\n- кириллицы\n- спецсимволов\n\nДопустимы только латинские буквы и цифры.");
         }
         else if (usernameInput.Text.Length > 16)
         {
@@ -507,7 +496,6 @@ public partial class LauncherForm : Form
                     File.WriteAllText(optionfile, opline);
                 }
 
-
                 //Hide the folders from stoopid users
                 hide("assets");
                 hide("libraries");
@@ -559,12 +547,11 @@ public partial class LauncherForm : Form
             }
             catch (Exception ex)
             {
-                // Show error 
+                // Show error
                 MessageBox.Show("Произошла ошибка.\nОтправьте репорт разрабочику.\n\n" + ex.ToString());
                 Environment.Exit(0);
                 //stfu(false);
             }
-
             pbFiles.Value = 0;
             //this.Enabled = true;
             Globals.isLoading = false;
@@ -741,6 +728,19 @@ public partial class LauncherForm : Form
     {
         Environment.Exit(0);
     }
+    //hideBtn
+    private void hideBtn_Hover(object sender, EventArgs e)
+    {
+        hideBtn.BackgroundImage = Properties.Resources.hide_hover;
+    }
+    private void hideBtn_noHover(object sender, EventArgs e)
+    {
+        hideBtn.BackgroundImage = Properties.Resources.hide;
+    }
+    private void hideBtn_Click(object sender, EventArgs e)
+    {
+        this.WindowState = FormWindowState.Minimized;
+    }
     //startBtn
     private void btnStart_Hover(object sender, EventArgs e)
     {
@@ -821,21 +821,46 @@ public partial class LauncherForm : Form
         NewsLabel.Text = "PREPARE THYSELF";
         NewsRTB.Text = "DIE!!!!";
     }
-
     private void usernameInput_TextChanged(object sender, EventArgs e)
     {
-        if (usernameInput.Text == "ilaa70")
+        switch (usernameInput.Text)
         {
-            easterLabel.Text = "Добро пожаловать, господин админ.";
-        } else if (usernameInput.Text == "PetrCHess") {
-            easterLabel.Text = "$> Майнер активирован.";
+            case "ilaa70":
+                easterLabel.Text = "/ban";
+                break;
+            case "PetrCHess":
+                easterLabel.Text = ">Майнер активирован";
+                break;
+            case "cnuuyy":
+                easterLabel.Text = "подписывайтесь на notNTඞ";
+                break;
+            case "LEGIMENCY":
+                easterLabel.Text = "Идём собирать хворост";
+                break;
+            case "_machini_":
+                easterLabel.Text = "Первый король онлайн";
+                break;
+            case "Noh4don":
+                easterLabel.Text = "что с братом?";
+                break;
+            case "T4lziar":
+                easterLabel.Text = "Свиное рагу";
+                break;
+            case "JustGera":
+                easterLabel.Text = "Я люблю Солнечный оплот ❤️";
+                break;
+            case "EvisTS":
+                easterLabel.Text = "Опять строить...";
+                break;
+            case "Desmit":
+                easterLabel.Text = "Первый Лук Мезенхольма";
+                break;
+            case "Arminiy777":
+                easterLabel.Text = "<3";
+                break;
+            default:
+                easterLabel.Text = "";
+                break;
         }
-        else if (usernameInput.Text == "cnuuyy")
-        {
-            easterLabel.Text = "почему винда а не арч, егор?";
-        } else {
-            easterLabel.Text = "";
-        }
-
     }
 }

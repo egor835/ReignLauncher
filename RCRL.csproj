@@ -15,13 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="vcrosd.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CmlLib.Core" Version="4.0.4" />
     <PackageReference Include="CmlLib.Core.Installer.Forge" Version="1.0.1" />
   </ItemGroup>
@@ -47,10 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bg.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </None>
     <None Update="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>

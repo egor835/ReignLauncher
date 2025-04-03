@@ -136,6 +136,9 @@
   <data name="Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hide_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hide_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Accept_clicked" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Accept_clicked.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -172,6 +175,9 @@
   <data name="Accept" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Accept.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hide" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hide.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Exit_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Exit_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -205,10 +211,85 @@
   <data name="bg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="hide" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hide.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="casino_001" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\casino_001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="hide_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hide_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="casino_002" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\casino_002.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="casino_003" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\casino_003.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_001" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_002" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_002.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_003" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_003.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_004" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_004.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_005" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_005.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_006" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_006.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_007" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_007.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_008" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_008.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_009" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_009.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_010" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_010.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_011" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_011.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_012" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_012.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_013" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_013.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_014" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_014.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_015" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_015.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_016" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_016.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_017" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_017.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_018" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_018.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_019" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_019.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_020" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_020.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_021" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_021.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_022" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_022.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_023" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_023.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image_part_024" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image_part_024.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

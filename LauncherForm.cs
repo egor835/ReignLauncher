@@ -156,8 +156,8 @@ public partial class LauncherForm : Form
         }
 
         InitializeComponent();
-        this.FormBorderStyle = FormBorderStyle.None;
-        Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
+        int sss = Screen.PrimaryScreen.Bounds.Height;
+        //plzresizeit(1080);
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)
@@ -877,4 +877,19 @@ public partial class LauncherForm : Form
                 break;
         }
     }
+
+    //resizing
+    //i fucking hate my life
+    private void plzresizeit(int resol)
+    {
+        if (resol <= 1100 && resol >= 770)
+        {
+            this.MinimumSize = new Size(800, 600);
+            this.MaximumSize = new Size(800, 600);
+
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
+        }
+
+    }
+
 }

@@ -106,6 +106,7 @@ namespace RCRL
             // 
             btnStart.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             btnStart.BackColor = Color.Transparent;
+            btnStart.BackgroundImageLayout = ImageLayout.Stretch;
             btnStart.ForeColor = Color.Transparent;
             btnStart.Image = Properties.Resources.Play;
             btnStart.Location = new Point(850, 680);
@@ -138,6 +139,7 @@ namespace RCRL
             // settingsBtn
             // 
             settingsBtn.BackColor = Color.Transparent;
+            settingsBtn.BackgroundImageLayout = ImageLayout.Stretch;
             settingsBtn.ForeColor = Color.Transparent;
             settingsBtn.Image = Properties.Resources.Settings;
             settingsBtn.Location = new Point(757, 702);
@@ -153,6 +155,7 @@ namespace RCRL
             // folderBtn
             // 
             folderBtn.BackColor = Color.Transparent;
+            folderBtn.BackgroundImageLayout = ImageLayout.Stretch;
             folderBtn.ForeColor = Color.Transparent;
             folderBtn.Image = Properties.Resources.Mods;
             folderBtn.Location = new Point(387, 702);
@@ -181,6 +184,7 @@ namespace RCRL
             // 
             logo.BackColor = Color.Transparent;
             logo.BackgroundImage = Properties.Resources.Logo;
+            logo.BackgroundImageLayout = ImageLayout.Stretch;
             logo.Enabled = false;
             logo.Location = new Point(411, 20);
             logo.Name = "logo";
@@ -192,6 +196,7 @@ namespace RCRL
             // 
             crown.BackColor = Color.Transparent;
             crown.BackgroundImage = Properties.Resources.Crown;
+            crown.BackgroundImageLayout = ImageLayout.Stretch;
             crown.Location = new Point(480, 628);
             crown.Margin = new Padding(0);
             crown.Name = "crown";
@@ -203,7 +208,7 @@ namespace RCRL
             // 
             closeBtn.BackColor = Color.Transparent;
             closeBtn.BackgroundImage = Properties.Resources.Exit;
-            closeBtn.BackgroundImageLayout = ImageLayout.Center;
+            closeBtn.BackgroundImageLayout = ImageLayout.Stretch;
             closeBtn.ForeColor = Color.Transparent;
             closeBtn.Location = new Point(1140, 0);
             closeBtn.Margin = new Padding(0);
@@ -218,6 +223,7 @@ namespace RCRL
             // nickIMG
             // 
             nickIMG.BackColor = Color.Transparent;
+            nickIMG.BackgroundImageLayout = ImageLayout.Stretch;
             nickIMG.Image = Properties.Resources.Icon_nickname;
             nickIMG.Location = new Point(20, 680);
             nickIMG.Name = "nickIMG";
@@ -229,6 +235,7 @@ namespace RCRL
             // 
             buildsIMG.BackColor = Color.Transparent;
             buildsIMG.BackgroundImage = Properties.Resources.Icon_builds;
+            buildsIMG.BackgroundImageLayout = ImageLayout.Stretch;
             buildsIMG.Location = new Point(20, 740);
             buildsIMG.Name = "buildsIMG";
             buildsIMG.Size = new Size(40, 40);
@@ -239,6 +246,7 @@ namespace RCRL
             // 
             box1.BackColor = Color.Transparent;
             box1.BackgroundImage = Properties.Resources.box;
+            box1.BackgroundImageLayout = ImageLayout.Stretch;
             box1.Location = new Point(65, 680);
             box1.Name = "box1";
             box1.Size = new Size(285, 40);
@@ -249,6 +257,7 @@ namespace RCRL
             // 
             box2.BackColor = Color.Transparent;
             box2.BackgroundImage = Properties.Resources.box_dropdown;
+            box2.BackgroundImageLayout = ImageLayout.Stretch;
             box2.Location = new Point(65, 740);
             box2.Name = "box2";
             box2.Size = new Size(285, 40);
@@ -270,6 +279,7 @@ namespace RCRL
             // sunflower
             // 
             sunflower.BackColor = Color.Transparent;
+            sunflower.BackgroundImageLayout = ImageLayout.Stretch;
             sunflower.ForeColor = Color.Transparent;
             sunflower.Image = Properties.Resources.Sunflower;
             sunflower.Location = new Point(20, 20);
@@ -285,6 +295,7 @@ namespace RCRL
             // book
             // 
             book.BackColor = Color.Transparent;
+            book.BackgroundImageLayout = ImageLayout.Stretch;
             book.ForeColor = Color.Transparent;
             book.Image = Properties.Resources.Textbook;
             book.Location = new Point(96, 20);
@@ -313,7 +324,7 @@ namespace RCRL
             // 
             hideBtn.BackColor = Color.Transparent;
             hideBtn.BackgroundImage = Properties.Resources.hide;
-            hideBtn.BackgroundImageLayout = ImageLayout.Center;
+            hideBtn.BackgroundImageLayout = ImageLayout.Stretch;
             hideBtn.ForeColor = Color.Transparent;
             hideBtn.Location = new Point(1080, 0);
             hideBtn.Margin = new Padding(0);
@@ -330,7 +341,7 @@ namespace RCRL
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.Black;
             BackgroundImage = Properties.Resources.bg;
-            BackgroundImageLayout = ImageLayout.Center;
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1200, 800);
             ControlBox = false;
             Controls.Add(hideBtn);

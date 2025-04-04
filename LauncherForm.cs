@@ -157,7 +157,7 @@ public partial class LauncherForm : Form
 
         InitializeComponent();
         int sss = Screen.PrimaryScreen.Bounds.Height;
-        //plzresizeit(1080);
+        plzresizeit(sss);
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)
@@ -882,10 +882,77 @@ public partial class LauncherForm : Form
     //i fucking hate my life
     private void plzresizeit(int resol)
     {
-        if (resol <= 1100 && resol >= 770)
+        if (resol <= 1100 && resol >= 770) //900x600 form
         {
-            this.MinimumSize = new Size(800, 600);
-            this.MaximumSize = new Size(800, 600);
+            
+            this.MinimumSize = new Size(900, 600);
+            this.MaximumSize = new Size(900, 600);
+            this.ClientSize = new Size(900, 600);
+
+            cbVersion.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
+            cbVersion.Location = new Point(62, 559);
+            cbVersion.Size = new Size(198, 22);
+
+            pbFiles.Location = new Point(568, 482);
+            pbFiles.Size = new Size(317, 12);
+
+            lbProgress.Font = new Font("Calibri", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbProgress.Location = new Point(568, 462);
+            lbProgress.Size = new Size(40, 17);
+
+            btnStart.Location = new Point(637, 510);
+            btnStart.Size = new Size(248, 75);
+
+            usernameInput.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Pixel);
+            usernameInput.Location = new Point(62, 526);
+            usernameInput.Size = new Size(196, 15);
+
+            settingsBtn.Location = new Point(568, 526);
+            settingsBtn.Size = new Size(42, 42);
+
+            folderBtn.Location = new Point(290, 526);
+            folderBtn.Size = new Size(42, 42);
+
+            NewsLabel.Font = new Font("Calibri", 36F, FontStyle.Regular, GraphicsUnit.Pixel);
+            NewsLabel.Location = new Point(27, 114);
+            NewsLabel.Size = new Size(444, 44);
+
+            logo.Location = new Point(308, 15);
+            logo.Size = new Size(284, 54);
+
+            crown.Location = new Point(360, 472);
+            crown.Size = new Size(180, 128);
+
+            closeBtn.Location = new Point(855, 0);
+            closeBtn.Size = new Size(45, 45);
+
+            nickIMG.Location = new Point(15, 519);
+            nickIMG.Size = new Size(30, 30);
+
+            buildsIMG.Location = new Point(15, 555);
+            buildsIMG.Size = new Size(30, 30);
+
+            box1.Location = new Point(51, 519);
+            box1.Size = new Size(214, 30);
+
+            box2.Location = new Point(51, 555);
+            box2.Size = new Size(214, 30);
+
+            NewsRTB.Font = new Font("Calibri", 20F, FontStyle.Regular, GraphicsUnit.Pixel);
+            NewsRTB.Location = new Point(51, 171);
+            NewsRTB.Size = new Size(489, 301);
+
+            sunflower.Location = new Point(15, 15);
+            sunflower.Size = new Size(48, 48);
+
+            book.Location = new Point(70, 15);
+            book.Size = new Size(48, 48);
+
+            easterLabel.Location = new Point(51, 502);
+            easterLabel.Size = new Size(99, 14);
+
+            hideBtn.Location = new Point(810, 0);
+            hideBtn.Size = new Size(45, 45);
 
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
         }

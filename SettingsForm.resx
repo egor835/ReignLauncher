@@ -211,14 +211,14 @@
     <value>Zoom</value>
   </data>
   <data name="closeBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>315, 15</value>
+    <value>290, 0</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="closeBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="closeBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>20, 20</value>
+    <value>60, 60</value>
   </data>
   <data name="closeBtn.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>

@@ -302,7 +302,7 @@ public partial class LauncherForm : Form
             // Disable UI while launchin
             stfu();
             Globals.isLoading = true;
-            btnStart.Image = Properties.Resources.Play_install;
+            btnStart.BackgroundImage = Properties.Resources.Play_install;
             var mcVersion = "1.20.1";
 
             //define fucking variables
@@ -569,7 +569,7 @@ public partial class LauncherForm : Form
             pbFiles.Value = 0;
             //this.Enabled = true;
             Globals.isLoading = false;
-            btnStart.Image = Properties.Resources.Play;
+            btnStart.BackgroundImage = Properties.Resources.Play;
         }
     }
 
@@ -760,28 +760,28 @@ public partial class LauncherForm : Form
     {
         if (!Globals.isLoading)
         {
-            btnStart.Image = Properties.Resources.Play_hover;
+            btnStart.BackgroundImage = Properties.Resources.Play_hover;
         }
     }
     private void btnStart_noHover(object sender, EventArgs e)
     {
         if (!Globals.isLoading)
         {
-            btnStart.Image = Properties.Resources.Play;
+            btnStart.BackgroundImage = Properties.Resources.Play;
         }
     }
     private void btnStart_press(object sender, EventArgs e)
     {
-        btnStart.Image = Properties.Resources.Play_clicked;
+        btnStart.BackgroundImage = Properties.Resources.Play_clicked;
     }
     //settingsBtn
     private void settingsBtn_Hover(object sender, EventArgs e)
     {
-        settingsBtn.Image = Properties.Resources.Settings_hover;
+        settingsBtn.BackgroundImage = Properties.Resources.Settings_hover;
     }
     private void settingsBtn_noHover(object sender, EventArgs e)
     {
-        settingsBtn.Image = Properties.Resources.Settings;
+        settingsBtn.BackgroundImage = Properties.Resources.Settings;
     }
 
     private void settingsBtn_Click(object sender, EventArgs e)
@@ -792,11 +792,11 @@ public partial class LauncherForm : Form
     //folderBtn
     private void folderBtn_Hover(object sender, EventArgs e)
     {
-        folderBtn.Image = Properties.Resources.Mods_hover;
+        folderBtn.BackgroundImage = Properties.Resources.Mods_hover;
     }
     private void folderBtn_noHover(object sender, EventArgs e)
     {
-        folderBtn.Image = Properties.Resources.Mods;
+        folderBtn.BackgroundImage = Properties.Resources.Mods;
     }
     private void folderBtn_Click(object sender, EventArgs e)
     {
@@ -805,11 +805,11 @@ public partial class LauncherForm : Form
     //sunflower
     private void sunflower_Hover(object sender, EventArgs e)
     {
-        sunflower.Image = Properties.Resources.Sunflower_hover;
+        sunflower.BackgroundImage = Properties.Resources.Sunflower_hover;
     }
     private void sunflower_noHover(object sender, EventArgs e)
     {
-        sunflower.Image = Properties.Resources.Sunflower;
+        sunflower.BackgroundImage = Properties.Resources.Sunflower;
     }
     private void sunflower_Click(object sender, EventArgs e)
     {
@@ -818,11 +818,11 @@ public partial class LauncherForm : Form
     //book
     private void book_Hover(object sender, EventArgs e)
     {
-        book.Image = Properties.Resources.Textbook_hover;
+        book.BackgroundImage = Properties.Resources.Textbook_hover;
     }
     private void book_noHover(object sender, EventArgs e)
     {
-        book.Image = Properties.Resources.Textbook;
+        book.BackgroundImage = Properties.Resources.Textbook;
     }
     private void book_Click(object sender, EventArgs e)
     {

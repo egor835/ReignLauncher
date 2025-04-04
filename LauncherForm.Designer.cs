@@ -108,7 +108,7 @@ namespace RCRL
             btnStart.BackColor = Color.Transparent;
             btnStart.BackgroundImageLayout = ImageLayout.Stretch;
             btnStart.ForeColor = Color.Transparent;
-            btnStart.Image = Properties.Resources.Play;
+            btnStart.BackgroundImage = Properties.Resources.Play;
             btnStart.Location = new Point(850, 680);
             btnStart.Margin = new Padding(0);
             btnStart.Name = "btnStart";
@@ -141,7 +141,7 @@ namespace RCRL
             settingsBtn.BackColor = Color.Transparent;
             settingsBtn.BackgroundImageLayout = ImageLayout.Stretch;
             settingsBtn.ForeColor = Color.Transparent;
-            settingsBtn.Image = Properties.Resources.Settings;
+            settingsBtn.BackgroundImage = Properties.Resources.Settings;
             settingsBtn.Location = new Point(757, 702);
             settingsBtn.Margin = new Padding(0);
             settingsBtn.Name = "settingsBtn";
@@ -157,7 +157,7 @@ namespace RCRL
             folderBtn.BackColor = Color.Transparent;
             folderBtn.BackgroundImageLayout = ImageLayout.Stretch;
             folderBtn.ForeColor = Color.Transparent;
-            folderBtn.Image = Properties.Resources.Mods;
+            folderBtn.BackgroundImage = Properties.Resources.Mods;
             folderBtn.Location = new Point(387, 702);
             folderBtn.Margin = new Padding(0);
             folderBtn.Name = "folderBtn";
@@ -224,7 +224,7 @@ namespace RCRL
             // 
             nickIMG.BackColor = Color.Transparent;
             nickIMG.BackgroundImageLayout = ImageLayout.Stretch;
-            nickIMG.Image = Properties.Resources.Icon_nickname;
+            nickIMG.BackgroundImage = Properties.Resources.Icon_nickname;
             nickIMG.Location = new Point(20, 680);
             nickIMG.Name = "nickIMG";
             nickIMG.Size = new Size(40, 40);
@@ -281,7 +281,7 @@ namespace RCRL
             sunflower.BackColor = Color.Transparent;
             sunflower.BackgroundImageLayout = ImageLayout.Stretch;
             sunflower.ForeColor = Color.Transparent;
-            sunflower.Image = Properties.Resources.Sunflower;
+            sunflower.BackgroundImage = Properties.Resources.Sunflower;
             sunflower.Location = new Point(20, 20);
             sunflower.Margin = new Padding(0);
             sunflower.Name = "sunflower";
@@ -297,7 +297,7 @@ namespace RCRL
             book.BackColor = Color.Transparent;
             book.BackgroundImageLayout = ImageLayout.Stretch;
             book.ForeColor = Color.Transparent;
-            book.Image = Properties.Resources.Textbook;
+            book.BackgroundImage = Properties.Resources.Textbook;
             book.Location = new Point(96, 20);
             book.Margin = new Padding(0);
             book.Name = "book";

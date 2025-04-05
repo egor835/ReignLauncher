@@ -69,9 +69,9 @@
             // closeBtn
             // 
             closeBtn.BackColor = Color.Transparent;
+            closeBtn.BackgroundImage = Properties.Resources.Exit;
             resources.ApplyResources(closeBtn, "closeBtn");
             closeBtn.ForeColor = Color.Transparent;
-            closeBtn.Image = Properties.Resources.Exit;
             closeBtn.Name = "closeBtn";
             closeBtn.TabStop = false;
             closeBtn.Click += closeBtn_Click;
@@ -81,7 +81,7 @@
             // okBtn
             // 
             okBtn.BackColor = Color.Transparent;
-            okBtn.Image = Properties.Resources.Accept;
+            okBtn.BackgroundImage = Properties.Resources.Accept;
             resources.ApplyResources(okBtn, "okBtn");
             okBtn.Name = "okBtn";
             okBtn.TabStop = false;
@@ -103,7 +103,7 @@
             // resetBtn
             // 
             resetBtn.BackColor = Color.Transparent;
-            resetBtn.Image = Properties.Resources.Reset;
+            resetBtn.BackgroundImage = Properties.Resources.Reset;
             resources.ApplyResources(resetBtn, "resetBtn");
             resetBtn.Name = "resetBtn";
             resetBtn.TabStop = false;
@@ -123,7 +123,6 @@
             // SettingsForm
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackColor = Color.Lime;
             BackgroundImage = Properties.Resources.Settings_background;
             resources.ApplyResources(this, "$this");
             ControlBox = false;
@@ -140,7 +139,6 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "SettingsForm";
-            TransparencyKey = Color.Lime;
             Load += SettingsForm_Load;
             ((System.ComponentModel.ISupportInitialize)closeBtn).EndInit();
             ((System.ComponentModel.ISupportInitialize)okBtn).EndInit();

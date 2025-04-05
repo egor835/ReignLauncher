@@ -156,8 +156,15 @@ public partial class LauncherForm : Form
         }
 
         InitializeComponent();
-        int sss = Screen.PrimaryScreen.Bounds.Height;
-        plzresizeit(sss);
+        if (string.IsNullOrEmpty(Properties.Settings.Default.dontResizeIt))
+        {
+            Properties.Settings.Default.dontResizeIt = "0";
+        }
+        if (Properties.Settings.Default.dontResizeIt == "0") {
+            plzresizeit();
+        } else {
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
+        }
     }
 
     private async void LauncherForm_Load(object sender, EventArgs e)
@@ -878,14 +885,19 @@ public partial class LauncherForm : Form
         }
     }
 
-    private void plzresizeit(int resol)
+    private void plzresizeit()
     {
+        int height = Screen.PrimaryScreen.Bounds.Height;
+        int width = Screen.PrimaryScreen.Bounds.Width;
         double k = 1;
-        k = Convert.ToDouble(resol) / 1080F;
-        if (k > 1.5F)
-        { k = 1.5F; }
-
-        this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
+        if (width > height) {
+            k = Convert.ToDouble(height) / 1080F;
+            if (k > 1.5F) { k = 1.5F; }
+        } else {
+            k = Convert.ToDouble(width) / 1920F;
+            if (k > 1.5F) { k = 1.5F; }
+        }
+            this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.MaximumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.ClientSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
 

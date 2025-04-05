@@ -150,7 +150,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;RAMLabel.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="useProxy.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 19px</value>
@@ -177,7 +177,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;useProxy.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="faststartBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 19px</value>
@@ -204,7 +204,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;faststartBox.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="closeBtn.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
@@ -233,7 +233,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;closeBtn.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="okBtn.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Stretch</value>
@@ -257,7 +257,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;okBtn.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>1</value>
   </data>
   <data name="ramBar.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 297</value>
@@ -278,7 +278,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ramBar.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="resetBtn.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Stretch</value>
@@ -302,7 +302,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;resetBtn.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="hcBtn.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 19px</value>
@@ -332,6 +332,36 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;hcBtn.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="dontresizeBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 19px</value>
+  </data>
+  <data name="dontresizeBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="dontresizeBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 165</value>
+  </data>
+  <data name="dontresizeBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>326, 30</value>
+  </data>
+  <data name="dontresizeBox.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="dontresizeBox.Text" xml:space="preserve">
+    <value>Не изменять размер лаунчера</value>
+  </data>
+  <data name="&gt;&gt;dontresizeBox.Name" xml:space="preserve">
+    <value>dontresizeBox</value>
+  </data>
+  <data name="&gt;&gt;dontresizeBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dontresizeBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;dontresizeBox.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

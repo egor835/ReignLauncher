@@ -30,8 +30,11 @@ namespace RCRL
         public SettingsForm()
         {
             InitializeComponent();
-            int sss = Screen.PrimaryScreen.Bounds.Height;
-            plzresizeit(sss);
+            if (Properties.Settings.Default.dontResizeIt == "0") {
+                plzresizeit();
+            } else {
+                Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
+            }
         }
 
         private async void SettingsForm_Load(object sender, EventArgs e)
@@ -59,6 +62,14 @@ namespace RCRL
             else
             {
                 hcBtn.Checked = true;
+            }
+            if (Properties.Settings.Default.dontResizeIt == "0")
+            {
+                dontresizeBox.Checked = false;
+            }
+            else
+            {
+                dontresizeBox.Checked = true;
             }
             ramBar.Value = Int32.Parse(Properties.Settings.Default.RAM);
             RAMLabel.Text = "Выделенная память: " + ramBar.Value + " МБ";
@@ -92,6 +103,14 @@ namespace RCRL
             {
                 Properties.Settings.Default.HighContrast = "1";
             }
+            if (dontresizeBox.Checked == false)
+            {
+                Properties.Settings.Default.dontResizeIt = "0";
+            }
+            else
+            {
+                Properties.Settings.Default.dontResizeIt = "1";
+            }
             Properties.Settings.Default.Save();
             ActiveForm.Close();
         }
@@ -111,10 +130,6 @@ namespace RCRL
                 Environment.Exit(0);
             }
         }
-
-
-
-
 
         private void closeBtn_Hover(object sender, EventArgs e)
         {
@@ -157,12 +172,21 @@ namespace RCRL
             RAMLabel.Text = "Выделенная память: " + ramBar.Value + " МБ";
         }
 
-        private void plzresizeit(int resol)
+        private void plzresizeit()
         {
+            int height = Screen.PrimaryScreen.Bounds.Height;
+            int width = Screen.PrimaryScreen.Bounds.Width;
             double k = 1;
-            k = Convert.ToDouble(resol) / 1080F;
-            if (k > 1.5F)
-            { k = 1.5F; }
+            if (width > height)
+            {
+                k = Convert.ToDouble(height) / 1080F;
+                if (k > 1.5F) { k = 1.5F; }
+            }
+            else
+            {
+                k = Convert.ToDouble(width) / 1920F;
+                if (k > 1.5F) { k = 1.5F; }
+            }
 
             this.MinimumSize = new Size(Convert.ToInt32(350 * k), Convert.ToInt32(400 * k));
             this.MaximumSize = new Size(Convert.ToInt32(350 * k), Convert.ToInt32(400 * k));
@@ -172,6 +196,7 @@ namespace RCRL
             useProxy.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
             faststartBox.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
             hcBtn.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
+            dontresizeBox.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
             RAMLabel.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
             RAMLabel.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(271 * k));
 
@@ -184,7 +209,8 @@ namespace RCRL
             closeBtn.Location = new Point(Convert.ToInt32(290 * k), Convert.ToInt32(0 * k));
             closeBtn.Size = new Size(Convert.ToInt32(60 * k), Convert.ToInt32(60 * k));
 
-
+            dontresizeBox.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(165 * k));
+            dontresizeBox.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(30 * k));
 
             useProxy.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(57 * k));
             useProxy.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(30 * k));

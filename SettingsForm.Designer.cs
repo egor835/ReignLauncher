@@ -37,6 +37,7 @@
             ramBar = new TrackBar();
             resetBtn = new PictureBox();
             hcBtn = new CheckBox();
+            dontresizeBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)closeBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)okBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ramBar).BeginInit();
@@ -120,16 +121,25 @@
             hcBtn.Name = "hcBtn";
             hcBtn.UseVisualStyleBackColor = false;
             // 
+            // dontresizeBox
+            // 
+            dontresizeBox.BackColor = Color.Transparent;
+            resources.ApplyResources(dontresizeBox, "dontresizeBox");
+            dontresizeBox.ForeColor = Color.White;
+            dontresizeBox.Name = "dontresizeBox";
+            dontresizeBox.UseVisualStyleBackColor = false;
+            // 
             // SettingsForm
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.Settings_background;
             resources.ApplyResources(this, "$this");
             ControlBox = false;
+            Controls.Add(dontresizeBox);
+            Controls.Add(okBtn);
             Controls.Add(hcBtn);
             Controls.Add(resetBtn);
             Controls.Add(ramBar);
-            Controls.Add(okBtn);
             Controls.Add(closeBtn);
             Controls.Add(faststartBox);
             Controls.Add(RAMLabel);
@@ -157,5 +167,6 @@
         private TrackBar ramBar;
         private PictureBox resetBtn;
         private CheckBox hcBtn;
+        private CheckBox dontresizeBox;
     }
 }

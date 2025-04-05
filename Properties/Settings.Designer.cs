@@ -118,5 +118,17 @@ namespace RCRL.Properties {
                 this["HighContrast"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string dontResizeIt {
+            get {
+                return ((string)(this["dontResizeIt"]));
+            }
+            set {
+                this["dontResizeIt"] = value;
+            }
+        }
     }
 }

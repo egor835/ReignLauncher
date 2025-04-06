@@ -93,7 +93,7 @@
             // 
             // ramBar
             // 
-            ramBar.BackColor = Color.Black;
+            ramBar.BackColor = Color.FromArgb(64, 64, 64);
             resources.ApplyResources(ramBar, "ramBar");
             ramBar.Maximum = 16384;
             ramBar.Minimum = 1024;

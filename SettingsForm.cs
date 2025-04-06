@@ -39,6 +39,11 @@ namespace RCRL
 
         private async void SettingsForm_Load(object sender, EventArgs e)
         {
+            initplz();
+        }
+
+        private void initplz()
+        {
             if (Properties.Settings.Default.Proxy == "0")
             {
                 useProxy.Checked = false;
@@ -73,9 +78,7 @@ namespace RCRL
             }
             ramBar.Value = Int32.Parse(Properties.Settings.Default.RAM);
             RAMLabel.Text = "Выделенная память: " + ramBar.Value + " МБ";
-
         }
-
         private async void okBtn_release(object sender, EventArgs e)
         {
             Properties.Settings.Default.RAM = ramBar.Value.ToString();
@@ -112,7 +115,7 @@ namespace RCRL
                 Properties.Settings.Default.dontResizeIt = "1";
             }
             Properties.Settings.Default.Save();
-            ActiveForm.Close();
+            ActiveForm.Hide();
         }
         private async void resetBtn_release(object sender, EventArgs e)
         {
@@ -141,7 +144,8 @@ namespace RCRL
         }
         private void closeBtn_Click(object sender, EventArgs e)
         {
-            ActiveForm.Close();
+            initplz();
+            ActiveForm.Hide();
         }
         private void okBtn_Hover(object sender, EventArgs e)
         {
@@ -179,7 +183,7 @@ namespace RCRL
             double k = 1;
             if (width > height)
             {
-                k = Convert.ToDouble(height) / 1080F;
+                k = (Convert.ToDouble(height) / 1080F) * 0.8;
                 if (k > 1.5F) { k = 1.5F; }
             }
             else

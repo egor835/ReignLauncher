@@ -165,7 +165,7 @@
     <value>13</value>
   </data>
   <data name="useProxy.Text" xml:space="preserve">
-    <value>Использовать прокси</value>
+    <value>Использовать прокси-сервер</value>
   </data>
   <data name="&gt;&gt;useProxy.Name" xml:space="preserve">
     <value>useProxy</value>
@@ -192,7 +192,7 @@
     <value>15</value>
   </data>
   <data name="faststartBox.Text" xml:space="preserve">
-    <value>Автоматически заходить на сервер</value>
+    <value>Автовход на сервер</value>
   </data>
   <data name="&gt;&gt;faststartBox.Name" xml:space="preserve">
     <value>faststartBox</value>
@@ -320,7 +320,7 @@
     <value>25</value>
   </data>
   <data name="hcBtn.Text" xml:space="preserve">
-    <value>Включить высококонтрастную тему</value>
+    <value>Высококонтрастная тема</value>
   </data>
   <data name="&gt;&gt;hcBtn.Name" xml:space="preserve">
     <value>hcBtn</value>
@@ -350,7 +350,7 @@
     <value>26</value>
   </data>
   <data name="dontresizeBox.Text" xml:space="preserve">
-    <value>Не изменять размер лаунчера</value>
+    <value>Статический размер окна</value>
   </data>
   <data name="&gt;&gt;dontresizeBox.Name" xml:space="preserve">
     <value>dontresizeBox</value>

@@ -70,6 +70,8 @@ public partial class LauncherForm : Form
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
+        //form
+        public static SettingsForm form = new SettingsForm();
     }
 
     //make window draggable
@@ -140,7 +142,8 @@ public partial class LauncherForm : Form
                     client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
                     client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
                 }
-            } catch
+            }
+            catch
             {
                 MessageBox.Show("Судя по всему, лаунчер уже запущен. Закройте все предыдущие процессы и повторите попытку.");
                 Environment.Exit(0);
@@ -160,9 +163,12 @@ public partial class LauncherForm : Form
         {
             Properties.Settings.Default.dontResizeIt = "0";
         }
-        if (Properties.Settings.Default.dontResizeIt == "0") {
+        if (Properties.Settings.Default.dontResizeIt == "0")
+        {
             plzresizeit();
-        } else {
+        }
+        else
+        {
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 60, 60));
         }
     }
@@ -305,10 +311,9 @@ public partial class LauncherForm : Form
         }
         else
         {
-
+            Globals.isLoading = true;
             // Disable UI while launchin
             stfu();
-            Globals.isLoading = true;
             btnStart.BackgroundImage = Properties.Resources.Play_install;
             var mcVersion = "1.20.1";
 
@@ -790,11 +795,10 @@ public partial class LauncherForm : Form
     {
         settingsBtn.BackgroundImage = Properties.Resources.Settings;
     }
-
     private void settingsBtn_Click(object sender, EventArgs e)
     {
-        SettingsForm form = new SettingsForm();
-        form.Show();
+        Globals.form.Show();
+        Globals.form.BringToFront();
     }
     //folderBtn
     private void folderBtn_Hover(object sender, EventArgs e)
@@ -835,6 +839,19 @@ public partial class LauncherForm : Form
     {
         Process.Start("explorer", "https://t.me/reignmod");
     }
+    private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if ((cbVersion.SelectedIndex == (cbVersion.Items.Count - 1)) && (Globals.isLoading == false))
+        {
+            DialogResult PROCEED = MessageBox.Show("Вы выбрали пользовательские моды в качестве модпака.\nУчтите, что в этом режиме сборки от создателей ReignCraft не будут использоваться, вы должны добавить свой модпак в usermods\nВы хотите открыть папку с пользовательскими модами сейчас?", "Значит ты выбрал Usermods...", MessageBoxButtons.OKCancel);
+            if (PROCEED == DialogResult.OK)
+            { 
+                Process.Start("explorer.exe", Path.Combine(Globals.mcpath, "user_mods"));
+            }
+        }
+    }
+
+
     private void ultrakillyourself(bool Lock = true)
     {
         this.BackgroundImage = null;
@@ -877,7 +894,10 @@ public partial class LauncherForm : Form
                 easterLabel.Text = "Первый Лук Мезенхольма";
                 break;
             case "Arminiy777":
-                easterLabel.Text = "<3";
+                easterLabel.Text = "гномыгномыгномыгномыгномыгномыгномыгномыгномыгномыгномы";
+                break;
+            case "Shinkiro":
+                easterLabel.Text = "сожги их всех";
                 break;
             default:
                 easterLabel.Text = "";
@@ -890,14 +910,17 @@ public partial class LauncherForm : Form
         int height = Screen.PrimaryScreen.Bounds.Height;
         int width = Screen.PrimaryScreen.Bounds.Width;
         double k = 1;
-        if (width > height) {
-            k = Convert.ToDouble(height) / 1080F;
-            if (k > 1.5F) { k = 1.5F; }
-        } else {
-            k = Convert.ToDouble(width) / 1920F;
+        if (width > height)
+        {
+            k = (Convert.ToDouble(height) / 1080F) * 0.8;
             if (k > 1.5F) { k = 1.5F; }
         }
-            this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
+        else
+        {
+            k = (Convert.ToDouble(width) / 1920F);
+            if (k > 1.5F) { k = 1.5F; }
+        }
+        this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.MaximumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.ClientSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
 

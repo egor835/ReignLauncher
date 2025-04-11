@@ -518,7 +518,7 @@ public partial class LauncherForm : Form
                         string rpname = Path.GetFileName(rp);
                         opline += ",\"file/" + rpname + "\"";
                     }
-                    opline += "]";
+                    opline += "]\nlang:ru_ru";
                     File.WriteAllText(optionfile, opline);
                 }
 

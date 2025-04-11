@@ -30,6 +30,10 @@ namespace RCRL
         public SettingsForm()
         {
             InitializeComponent();
+            if (string.IsNullOrEmpty(Properties.Settings.Default.dontResizeIt))
+            {
+                Properties.Settings.Default.dontResizeIt = "0";
+            }
             if (Properties.Settings.Default.dontResizeIt == "0") {
                 plzresizeit();
             } else {

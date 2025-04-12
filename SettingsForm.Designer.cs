@@ -93,12 +93,12 @@
             // 
             // ramBar
             // 
-            ramBar.BackColor = Color.FromArgb(64, 64, 64);
+            ramBar.BackColor = Color.Black;
+            ramBar.LargeChange = 2;
             resources.ApplyResources(ramBar, "ramBar");
-            ramBar.Maximum = 16384;
-            ramBar.Minimum = 1024;
+            ramBar.Maximum = 30;
             ramBar.Name = "ramBar";
-            ramBar.Value = 4096;
+            ramBar.Value = 30;
             ramBar.ValueChanged += ramBar_change;
             // 
             // resetBtn

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using static RCRL.LauncherForm;
+using Microsoft.VisualBasic;
 
 namespace RCRL
 {
@@ -27,9 +28,18 @@ namespace RCRL
             if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
                 message.Result = (IntPtr)HTCAPTION;
         }
+        static ulong GetTotalMemory()
+        {
+            return new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory/1024L/1024L;
+        }
+
         public SettingsForm()
         {
             InitializeComponent();
+            if (string.IsNullOrEmpty(Properties.Settings.Default.RAM))
+            {
+                Properties.Settings.Default.RAM = "4096";
+            }
             if (string.IsNullOrEmpty(Properties.Settings.Default.dontResizeIt))
             {
                 Properties.Settings.Default.dontResizeIt = "0";
@@ -80,12 +90,16 @@ namespace RCRL
             {
                 dontresizeBox.Checked = true;
             }
-            ramBar.Value = Int32.Parse(Properties.Settings.Default.RAM);
-            RAMLabel.Text = "Выделенная память: " + ramBar.Value + " МБ";
+            int maxram = Convert.ToInt32(GetTotalMemory())-2047;
+            if (maxram < 1024) { maxram = 16384; }
+            ramBar.Maximum = (maxram-1024)/512;
+            if (Int32.Parse(Properties.Settings.Default.RAM) > maxram) { ramToBar(maxram); }
+            else { ramToBar(Int32.Parse(Properties.Settings.Default.RAM)); }
+            RAMLabel.Text = "Выделенная память: " + barToRam() + " МБ";
         }
         private async void okBtn_release(object sender, EventArgs e)
         {
-            Properties.Settings.Default.RAM = ramBar.Value.ToString();
+            Properties.Settings.Default.RAM = barToRam().ToString();
             if (useProxy.Checked == false)
             {
                 Properties.Settings.Default.Proxy = "0";
@@ -177,7 +191,18 @@ namespace RCRL
         }
         private void ramBar_change(object sender, EventArgs e)
         {
-            RAMLabel.Text = "Выделенная память: " + ramBar.Value + " МБ";
+            RAMLabel.Text = "Выделенная память: " + barToRam() + " МБ";
+        }
+
+        private int barToRam()
+        {
+            return (ramBar.Value*512)+1024;
+        }
+
+        private void ramToBar(int ramm)
+        {
+            
+            ramBar.Value = ((ramm-1024) / 512);
         }
 
         private void plzresizeit()

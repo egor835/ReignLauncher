@@ -70,6 +70,7 @@ public partial class LauncherForm : Form
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
+        public static bool notafirstrun = false;
         //form
         public static SettingsForm form = new SettingsForm();
     }
@@ -843,12 +844,16 @@ public partial class LauncherForm : Form
     {
         if ((cbVersion.SelectedIndex == (cbVersion.Items.Count - 1)) && (Globals.isLoading == false))
         {
-            DialogResult PROCEED = MessageBox.Show("Вы выбрали пользовательские моды в качестве модпака.\nУчтите, что в этом режиме сборки от создателей ReignCraft не будут использоваться, вы должны добавить свой модпак в usermods\nВы хотите открыть папку с пользовательскими модами сейчас?", "Значит ты выбрал Usermods...", MessageBoxButtons.OKCancel);
-            if (PROCEED == DialogResult.OK)
-            { 
-                Process.Start("explorer.exe", Path.Combine(Globals.mcpath, "user_mods"));
+            if (Globals.notafirstrun == true)
+            {
+                DialogResult PROCEED = MessageBox.Show("Вы выбрали пользовательские моды в качестве модпака.\nУчтите, что в этом режиме сборки от создателей ReignCraft не будут использоваться, вы должны добавить свой модпак в usermods\nВы хотите открыть папку с пользовательскими модами сейчас?", "Значит ты выбрал Usermods...", MessageBoxButtons.OKCancel);
+                if (PROCEED == DialogResult.OK)
+                {
+                    Process.Start("explorer.exe", Path.Combine(Globals.mcpath, "user_mods"));
+                }
             }
         }
+        Globals.notafirstrun = true;
     }
 
 

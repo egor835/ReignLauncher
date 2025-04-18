@@ -54,7 +54,6 @@ namespace RCRL
             book = new PictureBox();
             easterLabel = new Label();
             hideBtn = new PictureBox();
-            cant_touch_this = new Label();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -335,15 +334,6 @@ namespace RCRL
             hideBtn.MouseEnter += hideBtn_Hover;
             hideBtn.MouseLeave += hideBtn_noHover;
             // 
-            // cant_touch_this
-            // 
-            cant_touch_this.BackColor = Color.Transparent;
-            cant_touch_this.ForeColor = Color.Brown;
-            cant_touch_this.Location = new Point(0, 95);
-            cant_touch_this.Name = "cant_touch_this";
-            cant_touch_this.Size = new Size(1200, 707);
-            cant_touch_this.TabIndex = 31;
-            // 
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -372,7 +362,6 @@ namespace RCRL
             Controls.Add(btnStart);
             Controls.Add(lbProgress);
             Controls.Add(pbFiles);
-            Controls.Add(cant_touch_this);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -424,6 +413,5 @@ namespace RCRL
         private PictureBox book;
         private Label easterLabel;
         private PictureBox hideBtn;
-        private Label cant_touch_this;
     }
 }

@@ -999,9 +999,6 @@ public partial class LauncherForm : Form
         hideBtn.Location = new Point(Convert.ToInt32(hideBtn.Location.X * k), Convert.ToInt32(hideBtn.Location.Y * k));
         hideBtn.Size = new Size(Convert.ToInt32(hideBtn.ClientSize.Width * k), Convert.ToInt32(hideBtn.ClientSize.Height * k));
 
-        cant_touch_this.Location = new Point(Convert.ToInt32(cant_touch_this.Location.X * k), Convert.ToInt32(cant_touch_this.Location.Y * k));
-        cant_touch_this.Size = new Size(Convert.ToInt32(cant_touch_this.ClientSize.Width * k), Convert.ToInt32(cant_touch_this.ClientSize.Height * k));
-
         this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.MaximumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.ClientSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));

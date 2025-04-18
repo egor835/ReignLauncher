@@ -54,6 +54,7 @@ namespace RCRL
             book = new PictureBox();
             easterLabel = new Label();
             hideBtn = new PictureBox();
+            cant_touch_this = new Label();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -90,7 +91,6 @@ namespace RCRL
             // 
             // lbProgress
             // 
-            lbProgress.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbProgress.AutoSize = true;
             lbProgress.BackColor = Color.Transparent;
             lbProgress.Font = new Font("Calibri", 19F, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -105,7 +105,6 @@ namespace RCRL
             // 
             // btnStart
             // 
-            btnStart.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             btnStart.BackColor = Color.Transparent;
             btnStart.BackgroundImage = Properties.Resources.Play;
             btnStart.BackgroundImageLayout = ImageLayout.Stretch;
@@ -123,10 +122,9 @@ namespace RCRL
             // 
             // usernameInput
             // 
-            usernameInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             usernameInput.BorderStyle = BorderStyle.None;
             usernameInput.Font = new Font("Calibri", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            usernameInput.Location = new Point(77, 689);
+            usernameInput.Location = new Point(80, 689);
             usernameInput.Name = "usernameInput";
             usernameInput.PlaceholderText = "Введите никнейм";
             usernameInput.Size = new Size(261, 20);
@@ -267,13 +265,12 @@ namespace RCRL
             // 
             // NewsRTB
             // 
-            NewsRTB.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             NewsRTB.BackColor = Color.Transparent;
-            NewsRTB.Font = new Font("Calibri", 27F, FontStyle.Regular, GraphicsUnit.Pixel);
+            NewsRTB.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Pixel);
             NewsRTB.ForeColor = Color.White;
             NewsRTB.Location = new Point(77, 243);
             NewsRTB.Name = "NewsRTB";
-            NewsRTB.Size = new Size(666, 385);
+            NewsRTB.Size = new Size(643, 385);
             NewsRTB.TabIndex = 26;
             NewsRTB.Text = "Но если сборка уже установлена, то вы можете начать играть :3";
             // 
@@ -337,6 +334,15 @@ namespace RCRL
             hideBtn.MouseEnter += hideBtn_Hover;
             hideBtn.MouseLeave += hideBtn_noHover;
             // 
+            // cant_touch_this
+            // 
+            cant_touch_this.BackColor = Color.Transparent;
+            cant_touch_this.ForeColor = Color.Brown;
+            cant_touch_this.Location = new Point(0, 95);
+            cant_touch_this.Name = "cant_touch_this";
+            cant_touch_this.Size = new Size(1200, 707);
+            cant_touch_this.TabIndex = 31;
+            // 
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -365,6 +371,7 @@ namespace RCRL
             Controls.Add(btnStart);
             Controls.Add(lbProgress);
             Controls.Add(pbFiles);
+            Controls.Add(cant_touch_this);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -416,5 +423,6 @@ namespace RCRL
         private PictureBox book;
         private Label easterLabel;
         private PictureBox hideBtn;
+        private Label cant_touch_this;
     }
 }

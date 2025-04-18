@@ -871,8 +871,8 @@ public partial class LauncherForm : Form
             case "ilaa70":
                 easterLabel.Text = "/ban";
                 break;
-            case "PetrCHess":
-                easterLabel.Text = ">Майнер активирован";
+            case "PetrCHes":
+                easterLabel.Text = "#> Майнер активирован";
                 break;
             case "cnuuyy":
                 easterLabel.Text = "подписывайтесь на notNTඞ";
@@ -925,76 +925,80 @@ public partial class LauncherForm : Form
             k = (Convert.ToDouble(width) / 1920F);
             if (k > 1.5F) { k = 1.5F; }
         }
+
+        cbVersion.Font = new Font("Calibri", Convert.ToInt32(cbVersion.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        lbProgress.Font = new Font("Calibri", Convert.ToInt32(lbProgress.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        usernameInput.Font = new Font("Calibri", Convert.ToInt32(usernameInput.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        NewsLabel.Font = new Font("Calibri", Convert.ToInt32(NewsLabel.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        NewsRTB.Font = new Font("Calibri", Convert.ToInt32(NewsRTB.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        easterLabel.Font = new Font("Calibri", Convert.ToInt32(easterLabel.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+
+        cbVersion.Location = new Point(Convert.ToInt32(cbVersion.Location.X * k), Convert.ToInt32(cbVersion.Location.Y * k));
+        cbVersion.Size = new Size(Convert.ToInt32(cbVersion.ClientSize.Width * k), Convert.ToInt32(cbVersion.ClientSize.Height * k));
+
+        pbFiles.Location = new Point(Convert.ToInt32(pbFiles.Location.X * k), Convert.ToInt32(pbFiles.Location.Y * k));
+        pbFiles.Size = new Size(Convert.ToInt32(pbFiles.ClientSize.Width * k), Convert.ToInt32(pbFiles.ClientSize.Height * k));
+
+        lbProgress.Location = new Point(Convert.ToInt32(lbProgress.Location.X * k), Convert.ToInt32(lbProgress.Location.Y * k));
+        lbProgress.Size = new Size(Convert.ToInt32(lbProgress.ClientSize.Width * k), Convert.ToInt32(lbProgress.ClientSize.Height * k));
+
+        btnStart.Location = new Point(Convert.ToInt32(btnStart.Location.X * k), Convert.ToInt32(btnStart.Location.Y * k));
+        btnStart.Size = new Size(Convert.ToInt32(btnStart.ClientSize.Width * k), Convert.ToInt32(btnStart.ClientSize.Height * k));
+
+        usernameInput.Location = new Point(Convert.ToInt32(usernameInput.Location.X * k), Convert.ToInt32(usernameInput.Location.Y * k));
+        usernameInput.Size = new Size(Convert.ToInt32(usernameInput.ClientSize.Width * k), Convert.ToInt32(usernameInput.ClientSize.Height * k));
+
+        settingsBtn.Location = new Point(Convert.ToInt32(settingsBtn.Location.X * k), Convert.ToInt32(settingsBtn.Location.Y * k));
+        settingsBtn.Size = new Size(Convert.ToInt32(settingsBtn.ClientSize.Width * k), Convert.ToInt32(settingsBtn.ClientSize.Height * k));
+
+        folderBtn.Location = new Point(Convert.ToInt32(folderBtn.Location.X * k), Convert.ToInt32(folderBtn.Location.Y * k));
+        folderBtn.Size = new Size(Convert.ToInt32(folderBtn.ClientSize.Width * k), Convert.ToInt32(folderBtn.ClientSize.Height * k));
+
+        NewsLabel.Location = new Point(Convert.ToInt32(NewsLabel.Location.X * k), Convert.ToInt32(NewsLabel.Location.Y * k));
+        NewsLabel.Size = new Size(Convert.ToInt32(NewsLabel.ClientSize.Width * k), Convert.ToInt32(NewsLabel.ClientSize.Height * k));
+
+        logo.Location = new Point(Convert.ToInt32(logo.Location.X * k), Convert.ToInt32(logo.Location.Y * k));
+        logo.Size = new Size(Convert.ToInt32(logo.ClientSize.Width * k), Convert.ToInt32(logo.ClientSize.Height * k));
+
+        crown.Location = new Point(Convert.ToInt32(crown.Location.X * k), Convert.ToInt32(crown.Location.Y * k));
+        crown.Size = new Size(Convert.ToInt32(crown.ClientSize.Width * k), Convert.ToInt32(crown.ClientSize.Height * k));
+
+        closeBtn.Location = new Point(Convert.ToInt32(closeBtn.Location.X * k), Convert.ToInt32(closeBtn.Location.Y * k));
+        closeBtn.Size = new Size(Convert.ToInt32(closeBtn.ClientSize.Width * k), Convert.ToInt32(closeBtn.ClientSize.Height * k));
+
+        nickIMG.Location = new Point(Convert.ToInt32(nickIMG.Location.X * k), Convert.ToInt32(nickIMG.Location.Y * k));
+        nickIMG.Size = new Size(Convert.ToInt32(nickIMG.ClientSize.Width * k), Convert.ToInt32(nickIMG.ClientSize.Height * k));
+
+        buildsIMG.Location = new Point(Convert.ToInt32(buildsIMG.Location.X * k), Convert.ToInt32(buildsIMG.Location.Y * k));
+        buildsIMG.Size = new Size(Convert.ToInt32(buildsIMG.ClientSize.Width * k), Convert.ToInt32(buildsIMG.ClientSize.Height * k));
+
+        box1.Location = new Point(Convert.ToInt32(box1.Location.X * k), Convert.ToInt32(box1.Location.Y * k));
+        box1.Size = new Size(Convert.ToInt32(box1.ClientSize.Width * k), Convert.ToInt32(box1.ClientSize.Height * k));
+
+        box2.Location = new Point(Convert.ToInt32(box2.Location.X * k), Convert.ToInt32(box2.Location.Y * k));
+        box2.Size = new Size(Convert.ToInt32(box2.ClientSize.Width * k), Convert.ToInt32(box2.ClientSize.Height * k));
+
+        NewsRTB.Location = new Point(Convert.ToInt32(NewsRTB.Location.X * k), Convert.ToInt32(NewsRTB.Location.Y * k));
+        NewsRTB.Size = new Size(Convert.ToInt32(NewsRTB.ClientSize.Width * k), Convert.ToInt32(NewsRTB.ClientSize.Height * k));
+
+        sunflower.Location = new Point(Convert.ToInt32(sunflower.Location.X * k), Convert.ToInt32(sunflower.Location.Y * k));
+        sunflower.Size = new Size(Convert.ToInt32(sunflower.ClientSize.Width * k), Convert.ToInt32(sunflower.ClientSize.Height * k));
+
+        book.Location = new Point(Convert.ToInt32(book.Location.X * k), Convert.ToInt32(book.Location.Y * k));
+        book.Size = new Size(Convert.ToInt32(book.ClientSize.Width * k), Convert.ToInt32(book.ClientSize.Height * k));
+
+        easterLabel.Location = new Point(Convert.ToInt32(easterLabel.Location.X * k), Convert.ToInt32(easterLabel.Location.Y * k));
+        easterLabel.Size = new Size(Convert.ToInt32(easterLabel.ClientSize.Width * k), Convert.ToInt32(easterLabel.ClientSize.Height * k));
+
+        hideBtn.Location = new Point(Convert.ToInt32(hideBtn.Location.X * k), Convert.ToInt32(hideBtn.Location.Y * k));
+        hideBtn.Size = new Size(Convert.ToInt32(hideBtn.ClientSize.Width * k), Convert.ToInt32(hideBtn.ClientSize.Height * k));
+
+        cant_touch_this.Location = new Point(Convert.ToInt32(cant_touch_this.Location.X * k), Convert.ToInt32(cant_touch_this.Location.Y * k));
+        cant_touch_this.Size = new Size(Convert.ToInt32(cant_touch_this.ClientSize.Width * k), Convert.ToInt32(cant_touch_this.ClientSize.Height * k));
+
         this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.MaximumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.ClientSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
-
-        cbVersion.Font = cbVersion.Font = new Font("Calibri", Convert.ToInt32(16 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-        lbProgress.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-        usernameInput.Font = new Font("Calibri", Convert.ToInt32(16 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-        NewsLabel.Font = new Font("Calibri", Convert.ToInt32(48 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-        NewsRTB.Font = new Font("Calibri", Convert.ToInt32(27 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-        easterLabel.Font = new Font("Calibri", Convert.ToInt32(12 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-
-        cbVersion.Location = new Point(Convert.ToInt32(77 * k), Convert.ToInt32(746 * k));
-        cbVersion.Size = new Size(Convert.ToInt32(261 * k), Convert.ToInt32(27 * k));
-
-        pbFiles.Location = new Point(Convert.ToInt32(757 * k), Convert.ToInt32(654 * k));
-        pbFiles.Size = new Size(Convert.ToInt32(423 * k), Convert.ToInt32(16 * k));
-
-        lbProgress.Location = new Point(Convert.ToInt32(752 * k), Convert.ToInt32(628 * k));
-        lbProgress.Size = new Size(Convert.ToInt32(14 * k), Convert.ToInt32(23 * k));
-
-        btnStart.Location = new Point(Convert.ToInt32(850 * k), Convert.ToInt32(680 * k));
-        btnStart.Size = new Size(Convert.ToInt32(330 * k), Convert.ToInt32(100 * k));
-
-        usernameInput.Location = new Point(Convert.ToInt32(77 * k), Convert.ToInt32(689 * k));
-        usernameInput.Size = new Size(Convert.ToInt32(261 * k), Convert.ToInt32(20 * k));
-
-        settingsBtn.Location = new Point(Convert.ToInt32(757 * k), Convert.ToInt32(702 * k));
-        settingsBtn.Size = new Size(Convert.ToInt32(56 * k), Convert.ToInt32(56 * k));
-
-        folderBtn.Location = new Point(Convert.ToInt32(387 * k), Convert.ToInt32(702 * k));
-        folderBtn.Size = new Size(Convert.ToInt32(56 * k), Convert.ToInt32(56 * k));
-
-        NewsLabel.Location = new Point(Convert.ToInt32(36 * k), Convert.ToInt32(150 * k));
-        NewsLabel.Size = new Size(Convert.ToInt32(595 * k), Convert.ToInt32(59 * k));
-
-        logo.Location = new Point(Convert.ToInt32(411 * k), Convert.ToInt32(20 * k));
-        logo.Size = new Size(Convert.ToInt32(378 * k), Convert.ToInt32(72 * k));
-
-        crown.Location = new Point(Convert.ToInt32(480 * k), Convert.ToInt32(628 * k));
-        crown.Size = new Size(Convert.ToInt32(240 * k), Convert.ToInt32(171 * k));
-
-        closeBtn.Location = new Point(Convert.ToInt32(1140 * k), Convert.ToInt32(0 * k));
-        closeBtn.Size = new Size(Convert.ToInt32(60 * k), Convert.ToInt32(60 * k));
-
-        nickIMG.Location = new Point(Convert.ToInt32(20 * k), Convert.ToInt32(680 * k));
-        nickIMG.Size = new Size(Convert.ToInt32(40 * k), Convert.ToInt32(40 * k));
-
-        buildsIMG.Location = new Point(Convert.ToInt32(20 * k), Convert.ToInt32(740 * k));
-        buildsIMG.Size = new Size(Convert.ToInt32(40 * k), Convert.ToInt32(40 * k));
-
-        box1.Location = new Point(Convert.ToInt32(65 * k), Convert.ToInt32(680 * k));
-        box1.Size = new Size(Convert.ToInt32(285 * k), Convert.ToInt32(40 * k));
-
-        box2.Location = new Point(Convert.ToInt32(65 * k), Convert.ToInt32(740 * k));
-        box2.Size = new Size(Convert.ToInt32(285 * k), Convert.ToInt32(40 * k));
-
-        NewsRTB.Location = new Point(Convert.ToInt32(77 * k), Convert.ToInt32(243 * k));
-        NewsRTB.Size = new Size(Convert.ToInt32(666 * k), Convert.ToInt32(385 * k));
-
-        sunflower.Location = new Point(Convert.ToInt32(20 * k), Convert.ToInt32(20 * k));
-        sunflower.Size = new Size(Convert.ToInt32(64 * k), Convert.ToInt32(64 * k));
-
-        book.Location = new Point(Convert.ToInt32(96 * k), Convert.ToInt32(20 * k));
-        book.Size = new Size(Convert.ToInt32(64 * k), Convert.ToInt32(64 * k));
-
-        easterLabel.Location = new Point(Convert.ToInt32(65 * k), Convert.ToInt32(663 * k));
-        easterLabel.Size = new Size(Convert.ToInt32(10 * k), Convert.ToInt32(14 * k));
-
-        hideBtn.Location = new Point(Convert.ToInt32(1080 * k), Convert.ToInt32(0 * k));
-        hideBtn.Size = new Size(Convert.ToInt32(60 * k), Convert.ToInt32(60 * k));
 
         Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, Convert.ToInt32(60 * k), Convert.ToInt32(60 * k)));
     }

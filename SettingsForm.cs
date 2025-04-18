@@ -221,41 +221,41 @@ namespace RCRL
                 if (k > 1.5F) { k = 1.5F; }
             }
 
+            useProxy.Font = new Font("Calibri", Convert.ToInt32(useProxy.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+            faststartBox.Font = new Font("Calibri", Convert.ToInt32(faststartBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+            hcBtn.Font = new Font("Calibri", Convert.ToInt32(hcBtn.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+            dontresizeBox.Font = new Font("Calibri", Convert.ToInt32(dontresizeBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+            RAMLabel.Font = new Font("Calibri", Convert.ToInt32(RAMLabel.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+
+            RAMLabel.Location = new Point(Convert.ToInt32(RAMLabel.Location.X * k), Convert.ToInt32(RAMLabel.Location.Y * k));
+
+            resetBtn.Location = new Point(Convert.ToInt32(resetBtn.Location.X * k), Convert.ToInt32(resetBtn.Location.Y * k));
+            resetBtn.Size = new Size(Convert.ToInt32(resetBtn.ClientSize.Width * k), Convert.ToInt32(resetBtn.ClientSize.Height * k));
+
+            okBtn.Location = new Point(Convert.ToInt32(okBtn.Location.X * k), Convert.ToInt32(okBtn.Location.Y * k));
+            okBtn.Size = new Size(Convert.ToInt32(okBtn.ClientSize.Width * k), Convert.ToInt32(okBtn.ClientSize.Height * k));
+
+            closeBtn.Location = new Point(Convert.ToInt32(closeBtn.Location.X * k), Convert.ToInt32(closeBtn.Location.Y * k));
+            closeBtn.Size = new Size(Convert.ToInt32(closeBtn.ClientSize.Width * k), Convert.ToInt32(closeBtn.ClientSize.Height * k));
+
+            dontresizeBox.Location = new Point(Convert.ToInt32(dontresizeBox.Location.X * k), Convert.ToInt32(dontresizeBox.Location.Y * k));
+            dontresizeBox.Size = new Size(Convert.ToInt32(dontresizeBox.ClientSize.Width * k), Convert.ToInt32(dontresizeBox.ClientSize.Height * k));
+
+            useProxy.Location = new Point(Convert.ToInt32(useProxy.Location.X * k), Convert.ToInt32(useProxy.Location.Y * k));
+            useProxy.Size = new Size(Convert.ToInt32(useProxy.ClientSize.Width * k), Convert.ToInt32(useProxy.ClientSize.Height * k));
+
+            faststartBox.Location = new Point(Convert.ToInt32(faststartBox.Location.X * k), Convert.ToInt32(faststartBox.Location.Y * k));
+            faststartBox.Size = new Size(Convert.ToInt32(faststartBox.ClientSize.Width * k), Convert.ToInt32(faststartBox.ClientSize.Height * k));
+
+            hcBtn.Location = new Point(Convert.ToInt32(hcBtn.Location.X * k), Convert.ToInt32(hcBtn.Location.Y * k));
+            hcBtn.Size = new Size(Convert.ToInt32(hcBtn.ClientSize.Width * k), Convert.ToInt32(hcBtn.ClientSize.Height * k));
+
+            ramBar.Location = new Point(Convert.ToInt32(ramBar.Location.X * k), Convert.ToInt32(ramBar.Location.Y * k));
+            ramBar.Size = new Size(Convert.ToInt32(ramBar.ClientSize.Width * k), Convert.ToInt32(ramBar.ClientSize.Height * k));
+
             this.MinimumSize = new Size(Convert.ToInt32(350 * k), Convert.ToInt32(400 * k));
             this.MaximumSize = new Size(Convert.ToInt32(350 * k), Convert.ToInt32(400 * k));
             this.ClientSize = new Size(Convert.ToInt32(350 * k), Convert.ToInt32(400 * k));
-
-
-            useProxy.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-            faststartBox.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-            hcBtn.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-            dontresizeBox.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-            RAMLabel.Font = new Font("Calibri", Convert.ToInt32(19 * k), FontStyle.Regular, GraphicsUnit.Pixel);
-            RAMLabel.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(271 * k));
-
-            resetBtn.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(348 * k));
-            resetBtn.Size = new Size(Convert.ToInt32(150 * k), Convert.ToInt32(40 * k));
-
-            okBtn.Location = new Point(Convert.ToInt32(185 * k), Convert.ToInt32(348 * k));
-            okBtn.Size = new Size(Convert.ToInt32(150 * k), Convert.ToInt32(40 * k));
-
-            closeBtn.Location = new Point(Convert.ToInt32(290 * k), Convert.ToInt32(0 * k));
-            closeBtn.Size = new Size(Convert.ToInt32(60 * k), Convert.ToInt32(60 * k));
-
-            dontresizeBox.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(165 * k));
-            dontresizeBox.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(30 * k));
-
-            useProxy.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(57 * k));
-            useProxy.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(30 * k));
-
-            faststartBox.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(93 * k));
-            faststartBox.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(30 * k));
-
-            hcBtn.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(129 * k));
-            hcBtn.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(30 * k));
-
-            ramBar.Location = new Point(Convert.ToInt32(12 * k), Convert.ToInt32(297 * k));
-            ramBar.Size = new Size(Convert.ToInt32(326 * k), Convert.ToInt32(45 * k));
 
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, Convert.ToInt32(60 * k), Convert.ToInt32(60 * k)));
         }

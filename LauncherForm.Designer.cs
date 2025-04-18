@@ -130,6 +130,7 @@ namespace RCRL
             usernameInput.Size = new Size(261, 20);
             usernameInput.TabIndex = 9;
             usernameInput.TextChanged += usernameInput_TextChanged;
+            usernameInput.KeyDown += usernameInput_KeyDown;
             // 
             // eventTimer
             // 

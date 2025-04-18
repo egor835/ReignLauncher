@@ -261,7 +261,13 @@ public partial class LauncherForm : Form
             }
         }
     }
-
+    private void usernameInput_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Enter)
+        {
+            btnStart_release(this, e);
+        }
+    }
     private async void btnStart_release(object sender, EventArgs e)
     {
         //check username

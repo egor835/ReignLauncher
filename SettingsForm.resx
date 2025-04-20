@@ -320,7 +320,7 @@
     <value>25</value>
   </data>
   <data name="hcBtn.Text" xml:space="preserve">
-    <value>Высококонтрастная тема</value>
+    <value>Отключить автовыбор шейдеров</value>
   </data>
   <data name="&gt;&gt;hcBtn.Name" xml:space="preserve">
     <value>hcBtn</value>

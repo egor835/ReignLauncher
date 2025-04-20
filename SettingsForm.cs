@@ -74,7 +74,7 @@ namespace RCRL
             {
                 faststartBox.Checked = true;
             }
-            if (Properties.Settings.Default.HighContrast == "0")
+            if (Properties.Settings.Default.ShadersSwitch == "0")
             {
                 hcBtn.Checked = false;
             }
@@ -118,11 +118,11 @@ namespace RCRL
             }
             if (hcBtn.Checked == false)
             {
-                Properties.Settings.Default.HighContrast = "0";
+                Properties.Settings.Default.ShadersSwitch = "0";
             }
             else
             {
-                Properties.Settings.Default.HighContrast = "1";
+                Properties.Settings.Default.ShadersSwitch = "1";
             }
             if (dontresizeBox.Checked == false)
             {

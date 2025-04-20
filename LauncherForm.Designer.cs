@@ -54,6 +54,8 @@ namespace RCRL
             book = new PictureBox();
             easterLabel = new Label();
             hideBtn = new PictureBox();
+            VersionBox = new Label();
+            UpdateBox = new Label();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -334,6 +336,30 @@ namespace RCRL
             hideBtn.MouseEnter += hideBtn_Hover;
             hideBtn.MouseLeave += hideBtn_noHover;
             // 
+            // VersionBox
+            // 
+            VersionBox.BackColor = Color.Transparent;
+            VersionBox.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Pixel);
+            VersionBox.ForeColor = Color.White;
+            VersionBox.Location = new Point(172, 20);
+            VersionBox.Name = "VersionBox";
+            VersionBox.Size = new Size(64, 64);
+            VersionBox.TabIndex = 31;
+            VersionBox.Text = "0.0.0";
+            VersionBox.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // UpdateBox
+            // 
+            UpdateBox.BackColor = Color.Transparent;
+            UpdateBox.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Pixel);
+            UpdateBox.ForeColor = Color.Gold;
+            UpdateBox.Location = new Point(411, 95);
+            UpdateBox.Name = "UpdateBox";
+            UpdateBox.Size = new Size(378, 55);
+            UpdateBox.TabIndex = 32;
+            UpdateBox.Text = "Доступно обновление!";
+            UpdateBox.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -342,6 +368,8 @@ namespace RCRL
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1200, 800);
             ControlBox = false;
+            Controls.Add(UpdateBox);
+            Controls.Add(VersionBox);
             Controls.Add(hideBtn);
             Controls.Add(easterLabel);
             Controls.Add(book);
@@ -413,5 +441,7 @@ namespace RCRL
         private PictureBox book;
         private Label easterLabel;
         private PictureBox hideBtn;
+        private Label VersionBox;
+        private Label UpdateBox;
     }
 }

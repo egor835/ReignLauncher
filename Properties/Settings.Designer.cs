@@ -110,24 +110,24 @@ namespace RCRL.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string HighContrast {
-            get {
-                return ((string)(this["HighContrast"]));
-            }
-            set {
-                this["HighContrast"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string dontResizeIt {
             get {
                 return ((string)(this["dontResizeIt"]));
             }
             set {
                 this["dontResizeIt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ShadersSwitch {
+            get {
+                return ((string)(this["ShadersSwitch"]));
+            }
+            set {
+                this["ShadersSwitch"] = value;
             }
         }
     }

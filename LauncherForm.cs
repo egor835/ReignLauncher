@@ -5,7 +5,6 @@ using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
 using CmlLib.Core.VersionLoader;
 using System.Diagnostics;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -57,6 +56,10 @@ public partial class LauncherForm : Form
 
     public static class Globals
     {
+        //Launcher version:
+        public static string launcher_version = "1.1.0";
+        public static string server_version = "";
+        public static string update_type = "none";
         //path
         public static string mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
         public static string datapath = Path.Combine(mcpath, "launcher_data");
@@ -177,6 +180,19 @@ public partial class LauncherForm : Form
         if (Globals.isInternetHere)
         {
             this.BackgroundImage = Image.FromFile(Path.Combine(Globals.datapath, "bg.png"));
+
+            //check version
+            var launcherversion = "";
+            using (HttpClient client = new HttpClient())
+            {
+                launcherversion = await client.GetStringAsync(Path.Combine(config.updateServer, "launcher_version"));
+            }
+            Globals.server_version = launcherversion;
+            string[] serverarray = launcherversion.Split('.');
+            string[] launcherarray = Globals.launcher_version.Split('.');
+            if (Convert.ToInt32(serverarray[2]) > Convert.ToInt32(launcherarray[2])) { Globals.update_type = "minor"; }
+            if ((Convert.ToInt32(serverarray[1]) > Convert.ToInt32(launcherarray[1]))||(Convert.ToInt32(serverarray[0]) > Convert.ToInt32(launcherarray[0]))) 
+            { Globals.update_type = "major"; }
         }
         hide("launcher_data");
 
@@ -199,9 +215,9 @@ public partial class LauncherForm : Form
         {
             Properties.Settings.Default.FastStart = "0";
         }
-        if (string.IsNullOrEmpty(Properties.Settings.Default.HighContrast))
+        if (string.IsNullOrEmpty(Properties.Settings.Default.ShadersSwitch))
         {
-            Properties.Settings.Default.HighContrast = "0";
+            Properties.Settings.Default.ShadersSwitch = "0";
         }
         if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_resourcepacks")))
         {
@@ -214,6 +230,10 @@ public partial class LauncherForm : Form
         if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_mods")))
         {
             Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_mods"));
+        }
+        if (!Directory.Exists(Path.Combine(Globals.mcpath, "config")))
+        {
+            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "config"));
         }
         await listVersions();
 
@@ -256,12 +276,18 @@ public partial class LauncherForm : Form
                 NewsRTB.Text += ("• " + neww + (Environment.NewLine + Environment.NewLine));
             }
         }
-    }
-    private void usernameInput_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.KeyCode == Keys.Enter)
+
+        //updates
+        if (Globals.update_type == "none")
         {
-            btnStart_release(this, e);
+            UpdateBox.Text = "";
+        } else if (Globals.update_type == "major")
+        {
+            DialogResult PROCEED = MessageBox.Show("", "Доступно обновление!", MessageBoxButtons.OKCancel);
+            if (PROCEED == DialogResult.OK)
+            {
+                Process.Start("explorer.exe", Path.Combine(Globals.mcpath, "user_mods"));
+            }
         }
     }
     private async void btnStart_release(object sender, EventArgs e)
@@ -294,8 +320,10 @@ public partial class LauncherForm : Form
             var globmodfolder = Path.Combine(Globals.mcpath, "mods");
             var usermodfolder = Path.Combine(Globals.mcpath, "user_mods");
             var resourcepacks = Path.Combine(Globals.mcpath, "resourcepacks");
+            var serverpacks = Path.Combine(Globals.mcpath, "serverpacks");
             var shaderpacks = Path.Combine(Globals.mcpath, "shaderpacks");
-            var optionfile = Path.Combine(Globals.mcpath, "options.txt");
+            var configfolder = Path.Combine(Globals.mcpath, "config");
+            var optionfile = Path.Combine(configfolder, "oculus.properties");
             var port = config.port;
             var addr = config.ip;
             if (!(Properties.Settings.Default.Proxy == "0"))
@@ -339,85 +367,21 @@ public partial class LauncherForm : Form
                         if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
                         {
                             //mods
-                            using (var client = new HttpClientDownloadWithProgress(Path.Combine(config.updateServer, "mods.zip"), Path.Combine(Globals.mcpath, "mods.zip")))
-                            {
-                                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
-                                {
-                                    pbFiles.Value = Convert.ToInt32(progressPercentage);
-                                    lbProgress.Text = $"[Updating mods: {totalBytesDownloaded}/{totalFileSize}]";
-                                };
-
-                                await client.StartDownload();
-                            }
-                            using (var client = new HttpClientDownloadWithProgress(Path.Combine(config.updateServer, "resourcepacks.zip"), Path.Combine(Globals.mcpath, "resourcepacks.zip")))
-                            {
-                                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
-                                {
-                                    pbFiles.Value = Convert.ToInt32(progressPercentage);
-                                    lbProgress.Text = $"[Updating resourcepacks: {totalBytesDownloaded}/{totalFileSize}]";
-                                };
-
-                                await client.StartDownload();
-                            }
-                            using (var client = new HttpClientDownloadWithProgress(Path.Combine(config.updateServer, "shaders.zip"), Path.Combine(Globals.mcpath, "shaders.zip")))
-                            {
-                                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
-                                {
-                                    pbFiles.Value = Convert.ToInt32(progressPercentage);
-                                    lbProgress.Text = $"[Updating shaders: {totalBytesDownloaded}/{totalFileSize}]";
-                                };
-
-                                await client.StartDownload();
-                            }
+                            FileMgr fileMgr = new FileMgr();
+                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "mods.zip"), servmodfolder, pbFiles, lbProgress);
+                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "resourcepacks.zip"), serverpacks, pbFiles, lbProgress);
+                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "shaders.zip"), shaderpacks, pbFiles, lbProgress);
+                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "config.zip"), configfolder, pbFiles, lbProgress);
+                            Globals.ModsVer = readver;
                             //README
                             DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
-
-                            Globals.ModsVer = readver;
-                            lbProgress.Text = "Unpacking...";
-                            try { Directory.Delete(servmodfolder, true); }
-                            catch (Exception ex) { }
-                            try { Directory.Delete(resourcepacks, true); }
-                            catch (Exception ex) { }
-                            try { Directory.Delete(shaderpacks, true); }
-                            catch (Exception ex) { }
-                            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "mods.zip"), servmodfolder);
-                            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "resourcepacks.zip"), resourcepacks);
-                            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, "shaders.zip"), shaderpacks);
-                            File.Delete(Path.Combine(Globals.mcpath, "mods.zip"));
-                            File.Delete(Path.Combine(Globals.mcpath, "resourcepacks.zip"));
-                            File.Delete(Path.Combine(Globals.mcpath, "shaders.zip"));
                         }
                     }
-                    //if you downloaded json, but somehow fucked up on version
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.ToString());
                     }
                 }
-
-                //add user's texturepak and shaders
-
-                try
-                {
-                    foreach (var usertp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
-                    {
-                        string tpname = Path.GetFileName(usertp);
-                        File.Copy(usertp, Path.Combine(resourcepacks, tpname), true);
-                    }
-                }
-                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks")); }
-
-                try
-                {
-                    foreach (var usersp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_shaderpacks")))
-                    {
-                        string spname = Path.GetFileName(usersp);
-                        File.Copy(usersp, Path.Combine(shaderpacks, spname), true);
-                    }
-                }
-                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks")); }
-
-
 
                 //MODPACK CHANGER (plz hewp me)
                 try { Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
@@ -438,57 +402,73 @@ public partial class LauncherForm : Form
                 }
                 catch { Directory.CreateDirectory(usermodfolder); }
 
-                //enable texturepacks
-                var opline = "";
-                if (File.Exists(optionfile))
+                //texturez!!!
+                try { Array.ForEach(Directory.GetFiles(resourcepacks), File.Delete); }
+                catch { Directory.CreateDirectory(resourcepacks); }
+                lbProgress.Text = "Installing resourcepacks";
+                foreach (var rps in fullVersion.resourcepacks)
                 {
-                    string[] arrLine = File.ReadAllLines(optionfile);
-                    foreach (var item in arrLine.Select((value, index) => new { value, index }))
+                    File.Copy(Path.Combine(serverpacks, rps), Path.Combine(resourcepacks, rps), true);
+                }
+                try
+                {
+                    foreach (var usrpack in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
                     {
-                        var lin = item.value;
-                        var ind = item.index;
-                        if (lin.Contains("resourcePacks"))
+                        string packname = Path.GetFileName(usrpack);
+                        File.Copy(usrpack, Path.Combine(resourcepacks, packname), true);
+                    }
+                }
+                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks")); }
+
+                //enable shaders (yes, itz code reuse, i know that it sucks)
+                if (Properties.Settings.Default.ShadersSwitch == "0"){
+                    var opline = "shaderPack=";
+                    if (File.Exists(optionfile))
+                    {
+                        string[] arrLine = File.ReadAllLines(optionfile);
+                        foreach (var item in arrLine.Select((value, index) => new { value, index }))
                         {
-                            opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
-                            if (Properties.Settings.Default.HighContrast == "1")
+                            var lin = item.value;
+                            var ind = item.index;
+                            if (lin.Contains("shaderPack"))
                             {
-                                opline += ",\"high_contrast\"";
+                                foreach (var rp in fullVersion.shaders)
+                                {
+                                    opline = "shaderPack=" + rp;
+                                }
+                                //MessageBox.Show(opline);
+                                arrLine[ind] = opline;
                             }
-                            foreach (var rp in fullVersion.resourcepacks)
-                            {
-                                opline += ",\"file/" + rp + "\"";
-                            }
-                            foreach (var rp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
-                            {
-                                string rpname = Path.GetFileName(rp);
-                                opline += ",\"file/" + rpname + "\"";
-                            }
-                            opline += "]";
-                            //MessageBox.Show(opline);
-                            arrLine[ind] = opline;
                         }
+                        File.WriteAllLines(optionfile, arrLine);
                     }
-                    File.WriteAllLines(optionfile, arrLine);
+                    else
+                    {
+                        foreach (var rp in fullVersion.shaders)
+                        {
+                            opline = "shaderPack=" + rp;
+                        }
+                        File.WriteAllText(optionfile, opline);
+                    }
                 }
-                else
+                try
                 {
-                    opline = "resourcePacks: [\"vanilla\",\"mod_resources\"";
-                    if (Properties.Settings.Default.HighContrast == "1")
+                    foreach (var usersp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_shaderpacks")))
                     {
-                        opline += ",\"high_contrast\"";
+                        string spname = Path.GetFileName(usersp);
+                        File.Copy(usersp, Path.Combine(shaderpacks, spname), true);
                     }
-                    foreach (var rp in fullVersion.resourcepacks)
-                    {
-                        opline += ",\"file/" + rp + "\"";
-                    }
-                    foreach (var rp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
-                    {
-                        string rpname = Path.GetFileName(rp);
-                        opline += ",\"file/" + rpname + "\"";
-                    }
-                    opline += "]\nlang:ru_ru";
-                    File.WriteAllText(optionfile, opline);
                 }
+                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks")); }
+
+
+
+                //russian lang
+                if (!File.Exists(Path.Combine(Globals.mcpath, "options.txt")))
+                {
+                    File.WriteAllText(Path.Combine(Globals.mcpath, "options.txt"), "lang:ru_ru");
+                }
+
 
                 //Hide the folders from stoopid users
                 hide("assets");
@@ -500,6 +480,7 @@ public partial class LauncherForm : Form
                 hide("versions");
                 hide("servermods");
                 hide("defaultconfigs");
+                hide("serverpacks");
 
                 //LAUNCH MINCERAFT and write vars to conf
                 pbFiles.Visible = false;
@@ -583,124 +564,6 @@ public partial class LauncherForm : Form
         }
         if (fileProgress != null)
             lbProgress.Text = $"[{fileProgress.ProgressedTasks}/{fileProgress.TotalTasks}] {fileProgress.Name}";
-    }
-    public class HttpClientDownloadWithProgress : IDisposable
-    {
-        private readonly string _downloadUrl;
-        private readonly string _destinationFilePath;
-
-        private HttpClient _httpClient;
-
-        public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage);
-
-        public event ProgressChangedHandler ProgressChanged;
-
-        public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
-        {
-            _downloadUrl = downloadUrl;
-            _destinationFilePath = destinationFilePath;
-        }
-
-        public async Task StartDownload()
-        {
-            _httpClient = new HttpClient { Timeout = TimeSpan.FromDays(1) };
-
-            using (var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead))
-                await DownloadFileFromHttpResponseMessage(response);
-        }
-
-        private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
-        {
-            response.EnsureSuccessStatusCode();
-
-            var totalBytes = response.Content.Headers.ContentLength;
-
-            using (var contentStream = await response.Content.ReadAsStreamAsync())
-                await ProcessContentStream(totalBytes, contentStream);
-        }
-
-        private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream)
-        {
-            var totalBytesRead = 0L;
-            var readCount = 0L;
-            var buffer = new byte[8192];
-            var isMoreToRead = true;
-
-            using (var fileStream = new FileStream(_destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
-            {
-                do
-                {
-                    var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length);
-                    if (bytesRead == 0)
-                    {
-                        isMoreToRead = false;
-                        TriggerProgressChanged(totalDownloadSize, totalBytesRead);
-                        continue;
-                    }
-
-                    await fileStream.WriteAsync(buffer, 0, bytesRead);
-
-                    totalBytesRead += bytesRead;
-                    readCount += 1;
-
-                    if (readCount % 100 == 0)
-                        TriggerProgressChanged(totalDownloadSize, totalBytesRead);
-                }
-                while (isMoreToRead);
-            }
-        }
-
-        private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
-        {
-            if (ProgressChanged == null)
-                return;
-
-            double? progressPercentage = null;
-            if (totalDownloadSize.HasValue)
-                progressPercentage = Math.Round((double)totalBytesRead / totalDownloadSize.Value * 100, 2);
-
-            ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
-        }
-
-        public void Dispose()
-        {
-            _httpClient?.Dispose();
-        }
-    }
-
-
-    //disable form but not really
-    private void stfu(bool Lock = true)
-    {
-        if (Lock == true)
-        {
-            closeBtn.Click -= closeBtn_Click;
-            closeBtn.MouseHover -= closeBtn_Hover;
-            btnStart.MouseUp -= btnStart_release;
-            btnStart.MouseDown -= btnStart_press;
-            btnStart.MouseEnter -= btnStart_Hover;
-            settingsBtn.Click -= settingsBtn_Click;
-            folderBtn.Click -= folderBtn_Click;
-            settingsBtn.MouseEnter -= settingsBtn_Hover;
-            folderBtn.MouseEnter -= folderBtn_Hover;
-            usernameInput.ReadOnly = true;
-            box1.BackgroundImage = Properties.Resources.box_disabled;
-            var tempor = cbVersion.Text;
-            cbVersion.Items.Clear();
-            cbVersion.Items.Add(tempor);
-            cbVersion.Text = tempor;
-            try { Application.OpenForms["SettingsForm"].Close(); }
-            catch { }
-        }
-        else
-        {
-            closeBtn.Click += closeBtn_Click;
-            btnStart.MouseUp += btnStart_release;
-            settingsBtn.Click += settingsBtn_Click;
-            folderBtn.Click += folderBtn_Click;
-            usernameInput.ReadOnly = false;
-            //listVersions();
-        }
     }
 
     private void hide(string foldername)
@@ -812,6 +675,7 @@ public partial class LauncherForm : Form
     {
         Process.Start("explorer", "https://t.me/reignmod");
     }
+
     private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
     {
         if ((cbVersion.SelectedIndex == (cbVersion.Items.Count - 1)) && (Globals.isLoading == false))
@@ -826,6 +690,39 @@ public partial class LauncherForm : Form
             }
         }
         Globals.notafirstrun = true;
+    }
+    //disable form but not really
+    private void stfu(bool Lock = true)
+    {
+        if (Lock == true)
+        {
+            closeBtn.Click -= closeBtn_Click;
+            closeBtn.MouseHover -= closeBtn_Hover;
+            btnStart.MouseUp -= btnStart_release;
+            btnStart.MouseDown -= btnStart_press;
+            btnStart.MouseEnter -= btnStart_Hover;
+            settingsBtn.Click -= settingsBtn_Click;
+            folderBtn.Click -= folderBtn_Click;
+            settingsBtn.MouseEnter -= settingsBtn_Hover;
+            folderBtn.MouseEnter -= folderBtn_Hover;
+            usernameInput.ReadOnly = true;
+            box1.BackgroundImage = Properties.Resources.box_disabled;
+            var tempor = cbVersion.Text;
+            cbVersion.Items.Clear();
+            cbVersion.Items.Add(tempor);
+            cbVersion.Text = tempor;
+            try { Application.OpenForms["SettingsForm"].Close(); }
+            catch { }
+        }
+        else
+        {
+            closeBtn.Click += closeBtn_Click;
+            btnStart.MouseUp += btnStart_release;
+            settingsBtn.Click += settingsBtn_Click;
+            folderBtn.Click += folderBtn_Click;
+            usernameInput.ReadOnly = false;
+            //listVersions();
+        }
     }
     private void usernameInput_TextChanged(object sender, EventArgs e)
     {
@@ -872,7 +769,13 @@ public partial class LauncherForm : Form
                 break;
         }
     }
-
+    private void usernameInput_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Enter)
+        {
+            btnStart_release(this, e);
+        }
+    }
     private void plzresizeit()
     {
         int height = Screen.PrimaryScreen.Bounds.Height;
@@ -895,6 +798,8 @@ public partial class LauncherForm : Form
         NewsLabel.Font = new Font("Calibri", Convert.ToInt32(NewsLabel.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
         NewsRTB.Font = new Font("Calibri", Convert.ToInt32(NewsRTB.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
         easterLabel.Font = new Font("Calibri", Convert.ToInt32(easterLabel.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        VersionBox.Font = new Font("Calibri", Convert.ToInt32(VersionBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        UpdateBox.Font = new Font("Calibri", Convert.ToInt32(UpdateBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
 
         cbVersion.Location = new Point(Convert.ToInt32(cbVersion.Location.X * k), Convert.ToInt32(cbVersion.Location.Y * k));
         cbVersion.Size = new Size(Convert.ToInt32(cbVersion.ClientSize.Width * k), Convert.ToInt32(cbVersion.ClientSize.Height * k));
@@ -955,6 +860,12 @@ public partial class LauncherForm : Form
 
         hideBtn.Location = new Point(Convert.ToInt32(hideBtn.Location.X * k), Convert.ToInt32(hideBtn.Location.Y * k));
         hideBtn.Size = new Size(Convert.ToInt32(hideBtn.ClientSize.Width * k), Convert.ToInt32(hideBtn.ClientSize.Height * k));
+        
+        VersionBox.Location = new Point(Convert.ToInt32(VersionBox.Location.X * k), Convert.ToInt32(VersionBox.Location.Y * k));
+        VersionBox.Size = new Size(Convert.ToInt32(VersionBox.ClientSize.Width * k), Convert.ToInt32(VersionBox.ClientSize.Height * k));
+
+        UpdateBox.Location = new Point(Convert.ToInt32(UpdateBox.Location.X * k), Convert.ToInt32(UpdateBox.Location.Y * k));
+        UpdateBox.Size = new Size(Convert.ToInt32(UpdateBox.ClientSize.Width * k), Convert.ToInt32(UpdateBox.ClientSize.Height * k));
 
         this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.MaximumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));

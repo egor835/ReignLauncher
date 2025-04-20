@@ -275,39 +275,6 @@ public partial class LauncherForm : Form
         {
             MessageBox.Show("Введите никнейм");
         }
-        else if (usernameInput.Text == "BannedForever")
-        {
-            stfu();
-            if (!Directory.Exists(Path.Combine(Globals.datapath, "Doukutsu")))
-            {
-                pbFiles.Visible = true;
-                using (var client = new HttpClientDownloadWithProgress("https://cavestorymultiplayer.com/content/CaveStoryMultiplayer-v0.1.1.16b.zip", Path.Combine(Globals.datapath, "doukutsu.zip")))
-                {
-                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
-                    {
-                        pbFiles.Value = Convert.ToInt32(progressPercentage);
-                        lbProgress.Text = $"[Downloading Cave Story: {totalBytesDownloaded}/{totalFileSize}]";
-                    };
-                    await client.StartDownload();
-                }
-                System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.datapath, "doukutsu.zip"), Path.Combine(Globals.datapath, "Doukutsu"));
-                File.Delete(Path.Combine(Globals.datapath, "doukutsu.zip"));
-                pbFiles.Visible = false;
-                lbProgress.Text = "";
-            }
-            Process.Start(Path.Combine(Globals.datapath, "Doukutsu\\Doukutsu.exe"));
-            Environment.Exit(0);
-        }
-        else if (usernameInput.Text == "MankindIsDeadBloodIsFuelHellIsFull")
-        {
-            ultrakillyourself();
-            Process.Start("\"C:\\Program Files (x86)\\Steam\\steam.exe\"", "steam://rungameid/1229490");
-        }
-        else if (usernameInput.Text == "shrek 2")
-        {
-            Process.Start("explorer", "http://parky.ddns.net/shrek.mp4");
-            Environment.Exit(0);
-        }
         else if (usernameInput.Text.Replace("_", "").Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text.Replace("_", ""), @"\p{IsCyrillic}"))
         {
             MessageBox.Show("Ваш никнейм не должен содержать:\n\n- пробелов\n- кириллицы\n- спецсимволов\n\nДопустимы только латинские буквы и цифры.");
@@ -860,15 +827,6 @@ public partial class LauncherForm : Form
             }
         }
         Globals.notafirstrun = true;
-    }
-
-
-    private void ultrakillyourself(bool Lock = true)
-    {
-        this.BackgroundImage = null;
-        this.BackColor = Color.Red;
-        NewsLabel.Text = "PREPARE THYSELF";
-        NewsRTB.Text = "DIE!!!!";
     }
     private void usernameInput_TextChanged(object sender, EventArgs e)
     {

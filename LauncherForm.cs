@@ -308,7 +308,7 @@ public partial class LauncherForm : Form
             Process.Start("explorer", "http://parky.ddns.net/shrek.mp4");
             Environment.Exit(0);
         }
-        else if (usernameInput.Text.Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text, @"\p{IsCyrillic}"))
+        else if (usernameInput.Text.Replace("_", "").Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text.Replace("_", ""), @"\p{IsCyrillic}"))
         {
             MessageBox.Show("Ваш никнейм не должен содержать:\n\n- пробелов\n- кириллицы\n- спецсимволов\n\nДопустимы только латинские буквы и цифры.");
         }

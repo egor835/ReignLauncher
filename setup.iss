@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ReignCraft Launcher"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "ReignCraft"
 #define MyAppExeName "RCRL.exe"
 
@@ -18,7 +18,7 @@ DisableProgramGroupPage=yes
 OutputBaseFilename=rcl
 SetupIconFile=C:\Users\Cunny\source\repos\ReignLauncher\minecraft.ico
 ;SolidCompression=yes
-Compression = none
+Compression = zip
 WizardStyle=modern
 
 [Languages]

@@ -112,10 +112,9 @@ public partial class LauncherForm : Form
         catch { }
         try
         {
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(Path.Combine(config.updateServer, "versions.json"), Path.Combine(datapath, "newversions.json"));
-            }
+            String getFrom = Path.Combine(config.updateServer, "versions.json");
+            String dwnTo = Path.Combine(datapath, "newversions.json");
+            DownloadFileSync(getFrom, dwnTo);
             File.Move(Path.Combine(datapath, "newversions.json"), Path.Combine(datapath, "versions.json"), true);
         }
         catch (Exception ex)
@@ -137,12 +136,9 @@ public partial class LauncherForm : Form
         {
             try
             {
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
-                    client.DownloadFile(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
-                    client.DownloadFile(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
-                }
+                DownloadFileSync(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
+                DownloadFileSync(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
+                DownloadFileSync(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
             }
             catch
             {
@@ -336,9 +332,9 @@ public partial class LauncherForm : Form
                     string readver;
                     try
                     {
-                        using (WebClient client = new WebClient())
+                        using (HttpClient client = new HttpClient())
                         {
-                            readver = client.DownloadString(Path.Combine(config.updateServer, "version"));
+                            readver = await client.GetStringAsync(Path.Combine(config.updateServer, "version"));
                         }
                         if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
                         {
@@ -374,10 +370,8 @@ public partial class LauncherForm : Form
                                 await client.StartDownload();
                             }
                             //README
-                            using (var client = new WebClient())
-                            {
-                                client.DownloadFile(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
-                            }
+                            DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
+
                             Globals.ModsVer = readver;
                             lbProgress.Text = "Unpacking...";
                             try { Directory.Delete(servmodfolder, true); }
@@ -559,7 +553,12 @@ public partial class LauncherForm : Form
         }
     }
 
-
+    void DownloadFileSync(string url, string dest)
+    {
+        using var client = new HttpClient();
+        var data = client.GetByteArrayAsync(url).GetAwaiter().GetResult();
+        File.WriteAllBytes(dest, data);
+    }
 
     //some random shit, idk, i stole this code
     ByteProgress byteProgress;
@@ -835,8 +834,8 @@ public partial class LauncherForm : Form
             case "ilaa70":
                 easterLabel.Text = "/ban";
                 break;
-            case "PetrCHes":
-                easterLabel.Text = "#> Майнер активирован";
+            case "PetrCHess":
+                easterLabel.Text = "наведи суету";
                 break;
             case "cnuuyy":
                 easterLabel.Text = "подписывайтесь на notNTඞ";

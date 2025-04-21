@@ -36,7 +36,6 @@ public partial class LauncherForm : Form
     public class packfile
     {
         public List<ver> ver { get; set; }
-        public List<string> configs { get; set; }
     }
     //newz
     public class newz
@@ -376,7 +375,7 @@ public partial class LauncherForm : Form
                         await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "mods"), GlobalPaths.servmodfolder, Globals.dwn_mods, pbFiles, lbProgress);
                         await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "resourcepacks"), GlobalPaths.serverpacks, Globals.dwn_resourcepacks, pbFiles, lbProgress);
                         await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "shaders"), GlobalPaths.shaderpacks, Globals.dwn_shaders, pbFiles, lbProgress);
-                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "configs"), GlobalPaths.configfolder, pfile.configs, pbFiles, lbProgress);
+                        await fileMgr.DownloadAndUnpack(Path.Combine(GlobalPaths.serverpath, "configs.zip"), GlobalPaths.configfolder);
                         //README
                         DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(GlobalPaths.mcpath, "README.TXT"));
                     }

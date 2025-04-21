@@ -13,6 +13,14 @@ namespace RCRL
                 DownloadFileSync(Path.Combine(whereis, item.Value), Path.Combine(whereitneed, item.Value));
             }
         }
+
+        public async Task DownloadAndUnpack(String whereis, String whereitneed)
+        {
+            DownloadFileSync(whereis, Path.Combine(GlobalPaths.datapath, Path.GetFileName(whereis)));
+            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(GlobalPaths.datapath, Path.GetFileName(whereis)), whereitneed, true);
+            File.Delete(Path.Combine(GlobalPaths.datapath, Path.GetFileName(whereis)));
+        }
+
         public async Task cleanMcFolder(String mcpath)
         {
             try { Directory.Delete(Path.Combine(mcpath, "assets"), true); }

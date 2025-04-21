@@ -4,107 +4,58 @@ namespace RCRL
 {
     internal class FileMgr
     {
-        public class HttpClientDownloadWithProgress : IDisposable
+        public async Task DownloadEveryFile(String whereis, String whereitneed, List<string> list, ProgressBar pb, Label tb)
         {
-            private readonly string _downloadUrl;
-            private readonly string _destinationFilePath;
-
-            private HttpClient _httpClient;
-
-            public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage);
-
-            public event ProgressChangedHandler ProgressChanged;
-
-            public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
+            foreach (var item in list.Select((value, index) => new { Value = value, Index = index }))
             {
-                _downloadUrl = downloadUrl;
-                _destinationFilePath = destinationFilePath;
+                pb.Value = Convert.ToInt32((Convert.ToDouble(item.Index) / Convert.ToDouble(list.Count)) * 100);
+                tb.Text = $"[Downloading {item.Value} ({item.Index}/{list.Count})]";
+                DownloadFileSync(Path.Combine(whereis, item.Value), Path.Combine(whereitneed, item.Value));
             }
-
-            public async Task StartDownload()
+        }
+        public async Task cleanMcFolder(String mcpath)
+        {
+            try { Directory.Delete(Path.Combine(mcpath, "assets"), true); }
+            catch (DirectoryNotFoundException ex) { }
+            try { Directory.Delete(Path.Combine(mcpath, "libraries"), true); }
+            catch (DirectoryNotFoundException ex) { }
+            try { Directory.Delete(Path.Combine(mcpath, "runtime"), true); }
+            catch (DirectoryNotFoundException ex) { }
+            try { Directory.Delete(Path.Combine(mcpath, "versions"), true); }
+            catch (DirectoryNotFoundException ex) { }
+        }
+        public async Task removeAllBut(String pathTo, IEnumerable<string> whatNeeded)
+        {
+            if (Directory.Exists(pathTo))
             {
-                _httpClient = new HttpClient { Timeout = TimeSpan.FromDays(1) };
-
-                using (var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead))
-                    await DownloadFileFromHttpResponseMessage(response);
-            }
-
-            private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
-            {
-                response.EnsureSuccessStatusCode();
-
-                var totalBytes = response.Content.Headers.ContentLength;
-
-                using (var contentStream = await response.Content.ReadAsStreamAsync())
-                    await ProcessContentStream(totalBytes, contentStream);
-            }
-
-            private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream)
-            {
-                var totalBytesRead = 0L;
-                var readCount = 0L;
-                var buffer = new byte[8192];
-                var isMoreToRead = true;
-
-                using (var fileStream = new FileStream(_destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
+                foreach (var element in Directory.GetFiles(pathTo))
                 {
-                    do
+                    if (!whatNeeded.Contains(Path.GetFileName(element)))
                     {
-                        var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length);
-                        if (bytesRead == 0)
+                        try
                         {
-                            isMoreToRead = false;
-                            TriggerProgressChanged(totalDownloadSize, totalBytesRead);
-                            continue;
+                            File.Delete(element);
                         }
-
-                        await fileStream.WriteAsync(buffer, 0, bytesRead);
-
-                        totalBytesRead += bytesRead;
-                        readCount += 1;
-
-                        if (readCount % 100 == 0)
-                            TriggerProgressChanged(totalDownloadSize, totalBytesRead);
+                        catch (Exception ex)
+                        {
+                        }
                     }
-                    while (isMoreToRead);
                 }
             }
-
-            private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
-            {
-                if (ProgressChanged == null)
-                    return;
-
-                double? progressPercentage = null;
-                if (totalDownloadSize.HasValue)
-                    progressPercentage = Math.Round((double)totalBytesRead / totalDownloadSize.Value * 100, 2);
-
-                ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
-            }
-
-            public void Dispose()
-            {
-                _httpClient?.Dispose();
-            }
         }
 
-        public async Task DownloadAndUnpack(String whereis, String whereitneed, ProgressBar pb, Label tb)
+        public List<string> getListOfDownloads(String path, List<string> list)
         {
-            using (var client = new HttpClientDownloadWithProgress(whereis, Path.Combine(Globals.mcpath, Path.GetFileName(whereis))))
+            Directory.CreateDirectory(path);
+            List<string> todwn = new List<string>();
+            foreach (var element in list)
             {
-                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                if (!Directory.GetFiles(path).Contains(Path.Combine(path, element)))
                 {
-                    pb.Value = Convert.ToInt32(progressPercentage);
-                    tb.Text = $"[Updating {Path.GetFileName(whereis)}: {totalBytesDownloaded}/{totalFileSize}]";
-                };
-                await client.StartDownload();
+                    todwn.Add(element);
+                }
             }
-            tb.Text = "Unpacking...";
-            try { Directory.Delete(whereitneed, true); }
-            catch (Exception ex) { }
-            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(Globals.mcpath, Path.GetFileName(whereis)), whereitneed, true);
-            File.Delete(Path.Combine(Globals.mcpath, Path.GetFileName(whereis)));
+            return todwn;
         }
-
     }
 }

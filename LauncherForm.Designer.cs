@@ -56,6 +56,7 @@ namespace RCRL
             hideBtn = new PictureBox();
             VersionBox = new Label();
             UpdateBox = new Label();
+            PackUpdateBox = new Label();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -257,7 +258,7 @@ namespace RCRL
             // box2
             // 
             box2.BackColor = Color.Transparent;
-            box2.BackgroundImage = Properties.Resources.box_dropdown;
+            box2.BackgroundImage = Properties.Resources.box;
             box2.BackgroundImageLayout = ImageLayout.Stretch;
             box2.Location = new Point(65, 740);
             box2.Name = "box2";
@@ -357,8 +358,21 @@ namespace RCRL
             UpdateBox.Name = "UpdateBox";
             UpdateBox.Size = new Size(378, 55);
             UpdateBox.TabIndex = 32;
-            UpdateBox.Text = "Доступно обновление!";
+            UpdateBox.Text = "Доступно обновление лаунчера!";
             UpdateBox.TextAlign = ContentAlignment.MiddleCenter;
+            UpdateBox.Click += UpdateBox_Click;
+            // 
+            // PackUpdateBox
+            // 
+            PackUpdateBox.BackColor = Color.Transparent;
+            PackUpdateBox.Font = new Font("Calibri", 18F, FontStyle.Regular, GraphicsUnit.Pixel);
+            PackUpdateBox.ForeColor = Color.Gold;
+            PackUpdateBox.Location = new Point(850, 654);
+            PackUpdateBox.Name = "PackUpdateBox";
+            PackUpdateBox.Size = new Size(330, 26);
+            PackUpdateBox.TabIndex = 33;
+            PackUpdateBox.Text = "Есть обновления сборки";
+            PackUpdateBox.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // LauncherForm
             // 
@@ -368,6 +382,9 @@ namespace RCRL
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1200, 800);
             ControlBox = false;
+            Controls.Add(PackUpdateBox);
+            Controls.Add(lbProgress);
+            Controls.Add(pbFiles);
             Controls.Add(UpdateBox);
             Controls.Add(VersionBox);
             Controls.Add(hideBtn);
@@ -388,8 +405,6 @@ namespace RCRL
             Controls.Add(folderBtn);
             Controls.Add(settingsBtn);
             Controls.Add(btnStart);
-            Controls.Add(lbProgress);
-            Controls.Add(pbFiles);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -443,5 +458,6 @@ namespace RCRL
         private PictureBox hideBtn;
         private Label VersionBox;
         private Label UpdateBox;
+        private Label PackUpdateBox;
     }
 }

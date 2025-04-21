@@ -123,16 +123,6 @@ namespace RCRL.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap box_dropdown {
-            get {
-                object obj = ResourceManager.GetObject("box_dropdown", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Crown {
             get {
                 object obj = ResourceManager.GetObject("Crown", resourceCulture);

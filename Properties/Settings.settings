@@ -14,9 +14,6 @@
     <Setting Name="Proxy" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ModsVer" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="FastStart" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

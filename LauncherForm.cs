@@ -33,9 +33,10 @@ public partial class LauncherForm : Form
         public List<string> shaders { get; set; }
         public List<string> resourcepacks { get; set; }
     }
-    public class rev
+    public class packfile
     {
         public List<ver> ver { get; set; }
+        public List<string> configs { get; set; }
     }
     //newz
     public class newz
@@ -54,22 +55,38 @@ public partial class LauncherForm : Form
         public string versionName { get; set; }
     }
 
+    public static class GlobalPaths
+    {
+        public static string mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
+        public static string datapath = Path.Combine(mcpath, "launcher_data");
+        public static string serverpath = "";
+        public static string servmodfolder = Path.Combine(mcpath, "servermods");
+        public static string globmodfolder = Path.Combine(mcpath, "mods");
+        public static string usermodfolder = Path.Combine(mcpath, "user_mods");
+        public static string resourcepacks = Path.Combine(mcpath, "resourcepacks");
+        public static string serverpacks = Path.Combine(mcpath, "serverpacks");
+        public static string userpacks = Path.Combine(mcpath, "user_resourcepacks");
+        public static string shaderpacks = Path.Combine(mcpath, "shaderpacks");
+        public static string usershaders = Path.Combine(mcpath, "user_shaderpacks");
+        public static string configfolder = Path.Combine(mcpath, "config");
+    }
+
     public static class Globals
     {
         //Launcher version:
         public static string launcher_version = "1.1.0";
-        public static string server_version = "";
+        public static string server_version = "0.0.0";
         public static string update_type = "none";
-        //path
-        public static string mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
-        public static string datapath = Path.Combine(mcpath, "launcher_data");
+        public static bool pack_update = false;
         //config
         public static string jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         public static string json = File.ReadAllText(jsonPath);
         //versions
-        public static string versionsPath = Path.Combine(datapath, "versions.json");
+        public static string versionsPath = Path.Combine(GlobalPaths.datapath, "versions.json");
         public static string versions = File.ReadAllText(versionsPath);
-        public static string ModsVer;
+        public static List<string> dwn_mods = new List<string>();
+        public static List<string> dwn_resourcepacks = new List<string>();
+        public static List<string> dwn_shaders = new List<string>();
         //parameters
         public static bool isInternetHere = true;
         public static bool isLoading = false;
@@ -102,23 +119,20 @@ public partial class LauncherForm : Form
         }
 
         //define vars
-        var mcpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".reigncraft");
-        var datapath = Path.Combine(mcpath, "launcher_data");
         var jsonPath = Path.Combine(AppContext.BaseDirectory, "config.json");
         var json = File.ReadAllText(jsonPath);
 
         //fucking mess, which downloads versions.json from remote server and checks internet kenekshun
         Config? config = JsonSerializer.Deserialize<Config>(json);
-        try { Directory.CreateDirectory(mcpath); }
-        catch { }
-        try { Directory.CreateDirectory(datapath); }
-        catch { }
+        GlobalPaths.serverpath = config.updateServer;
+        Directory.CreateDirectory(GlobalPaths.mcpath);
+        Directory.CreateDirectory(GlobalPaths.datapath);
         try
         {
-            String getFrom = Path.Combine(config.updateServer, "versions.json");
-            String dwnTo = Path.Combine(datapath, "newversions.json");
+            String getFrom = Path.Combine(GlobalPaths.serverpath, "versions.json");
+            String dwnTo = Path.Combine(GlobalPaths.datapath, "newversions.json");
             DownloadFileSync(getFrom, dwnTo);
-            File.Move(Path.Combine(datapath, "newversions.json"), Path.Combine(datapath, "versions.json"), true);
+            File.Move(Path.Combine(GlobalPaths.datapath, "newversions.json"), Path.Combine(GlobalPaths.datapath, "versions.json"), true);
         }
         catch (Exception ex)
         {
@@ -139,20 +153,20 @@ public partial class LauncherForm : Form
         {
             try
             {
-                DownloadFileSync(Path.Combine(config.updateServer, "bg.png"), Path.Combine(Globals.datapath, "bg.png"));
-                DownloadFileSync(Path.Combine(config.updateServer, "news.json"), Path.Combine(Globals.datapath, "news.json"));
-                DownloadFileSync(Path.Combine(config.updateServer, "servers.dat"), Path.Combine(Globals.mcpath, "servers.dat"));
+                DownloadFileSync(Path.Combine(GlobalPaths.serverpath, "bg.png"), Path.Combine(GlobalPaths.datapath, "bg.png"));
+                DownloadFileSync(Path.Combine(GlobalPaths.serverpath, "news.json"), Path.Combine(GlobalPaths.datapath, "news.json"));
+                DownloadFileSync(Path.Combine(GlobalPaths.serverpath, "servers.dat"), Path.Combine(GlobalPaths.mcpath, "servers.dat"));
             }
             catch
             {
                 MessageBox.Show("Судя по всему, лаунчер уже запущен. Закройте все предыдущие процессы и повторите попытку.");
                 Environment.Exit(0);
             }
-            _launcher = new MinecraftLauncher(new MinecraftPath(mcpath));
+            _launcher = new MinecraftLauncher(new MinecraftPath(GlobalPaths.mcpath));
         }
         else
         {
-            var path = new MinecraftPath(mcpath);
+            var path = new MinecraftPath(GlobalPaths.mcpath);
             var parameters = MinecraftLauncherParameters.CreateDefault(path);
             parameters.VersionLoader = new LocalJsonVersionLoader(path);
             _launcher = new MinecraftLauncher(parameters);
@@ -175,32 +189,27 @@ public partial class LauncherForm : Form
 
     private async void LauncherForm_Load(object sender, EventArgs e)
     {
-        //define buttons and some дезигн shit
-        Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
+        // Load previous used values in the inputs
+        usernameInput.Text = Properties.Settings.Default.Username;
+
+        //bg and get versions
         if (Globals.isInternetHere)
         {
-            this.BackgroundImage = Image.FromFile(Path.Combine(Globals.datapath, "bg.png"));
+            this.BackgroundImage = Image.FromFile(Path.Combine(GlobalPaths.datapath, "bg.png"));
 
-            //check version
+            //check launcher version
             var launcherversion = "";
             using (HttpClient client = new HttpClient())
-            {
-                launcherversion = await client.GetStringAsync(Path.Combine(config.updateServer, "launcher_version"));
-            }
+            { launcherversion = await client.GetStringAsync(Path.Combine(GlobalPaths.serverpath, "launcher_version")); }
             Globals.server_version = launcherversion;
             string[] serverarray = launcherversion.Split('.');
             string[] launcherarray = Globals.launcher_version.Split('.');
-            if (Convert.ToInt32(serverarray[2]) > Convert.ToInt32(launcherarray[2])) { Globals.update_type = "minor"; }
-            if ((Convert.ToInt32(serverarray[1]) > Convert.ToInt32(launcherarray[1]))||(Convert.ToInt32(serverarray[0]) > Convert.ToInt32(launcherarray[0]))) 
+            if (Convert.ToInt32(serverarray[2]) > Convert.ToInt32(launcherarray[2]))
+            { Globals.update_type = "minor"; }
+            if ((Convert.ToInt32(serverarray[1]) > Convert.ToInt32(launcherarray[1])) || (Convert.ToInt32(serverarray[0]) > Convert.ToInt32(launcherarray[0])))
             { Globals.update_type = "major"; }
         }
         hide("launcher_data");
-
-        // Load previous used values in the inputs
-        usernameInput.Text = Properties.Settings.Default.Username;
-        Globals.ModsVer = Properties.Settings.Default.ModsVer;
-        if (string.IsNullOrEmpty(Globals.ModsVer))
-            Globals.ModsVer = "0";
 
         //first run checks
         if (string.IsNullOrEmpty(Properties.Settings.Default.Proxy))
@@ -219,24 +228,11 @@ public partial class LauncherForm : Form
         {
             Properties.Settings.Default.ShadersSwitch = "0";
         }
-        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_resourcepacks")))
-        {
-            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks"));
-        }
-        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_shaderpacks")))
-        {
-            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks"));
-        }
-        if (!Directory.Exists(Path.Combine(Globals.mcpath, "user_mods")))
-        {
-            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_mods"));
-        }
-        if (!Directory.Exists(Path.Combine(Globals.mcpath, "config")))
-        {
-            Directory.CreateDirectory(Path.Combine(Globals.mcpath, "config"));
-        }
+        Directory.CreateDirectory(GlobalPaths.userpacks);
+        Directory.CreateDirectory(GlobalPaths.usershaders);
+        Directory.CreateDirectory(GlobalPaths.usermodfolder);
+        Directory.CreateDirectory(GlobalPaths.configfolder);
         await listVersions();
-
     }
 
     private async Task listVersions()
@@ -245,14 +241,25 @@ public partial class LauncherForm : Form
         cbVersion.Items.Clear();
 
         //init config
-        rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
+        packfile? pfile = JsonSerializer.Deserialize<packfile>(Globals.versions);
 
-
-        // List all versions
-        foreach (var version in revision.ver)
+        IEnumerable<string> all_mods = new List<string>();
+        IEnumerable<string> all_shaders = new List<string>();
+        IEnumerable<string> all_resourcepacks = new List<string>();
+        // List all versions and get list of all mods and shit
+        foreach (var version in pfile.ver)
         {
             cbVersion.Items.Add(version.name);
+            ver? fullVersion = pfile.ver.FirstOrDefault(v => v.name == version.name);
+            all_mods = all_mods.Union(fullVersion.mods);
+            all_shaders = all_shaders.Union(fullVersion.shaders);
+            all_resourcepacks = all_resourcepacks.Union(fullVersion.resourcepacks);
         }
+
+        FileMgr fileMgr = new FileMgr();
+        await fileMgr.removeAllBut(GlobalPaths.servmodfolder, all_mods);
+        await fileMgr.removeAllBut(GlobalPaths.serverpacks, all_resourcepacks);
+        await fileMgr.removeAllBut(GlobalPaths.shaderpacks, all_shaders);
 
         if (!(cbVersion.Items.Contains(Properties.Settings.Default.Version)))
         {
@@ -266,7 +273,7 @@ public partial class LauncherForm : Form
         //news
         if (Globals.isInternetHere)
         {
-            string newsPath = Path.Combine(Globals.datapath, "news.json");
+            string newsPath = Path.Combine(GlobalPaths.datapath, "news.json");
             string newsCont = File.ReadAllText(newsPath);
             newz? news = JsonSerializer.Deserialize<newz>(newsCont);
             NewsLabel.Text = news.title;
@@ -278,16 +285,14 @@ public partial class LauncherForm : Form
         }
 
         //updates
+        VersionBox.Text = Globals.launcher_version;
         if (Globals.update_type == "none")
         {
             UpdateBox.Text = "";
-        } else if (Globals.update_type == "major")
+        }
+        else if (Globals.update_type == "major")
         {
-            DialogResult PROCEED = MessageBox.Show("", "Доступно обновление!", MessageBoxButtons.OKCancel);
-            if (PROCEED == DialogResult.OK)
-            {
-                Process.Start("explorer.exe", Path.Combine(Globals.mcpath, "user_mods"));
-            }
+            updatelauncher();
         }
     }
     private async void btnStart_release(object sender, EventArgs e)
@@ -314,16 +319,11 @@ public partial class LauncherForm : Form
             var mcVersion = "1.20.1";
 
             //define fucking variables
+            var optionfile = Path.Combine(GlobalPaths.configfolder, "oculus.properties");
+            packfile? pfile = JsonSerializer.Deserialize<packfile>(Globals.versions);
+            ver? fullVersion = pfile.ver.FirstOrDefault(v => v.name == cbVersion.Text);
             Config? config = JsonSerializer.Deserialize<Config>(Globals.json);
-            rev? revision = JsonSerializer.Deserialize<rev>(Globals.versions);
-            var servmodfolder = Path.Combine(Globals.mcpath, "servermods");
-            var globmodfolder = Path.Combine(Globals.mcpath, "mods");
-            var usermodfolder = Path.Combine(Globals.mcpath, "user_mods");
-            var resourcepacks = Path.Combine(Globals.mcpath, "resourcepacks");
-            var serverpacks = Path.Combine(Globals.mcpath, "serverpacks");
-            var shaderpacks = Path.Combine(Globals.mcpath, "shaderpacks");
-            var configfolder = Path.Combine(Globals.mcpath, "config");
-            var optionfile = Path.Combine(configfolder, "oculus.properties");
+            FileMgr fileMgr = new FileMgr();
             var port = config.port;
             var addr = config.ip;
             if (!(Properties.Settings.Default.Proxy == "0"))
@@ -335,19 +335,33 @@ public partial class LauncherForm : Form
             {
                 pbFiles.Visible = true;
                 var version_name = "";
+
                 if (Globals.isInternetHere)
                 {
-                    //install forge
-                    eventTimer.Enabled = true;
-                    var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
-                    var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
-                    var forge = new ForgeInstaller(_launcher);
-                    version_name = await forge.Install(mcVersion, config.versionName, new ForgeInstallOptions
+                    try
                     {
-                        ByteProgress = byteProgress,
-                        FileProgress = fileProgress
-                    });
-                    eventTimer.Enabled = false;
+                        //clen fldr
+                        if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+                        {
+                            await fileMgr.cleanMcFolder(GlobalPaths.mcpath);
+                        }
+                        //install forge
+                        eventTimer.Enabled = true;
+                        var byteProgress = new SyncProgress<ByteProgress>(_launcher_ProgressChanged);
+                        var fileProgress = new SyncProgress<InstallerProgressChangedEventArgs>(Launcher_FileChanged);
+                        var forge = new ForgeInstaller(_launcher);
+                        version_name = await forge.Install(mcVersion, config.versionName, new ForgeInstallOptions
+                        {
+                            ByteProgress = byteProgress,
+                            FileProgress = fileProgress
+                        });
+                        eventTimer.Enabled = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Произошла ошибка при установке Minecraft.\nПроверьте своё интернет-соединение, закройте все процессы использующие Java или перезагрузите компьютер.\n\nКод ошибки:" + ex.ToString());
+                        Environment.Exit(0);
+                    }
                 }
                 else
                 {
@@ -357,71 +371,56 @@ public partial class LauncherForm : Form
                 //silly mod updater
                 if (Globals.isInternetHere)
                 {
-                    string readver;
-                    try
+                    if (Globals.pack_update)
                     {
-                        using (HttpClient client = new HttpClient())
-                        {
-                            readver = await client.GetStringAsync(Path.Combine(config.updateServer, "version"));
-                        }
-                        if (Int32.Parse(readver) > Int32.Parse(Globals.ModsVer))
-                        {
-                            //mods
-                            FileMgr fileMgr = new FileMgr();
-                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "mods.zip"), servmodfolder, pbFiles, lbProgress);
-                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "resourcepacks.zip"), serverpacks, pbFiles, lbProgress);
-                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "shaders.zip"), shaderpacks, pbFiles, lbProgress);
-                            await fileMgr.DownloadAndUnpack(Path.Combine(config.updateServer, "config.zip"), configfolder, pbFiles, lbProgress);
-                            Globals.ModsVer = readver;
-                            //README
-                            DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(Globals.mcpath, "README.TXT"));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
+                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "mods"), GlobalPaths.servmodfolder, Globals.dwn_mods, pbFiles, lbProgress);
+                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "resourcepacks"), GlobalPaths.serverpacks, Globals.dwn_resourcepacks, pbFiles, lbProgress);
+                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "shaders"), GlobalPaths.shaderpacks, Globals.dwn_shaders, pbFiles, lbProgress);
+                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "configs"), GlobalPaths.configfolder, pfile.configs, pbFiles, lbProgress);
+                        //README
+                        DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(GlobalPaths.mcpath, "README.TXT"));
                     }
                 }
 
                 //MODPACK CHANGER (plz hewp me)
-                try { Array.ForEach(Directory.GetFiles(globmodfolder), File.Delete); }
-                catch { Directory.CreateDirectory(globmodfolder); }
-                ver? fullVersion = revision.ver.FirstOrDefault(v => v.name == cbVersion.Text);
+                try { Array.ForEach(Directory.GetFiles(GlobalPaths.globmodfolder), File.Delete); }
+                catch { Directory.CreateDirectory(GlobalPaths.globmodfolder); }
                 lbProgress.Text = "Installing mods";
                 foreach (var mod in fullVersion.mods)
                 {
-                    File.Copy(Path.Combine(servmodfolder, mod), Path.Combine(globmodfolder, mod), true);
+                    File.Copy(Path.Combine(GlobalPaths.servmodfolder, mod), Path.Combine(GlobalPaths.globmodfolder, mod), true);
                 }
                 try
                 {
-                    foreach (var usermod in Directory.GetFiles(usermodfolder))
+                    foreach (var usermod in Directory.GetFiles(GlobalPaths.usermodfolder))
                     {
                         string modname = Path.GetFileName(usermod);
-                        File.Copy(usermod, Path.Combine(globmodfolder, modname), true);
+                        File.Copy(usermod, Path.Combine(GlobalPaths.globmodfolder, modname), true);
                     }
                 }
-                catch { Directory.CreateDirectory(usermodfolder); }
+                catch { Directory.CreateDirectory(GlobalPaths.usermodfolder); }
 
                 //texturez!!!
-                try { Array.ForEach(Directory.GetFiles(resourcepacks), File.Delete); }
-                catch { Directory.CreateDirectory(resourcepacks); }
+                try { Array.ForEach(Directory.GetFiles(GlobalPaths.resourcepacks), File.Delete); }
+                catch { Directory.CreateDirectory(GlobalPaths.resourcepacks); }
                 lbProgress.Text = "Installing resourcepacks";
                 foreach (var rps in fullVersion.resourcepacks)
                 {
-                    File.Copy(Path.Combine(serverpacks, rps), Path.Combine(resourcepacks, rps), true);
+                    File.Copy(Path.Combine(GlobalPaths.serverpacks, rps), Path.Combine(GlobalPaths.resourcepacks, rps), true);
                 }
                 try
                 {
-                    foreach (var usrpack in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_resourcepacks")))
+                    foreach (var usrpack in Directory.GetFiles(Path.Combine(GlobalPaths.mcpath, "user_resourcepacks")))
                     {
                         string packname = Path.GetFileName(usrpack);
-                        File.Copy(usrpack, Path.Combine(resourcepacks, packname), true);
+                        File.Copy(usrpack, Path.Combine(GlobalPaths.resourcepacks, packname), true);
                     }
                 }
-                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_resourcepacks")); }
+                catch { Directory.CreateDirectory(Path.Combine(GlobalPaths.mcpath, "user_resourcepacks")); }
 
                 //enable shaders (yes, itz code reuse, i know that it sucks)
-                if (Properties.Settings.Default.ShadersSwitch == "0"){
+                if (Properties.Settings.Default.ShadersSwitch == "0")
+                {
                     var opline = "shaderPack=";
                     if (File.Exists(optionfile))
                     {
@@ -453,20 +452,20 @@ public partial class LauncherForm : Form
                 }
                 try
                 {
-                    foreach (var usersp in Directory.GetFiles(Path.Combine(Globals.mcpath, "user_shaderpacks")))
+                    foreach (var usersp in Directory.GetFiles(Path.Combine(GlobalPaths.mcpath, "user_shaderpacks")))
                     {
                         string spname = Path.GetFileName(usersp);
-                        File.Copy(usersp, Path.Combine(shaderpacks, spname), true);
+                        File.Copy(usersp, Path.Combine(GlobalPaths.shaderpacks, spname), true);
                     }
                 }
-                catch { Directory.CreateDirectory(Path.Combine(Globals.mcpath, "user_shaderpacks")); }
+                catch { Directory.CreateDirectory(Path.Combine(GlobalPaths.mcpath, "user_shaderpacks")); }
 
 
 
                 //russian lang
-                if (!File.Exists(Path.Combine(Globals.mcpath, "options.txt")))
+                if (!File.Exists(Path.Combine(GlobalPaths.mcpath, "options.txt")))
                 {
-                    File.WriteAllText(Path.Combine(Globals.mcpath, "options.txt"), "lang:ru_ru");
+                    File.WriteAllText(Path.Combine(GlobalPaths.mcpath, "options.txt"), "lang:ru_ru");
                 }
 
 
@@ -502,7 +501,6 @@ public partial class LauncherForm : Form
                 }
                 Properties.Settings.Default.Username = usernameInput.Text;
                 Properties.Settings.Default.Version = cbVersion.Text;
-                Properties.Settings.Default.ModsVer = Globals.ModsVer;
                 Properties.Settings.Default.MCVersion = version_name;
                 Properties.Settings.Default.Save();
                 var process = new Process();
@@ -534,7 +532,7 @@ public partial class LauncherForm : Form
         }
     }
 
-    void DownloadFileSync(string url, string dest)
+    public static void DownloadFileSync(string url, string dest)
     {
         using var client = new HttpClient();
         var data = client.GetByteArrayAsync(url).GetAwaiter().GetResult();
@@ -568,12 +566,23 @@ public partial class LauncherForm : Form
 
     private void hide(string foldername)
     {
-        var folderpath = Path.Combine(Globals.mcpath, foldername);
+        var folderpath = Path.Combine(GlobalPaths.mcpath, foldername);
         if (!Directory.Exists(folderpath))
         { Directory.CreateDirectory(folderpath); }
         DirectoryInfo di = new DirectoryInfo(folderpath);
         if (!di.Attributes.HasFlag(FileAttributes.Hidden))
         { di.Attributes |= FileAttributes.Hidden; }
+    }
+
+    private void updatelauncher()
+    {
+        DialogResult PROCEED = MessageBox.Show("Доступно обновление лаунчера " + Globals.server_version + "\nНажмите ОК, чтобы установить", "Доступно обновление!", MessageBoxButtons.OKCancel);
+        if (PROCEED == DialogResult.OK)
+        {
+            DownloadFileSync(Path.Combine(GlobalPaths.serverpath, "update.exe"), Path.Combine(GlobalPaths.datapath, "update.exe"));
+            Process.Start("explorer.exe", Path.Combine(GlobalPaths.datapath, "update.exe"));
+            Environment.Exit(0);
+        }
     }
 
     //some random design code
@@ -647,7 +656,7 @@ public partial class LauncherForm : Form
     }
     private void folderBtn_Click(object sender, EventArgs e)
     {
-        Process.Start("explorer.exe", Globals.mcpath);
+        Process.Start("explorer.exe", GlobalPaths.mcpath);
     }
     //sunflower
     private void sunflower_Hover(object sender, EventArgs e)
@@ -675,6 +684,12 @@ public partial class LauncherForm : Form
     {
         Process.Start("explorer", "https://t.me/reignmod");
     }
+    private void UpdateBox_Click(object sender, EventArgs e)
+    {
+        if (Globals.update_type != "none") {
+            updatelauncher();
+        }
+    }
 
     private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -685,44 +700,59 @@ public partial class LauncherForm : Form
                 DialogResult PROCEED = MessageBox.Show("Вы выбрали пользовательские моды в качестве модпака.\nУчтите, что в этом режиме сборки от создателей ReignCraft не будут использоваться, вы должны добавить свой модпак в usermods\nВы хотите открыть папку с пользовательскими модами сейчас?", "Значит ты выбрал Usermods...", MessageBoxButtons.OKCancel);
                 if (PROCEED == DialogResult.OK)
                 {
-                    Process.Start("explorer.exe", Path.Combine(Globals.mcpath, "user_mods"));
+                    Process.Start("explorer.exe", GlobalPaths.usermodfolder);
                 }
             }
         }
         Globals.notafirstrun = true;
-    }
-    //disable form but not really
-    private void stfu(bool Lock = true)
-    {
-        if (Lock == true)
+
+        FileMgr fileMgr = new FileMgr();
+        packfile? pfile = JsonSerializer.Deserialize<packfile>(Globals.versions);
+        ver? fullVersion = pfile.ver.FirstOrDefault(v => v.name == cbVersion.Text);
+
+        Globals.dwn_mods = fileMgr.getListOfDownloads(GlobalPaths.servmodfolder, fullVersion.mods);
+        Globals.dwn_resourcepacks = fileMgr.getListOfDownloads(GlobalPaths.serverpacks, fullVersion.resourcepacks);
+        Globals.dwn_shaders = fileMgr.getListOfDownloads(GlobalPaths.shaderpacks, fullVersion.shaders);
+        if (Globals.dwn_mods.Count == 0 && Globals.dwn_resourcepacks.Count == 0 && Globals.dwn_shaders.Count == 0)
         {
-            closeBtn.Click -= closeBtn_Click;
-            closeBtn.MouseHover -= closeBtn_Hover;
-            btnStart.MouseUp -= btnStart_release;
-            btnStart.MouseDown -= btnStart_press;
-            btnStart.MouseEnter -= btnStart_Hover;
-            settingsBtn.Click -= settingsBtn_Click;
-            folderBtn.Click -= folderBtn_Click;
-            settingsBtn.MouseEnter -= settingsBtn_Hover;
-            folderBtn.MouseEnter -= folderBtn_Hover;
-            usernameInput.ReadOnly = true;
-            box1.BackgroundImage = Properties.Resources.box_disabled;
-            var tempor = cbVersion.Text;
-            cbVersion.Items.Clear();
-            cbVersion.Items.Add(tempor);
-            cbVersion.Text = tempor;
-            try { Application.OpenForms["SettingsForm"].Close(); }
-            catch { }
+            Globals.pack_update = false;
         }
         else
         {
-            closeBtn.Click += closeBtn_Click;
-            btnStart.MouseUp += btnStart_release;
-            settingsBtn.Click += settingsBtn_Click;
-            folderBtn.Click += folderBtn_Click;
-            usernameInput.ReadOnly = false;
-            //listVersions();
+            Globals.pack_update = true;
         }
+        if (!Globals.pack_update)
+        {
+            PackUpdateBox.Visible = false;
+        }
+        else
+        {
+            PackUpdateBox.Visible = true;
+        }
+    }
+    //disable form but not really
+    private void stfu()
+    {
+
+        closeBtn.Click -= closeBtn_Click;
+        closeBtn.MouseHover -= closeBtn_Hover;
+        btnStart.MouseUp -= btnStart_release;
+        btnStart.MouseDown -= btnStart_press;
+        btnStart.MouseEnter -= btnStart_Hover;
+        settingsBtn.Click -= settingsBtn_Click;
+        folderBtn.Click -= folderBtn_Click;
+        settingsBtn.MouseEnter -= settingsBtn_Hover;
+        folderBtn.MouseEnter -= folderBtn_Hover;
+        UpdateBox.Click -= UpdateBox_Click;
+        usernameInput.ReadOnly = true;
+        box1.BackgroundImage = Properties.Resources.box_disabled;
+        var tempor = cbVersion.Text;
+        cbVersion.Items.Clear();
+        cbVersion.Items.Add(tempor);
+        cbVersion.Text = tempor;
+        try { Application.OpenForms["SettingsForm"].Close(); }
+        catch { }
+        PackUpdateBox.Visible = false;
     }
     private void usernameInput_TextChanged(object sender, EventArgs e)
     {
@@ -800,6 +830,7 @@ public partial class LauncherForm : Form
         easterLabel.Font = new Font("Calibri", Convert.ToInt32(easterLabel.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
         VersionBox.Font = new Font("Calibri", Convert.ToInt32(VersionBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
         UpdateBox.Font = new Font("Calibri", Convert.ToInt32(UpdateBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
+        PackUpdateBox.Font = new Font("Calibri", Convert.ToInt32(PackUpdateBox.Font.Size * k), FontStyle.Regular, GraphicsUnit.Pixel);
 
         cbVersion.Location = new Point(Convert.ToInt32(cbVersion.Location.X * k), Convert.ToInt32(cbVersion.Location.Y * k));
         cbVersion.Size = new Size(Convert.ToInt32(cbVersion.ClientSize.Width * k), Convert.ToInt32(cbVersion.ClientSize.Height * k));
@@ -860,12 +891,15 @@ public partial class LauncherForm : Form
 
         hideBtn.Location = new Point(Convert.ToInt32(hideBtn.Location.X * k), Convert.ToInt32(hideBtn.Location.Y * k));
         hideBtn.Size = new Size(Convert.ToInt32(hideBtn.ClientSize.Width * k), Convert.ToInt32(hideBtn.ClientSize.Height * k));
-        
+
         VersionBox.Location = new Point(Convert.ToInt32(VersionBox.Location.X * k), Convert.ToInt32(VersionBox.Location.Y * k));
         VersionBox.Size = new Size(Convert.ToInt32(VersionBox.ClientSize.Width * k), Convert.ToInt32(VersionBox.ClientSize.Height * k));
 
         UpdateBox.Location = new Point(Convert.ToInt32(UpdateBox.Location.X * k), Convert.ToInt32(UpdateBox.Location.Y * k));
         UpdateBox.Size = new Size(Convert.ToInt32(UpdateBox.ClientSize.Width * k), Convert.ToInt32(UpdateBox.ClientSize.Height * k));
+
+        PackUpdateBox.Location = new Point(Convert.ToInt32(PackUpdateBox.Location.X * k), Convert.ToInt32(PackUpdateBox.Location.Y * k));
+        PackUpdateBox.Size = new Size(Convert.ToInt32(PackUpdateBox.ClientSize.Width * k), Convert.ToInt32(PackUpdateBox.ClientSize.Height * k));
 
         this.MinimumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));
         this.MaximumSize = new Size(Convert.ToInt32(1200 * k), Convert.ToInt32(800 * k));

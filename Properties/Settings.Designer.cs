@@ -74,18 +74,6 @@ namespace RCRL.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ModsVer {
-            get {
-                return ((string)(this["ModsVer"]));
-            }
-            set {
-                this["ModsVer"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string FastStart {
             get {
                 return ((string)(this["FastStart"]));

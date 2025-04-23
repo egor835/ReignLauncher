@@ -54,9 +54,9 @@ namespace RCRL
             book = new PictureBox();
             easterLabel = new Label();
             hideBtn = new PictureBox();
-            VersionBox = new Label();
             UpdateBox = new Label();
             PackUpdateBox = new Label();
+            VersionBox = new Label();
             ((System.ComponentModel.ISupportInitialize)btnStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)folderBtn).BeginInit();
@@ -337,18 +337,6 @@ namespace RCRL
             hideBtn.MouseEnter += hideBtn_Hover;
             hideBtn.MouseLeave += hideBtn_noHover;
             // 
-            // VersionBox
-            // 
-            VersionBox.BackColor = Color.Transparent;
-            VersionBox.Font = new Font("Calibri", 18F, FontStyle.Regular, GraphicsUnit.Pixel);
-            VersionBox.ForeColor = Color.White;
-            VersionBox.Location = new Point(163, 20);
-            VersionBox.Name = "VersionBox";
-            VersionBox.Size = new Size(205, 64);
-            VersionBox.TabIndex = 31;
-            VersionBox.Text = "0.0.0";
-            VersionBox.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // UpdateBox
             // 
             UpdateBox.BackColor = Color.Transparent;
@@ -374,6 +362,17 @@ namespace RCRL
             PackUpdateBox.Text = "Есть обновления сборки";
             PackUpdateBox.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // VersionBox
+            // 
+            VersionBox.BackColor = Color.Transparent;
+            VersionBox.Font = new Font("Calibri", 18F, FontStyle.Regular, GraphicsUnit.Pixel);
+            VersionBox.ForeColor = Color.White;
+            VersionBox.Location = new Point(244, 41);
+            VersionBox.Name = "VersionBox";
+            VersionBox.Size = new Size(124, 43);
+            VersionBox.TabIndex = 31;
+            VersionBox.Text = "0.0.0";
+            // 
             // LauncherForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -386,7 +385,6 @@ namespace RCRL
             Controls.Add(lbProgress);
             Controls.Add(pbFiles);
             Controls.Add(UpdateBox);
-            Controls.Add(VersionBox);
             Controls.Add(hideBtn);
             Controls.Add(easterLabel);
             Controls.Add(book);
@@ -405,6 +403,7 @@ namespace RCRL
             Controls.Add(folderBtn);
             Controls.Add(settingsBtn);
             Controls.Add(btnStart);
+            Controls.Add(VersionBox);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -456,8 +455,8 @@ namespace RCRL
         private PictureBox book;
         private Label easterLabel;
         private PictureBox hideBtn;
-        private Label VersionBox;
         private Label UpdateBox;
         private Label PackUpdateBox;
+        private Label VersionBox;
     }
 }

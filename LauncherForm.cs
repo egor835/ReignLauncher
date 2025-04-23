@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace RCRL;
 
@@ -340,9 +341,17 @@ public partial class LauncherForm : Form
                     try
                     {
                         //clen fldr
-                        if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+                        try
                         {
-                            await fileMgr.cleanMcFolder(GlobalPaths.mcpath);
+                            if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+                            {
+                                await fileMgr.cleanMcFolder(GlobalPaths.mcpath);
+                            }
+                        }
+                        catch (Exception ex1)
+                        {
+                            MessageBox.Show("Произошла ошибка при подготовке к установке Minecraft.\nЗакройте все процессы использующие Java или перезагрузите компьютер.\n\nКод ошибки:" + ex1.ToString());
+                            Environment.Exit(0);
                         }
                         //install forge
                         eventTimer.Enabled = true;
@@ -358,8 +367,30 @@ public partial class LauncherForm : Form
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Произошла ошибка при установке Minecraft.\nПроверьте своё интернет-соединение, закройте все процессы использующие Java или перезагрузите компьютер.\n\nКод ошибки:" + ex.ToString());
-                        Environment.Exit(0);
+                        DialogResult PROCEED = MessageBox.Show("Похоже на то, что установка Minecraft завершилась с ошибкой.\nВероятно, соединение прервано или нет доступа к серверам Microsoft.\nНажмите ОК, чтобы попытаться скачать Minecraft с сервера ReignCraft.\n\nКод ошибки:" + ex.ToString(), "Ошибка при установке.", MessageBoxButtons.OKCancel);
+                        if (PROCEED == DialogResult.OK)
+                        {
+                            eventTimer.Enabled = false;
+                            try
+                            {
+                                if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+                                {
+                                    await fileMgr.cleanMcFolder(GlobalPaths.mcpath);
+                                }
+                            }
+                            catch (Exception ex2)
+                            {
+                                MessageBox.Show("Произошла ошибка при подготовке к установке Minecraft.\nЗакройте все процессы использующие Java или перезагрузите компьютер.\n\nКод ошибки:" + ex2.ToString());
+                                Environment.Exit(0);
+                            }
+                            await fileMgr.DownloadAndUnpack(Path.Combine(GlobalPaths.serverpath, "minecraft.zip"), GlobalPaths.mcpath, pbFiles, lbProgress);
+                            var fallforge = new ForgeInstaller(_launcher);
+                            version_name = await fallforge.Install(mcVersion, config.versionName, new ForgeInstallOptions{});
+                        }
+                        else
+                        {
+                            Environment.Exit(0);
+                        }
                     }
                 }
                 else

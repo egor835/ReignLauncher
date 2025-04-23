@@ -340,13 +340,14 @@ namespace RCRL
             // VersionBox
             // 
             VersionBox.BackColor = Color.Transparent;
-            VersionBox.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Pixel);
+            VersionBox.Font = new Font("Calibri", 18F, FontStyle.Regular, GraphicsUnit.Pixel);
             VersionBox.ForeColor = Color.White;
-            VersionBox.Location = new Point(172, 20);
+            VersionBox.Location = new Point(163, 20);
             VersionBox.Name = "VersionBox";
-            VersionBox.Size = new Size(178, 64);
+            VersionBox.Size = new Size(205, 64);
             VersionBox.TabIndex = 31;
             VersionBox.Text = "0.0.0";
+            VersionBox.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // UpdateBox
             // 

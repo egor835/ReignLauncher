@@ -1,5 +1,5 @@
 #define MyAppName "ReignCraft Launcher"
-#define MyAppVersion "1.1.0"
+#define MyAppVersion "1.1.1"
 #define MyAppPublisher "ReignCraft"
 #define MyAppExeName "RCRL.exe"
 

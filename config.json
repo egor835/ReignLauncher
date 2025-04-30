@@ -3,5 +3,6 @@
     "proxy": "45.154.35.134",
     "port": "15056",
     "updateServer": "http://45.154.35.134/launcher",
+    "secondServer": "http://79.174.40.8/launcher",
     "versionName": "47.3.12"
 }

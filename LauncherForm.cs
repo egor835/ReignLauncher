@@ -52,6 +52,7 @@ public partial class LauncherForm : Form
         public string proxy { get; set; }
         public string port { get; set; }
         public string updateServer { get; set; }
+        public string secondServer { get; set; }
         public string versionName { get; set; }
     }
 
@@ -74,7 +75,7 @@ public partial class LauncherForm : Form
     public static class Globals
     {
         //Launcher version:
-        public static string launcher_version = "1.1.0";
+        public static string launcher_version = "1.1.1";
         public static string server_version = "0.0.0";
         public static string update_type = "none";
         public static bool pack_update = false;
@@ -127,24 +128,33 @@ public partial class LauncherForm : Form
         GlobalPaths.serverpath = config.updateServer;
         Directory.CreateDirectory(GlobalPaths.mcpath);
         Directory.CreateDirectory(GlobalPaths.datapath);
+        String getFrom = Path.Combine(GlobalPaths.serverpath, "versions.json");
+        String dwnTo = Path.Combine(GlobalPaths.datapath, "newversions.json");
         try
         {
-            String getFrom = Path.Combine(GlobalPaths.serverpath, "versions.json");
-            String dwnTo = Path.Combine(GlobalPaths.datapath, "newversions.json");
             DownloadFileSync(getFrom, dwnTo);
             File.Move(Path.Combine(GlobalPaths.datapath, "newversions.json"), Path.Combine(GlobalPaths.datapath, "versions.json"), true);
         }
         catch (Exception ex)
         {
-            if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+            GlobalPaths.serverpath = config.secondServer;
+            try
             {
-                MessageBox.Show("Проверьте своё интернет-соединение перед первым запуском.");
-                Environment.Exit(0);
+                DownloadFileSync(getFrom, dwnTo);
+                File.Move(Path.Combine(GlobalPaths.datapath, "newversions.json"), Path.Combine(GlobalPaths.datapath, "versions.json"), true);
             }
-            else
+            catch (Exception exx)
             {
-                MessageBox.Show("Проверьте своё интернет-соединение.");
-                Globals.isInternetHere = false;
+                if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+                {
+                    MessageBox.Show("Проверьте своё интернет-соединение перед первым запуском.");
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    MessageBox.Show("Проверьте своё интернет-соединение.");
+                    Globals.isInternetHere = false;
+                }
             }
         }
 
@@ -161,7 +171,11 @@ public partial class LauncherForm : Form
             {
                 MessageBox.Show("Судя по всему, лаунчер уже запущен. Закройте все предыдущие процессы и повторите попытку.");
                 Environment.Exit(0);
-            }
+            }   
+        }
+
+        if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
+        {
             _launcher = new MinecraftLauncher(new MinecraftPath(GlobalPaths.mcpath));
         }
         else
@@ -297,16 +311,17 @@ public partial class LauncherForm : Form
     }
     private async void btnStart_release(object sender, EventArgs e)
     {
+        var usrname = usernameInput.Text.Trim();
         //check username
-        if (string.IsNullOrEmpty(usernameInput.Text))
+        if (string.IsNullOrEmpty(usrname))
         {
             MessageBox.Show("Введите никнейм");
         }
-        else if (usernameInput.Text.Replace("_", "").Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usernameInput.Text.Replace("_", ""), @"\p{IsCyrillic}"))
+        else if (usrname.Replace("_", "").Any(ch => !char.IsLetterOrDigit(ch)) || Regex.IsMatch(usrname.Replace("_", ""), @"\p{IsCyrillic}"))
         {
             MessageBox.Show("Ваш никнейм не должен содержать:\n\n- пробелов\n- кириллицы\n- спецсимволов\n\nДопустимы только латинские буквы и цифры.");
         }
-        else if (usernameInput.Text.Length > 16)
+        else if (usrname.Length > 16)
         {
             MessageBox.Show("Ваш никнейм слишком длинный!");
         }
@@ -319,6 +334,7 @@ public partial class LauncherForm : Form
             var mcVersion = "1.20.1";
 
             //define fucking variables
+            
             var optionfile = Path.Combine(GlobalPaths.configfolder, "oculus.properties");
             packfile? pfile = JsonSerializer.Deserialize<packfile>(Globals.versions);
             ver? fullVersion = pfile.ver.FirstOrDefault(v => v.name == cbVersion.Text);
@@ -336,17 +352,14 @@ public partial class LauncherForm : Form
                 pbFiles.Visible = true;
                 var version_name = "";
 
-                if (Globals.isInternetHere)
+                if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
                 {
                     try
                     {
                         //clen fldr
                         try
                         {
-                            if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
-                            {
-                                await fileMgr.cleanMcFolder(GlobalPaths.mcpath);
-                            }
+                            await fileMgr.cleanMcFolder(GlobalPaths.mcpath);
                         }
                         catch (Exception ex1)
                         {
@@ -384,8 +397,7 @@ public partial class LauncherForm : Form
                                 Environment.Exit(0);
                             }
                             await fileMgr.DownloadAndUnpack(Path.Combine(GlobalPaths.serverpath, "minecraft.zip"), GlobalPaths.mcpath, pbFiles, lbProgress);
-                            var fallforge = new ForgeInstaller(_launcher);
-                            version_name = await fallforge.Install(mcVersion, config.versionName, new ForgeInstallOptions{});
+                            version_name = (mcVersion + "-forge-" + config.versionName);
                         }
                         else
                         {
@@ -399,17 +411,14 @@ public partial class LauncherForm : Form
                 }
 
                 //silly mod updater
-                if (Globals.isInternetHere)
+                if (Globals.isInternetHere && Globals.pack_update)
                 {
-                    if (Globals.pack_update)
-                    {
-                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "mods"), GlobalPaths.servmodfolder, Globals.dwn_mods, pbFiles, lbProgress);
-                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "resourcepacks"), GlobalPaths.serverpacks, Globals.dwn_resourcepacks, pbFiles, lbProgress);
-                        await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "shaders"), GlobalPaths.shaderpacks, Globals.dwn_shaders, pbFiles, lbProgress);
-                        await fileMgr.DownloadAndUnpack(Path.Combine(GlobalPaths.serverpath, "configs.zip"), GlobalPaths.configfolder);
-                        //README
-                        DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(GlobalPaths.mcpath, "README.TXT"));
-                    }
+                    await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "mods"), GlobalPaths.servmodfolder, Globals.dwn_mods, pbFiles, lbProgress);
+                    await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "resourcepacks"), GlobalPaths.serverpacks, Globals.dwn_resourcepacks, pbFiles, lbProgress);
+                    await fileMgr.DownloadEveryFile(Path.Combine(GlobalPaths.serverpath, "shaders"), GlobalPaths.shaderpacks, Globals.dwn_shaders, pbFiles, lbProgress);
+                    await fileMgr.DownloadAndUnpack(Path.Combine(GlobalPaths.serverpath, "configs.zip"), GlobalPaths.configfolder);
+                    //README
+                    DownloadFileSync(Path.Combine(config.updateServer, "README.TXT"), Path.Combine(GlobalPaths.mcpath, "README.TXT"));
                 }
 
                 //MODPACK CHANGER (plz hewp me)
@@ -517,31 +526,33 @@ public partial class LauncherForm : Form
                 var launchOption = new MLaunchOption
                 {
                     MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),
-                    Session = MSession.CreateOfflineSession(usernameInput.Text),
+                    Session = MSession.CreateOfflineSession(usrname),
                 };
                 if (Properties.Settings.Default.FastStart == "1")
                 {
                     launchOption = new MLaunchOption
                     {
                         MaximumRamMb = Int32.Parse(Properties.Settings.Default.RAM),
-                        Session = MSession.CreateOfflineSession(usernameInput.Text),
+                        Session = MSession.CreateOfflineSession(usrname),
                         ServerIp = addr,
                         ServerPort = Int32.Parse(port),
                     };
                 }
-                Properties.Settings.Default.Username = usernameInput.Text;
-                Properties.Settings.Default.Version = cbVersion.Text;
-                Properties.Settings.Default.MCVersion = version_name;
-                Properties.Settings.Default.Save();
+                
                 var process = new Process();
-                if (Globals.isInternetHere)
+
+                if (string.IsNullOrEmpty(Properties.Settings.Default.MCVersion))
                 {
                     process = await _launcher.InstallAndBuildProcessAsync(version_name, launchOption);
-                }
-                else
+                } else
                 {
                     process = await _launcher.BuildProcessAsync(version_name, launchOption);
                 }
+
+                Properties.Settings.Default.Username = usrname;
+                Properties.Settings.Default.Version = cbVersion.Text;
+                Properties.Settings.Default.MCVersion = version_name;
+                Properties.Settings.Default.Save();
                 var processUtil = new ProcessWrapper(process);
                 processUtil.StartWithEvents();
                 //await processUtil.WaitForExitTaskAsync();
@@ -565,6 +576,7 @@ public partial class LauncherForm : Form
     public static void DownloadFileSync(string url, string dest)
     {
         using var client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(15);
         var data = client.GetByteArrayAsync(url).GetAwaiter().GetResult();
         File.WriteAllBytes(dest, data);
     }
